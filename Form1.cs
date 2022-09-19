@@ -12,6 +12,7 @@ namespace Next_tile_editor
         List<Image> spriteImages = new List<Image>();
         List<PictureBox> pictureBoxes = new List<PictureBox>();
         int noFrames = 0;
+        string curDir = Application.ExecutablePath;
 
 
         public Form1()
@@ -166,6 +167,7 @@ namespace Next_tile_editor
             openFileDialog.Filter = "png files (*.png)|*.png";
             openFileDialog.Title = "Select Pngs";
             openFileDialog.Multiselect = true;
+            openFileDialog.InitialDirectory = curDir;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 List<string> listFileNames = new List<string>();
@@ -364,6 +366,7 @@ namespace Next_tile_editor
         private void btnImportFromNext_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.InitialDirectory = curDir;
             var res = ofd.ShowDialog();
             byte[] bin = File.ReadAllBytes(ofd.FileName);
 
@@ -374,6 +377,9 @@ namespace Next_tile_editor
         private void btnLoadTileMap_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.InitialDirectory = curDir;
+            ofd.Filter = "map files (*.map)|*.map";
+   //         ofd.DefaultExt = "*.map";
             if (ofd.ShowDialog(this) == DialogResult.OK)
             { 
                 baMap = File.ReadAllBytes(ofd.FileName);
@@ -388,6 +394,9 @@ namespace Next_tile_editor
         private void btnLoadTiles_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.InitialDirectory = curDir;
+
+            ofd.Filter = "spr files (*.spr)|*.spr|tile file|*.til";
             if (ofd.ShowDialog(this) == DialogResult.OK)
             {
                 baTiles = File.ReadAllBytes(ofd.FileName);
@@ -477,13 +486,21 @@ namespace Next_tile_editor
         }
         public void UpdateTileMap()
         {
+            int arrLength = baMap.Length;
+            int height = arrLength / 40 +1;
+            if (bmTileBuffer != null && bmTileBuffer.Height != height * 32)
+            {
+                bmTileBuffer.Dispose();
+                bmTileBuffer = null;
+            }
+                
+            if (bmTileBuffer == null)
+                bmTileBuffer = new Bitmap(40 * 32, 256 * 32);
 
             using (Graphics g = Graphics.FromImage(bmTileBuffer))
             {
                 if (Tiles != null)
                 {
-                    
-
                     int y = 0;
                     do
                     {
@@ -509,8 +526,6 @@ namespace Next_tile_editor
             pnlPalettePicker.Invalidate();
             pnlTilePalette.Invalidate();
 
-
-
         }
 
         Bitmap bmPalettePicker = new Bitmap(128, 1024);
@@ -518,6 +533,7 @@ namespace Next_tile_editor
         private void btnLoadPalette_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.InitialDirectory = curDir;
             if (ofd.ShowDialog(this) == DialogResult.OK)
             {
                 baTilePalette = File.ReadAllBytes(ofd.FileName);
@@ -679,6 +695,16 @@ namespace Next_tile_editor
                 File.WriteAllBytes(ofd.FileName, baTiles);
 
             }
+        }
+
+        private void btnLoadTileMap_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pnlTileMap_Paint(object sender, PaintEventArgs e)
+        {
+
         }
 
 
