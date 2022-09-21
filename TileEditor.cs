@@ -37,8 +37,8 @@ namespace Next_tile_editor
                 val = this.PaperVal;
             }
             // get tile byte array that corresponds,
-            int tx = (int)(e.X / 32);
-            int ty = (int)(e.Y / 32);
+            int tx = (int)(e.X / Form1.TileSize);
+            int ty = (int)(e.Y / Form1.TileSize);
 
             int byteNo = tx / 2 + ty * 4;
             if ((tx & 0b1 )!= 0) // are we odd?

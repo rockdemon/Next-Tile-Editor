@@ -71,7 +71,7 @@
             paletteValue9bit1.Red = ((byte)(0));
             this.NextPalette.Ink9bit = paletteValue9bit1;
             this.NextPalette.InkIndex = 0;
-            this.NextPalette.Location = new System.Drawing.Point(1622, 41);
+            this.NextPalette.Location = new System.Drawing.Point(1428, 41);
             this.NextPalette.Name = "NextPalette";
             this.NextPalette.Palette = null;
             paletteValue9bit2.Blue = ((byte)(7));
@@ -151,7 +151,7 @@
             this.tabControl1.Location = new System.Drawing.Point(-2, 41);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(2140, 994);
+            this.tabControl1.Size = new System.Drawing.Size(1864, 994);
             this.tabControl1.TabIndex = 7;
             // 
             // tabPage1
@@ -159,9 +159,9 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 29);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(2132, 961);
+            this.tabPage1.Size = new System.Drawing.Size(1856, 961);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.Text = "Sprite Import";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // TileEditor
@@ -175,7 +175,7 @@
             this.TileEditor.Location = new System.Drawing.Point(4, 29);
             this.TileEditor.Name = "TileEditor";
             this.TileEditor.Padding = new System.Windows.Forms.Padding(3);
-            this.TileEditor.Size = new System.Drawing.Size(2132, 961);
+            this.TileEditor.Size = new System.Drawing.Size(1856, 961);
             this.TileEditor.TabIndex = 1;
             this.TileEditor.Text = "Tile Editor";
             this.TileEditor.UseVisualStyleBackColor = true;
@@ -185,9 +185,9 @@
             this.panelParent.AutoScroll = true;
             this.panelParent.Controls.Add(this.pnlTileMap);
             this.panelParent.Location = new System.Drawing.Point(6, 41);
-            this.panelParent.MaximumSize = new System.Drawing.Size(1320, 800);
+            this.panelParent.MaximumSize = new System.Drawing.Size(1123, 800);
             this.panelParent.Name = "panelParent";
-            this.panelParent.Size = new System.Drawing.Size(1320, 800);
+            this.panelParent.Size = new System.Drawing.Size(1115, 800);
             this.panelParent.TabIndex = 6;
             // 
             // pnlTileMap
@@ -201,7 +201,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1772, 429);
+            this.button2.Location = new System.Drawing.Point(1578, 429);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(91, 36);
             this.button2.TabIndex = 17;
@@ -211,7 +211,7 @@
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(1772, 367);
+            this.numericUpDown1.Location = new System.Drawing.Point(1578, 367);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             15,
             0,
@@ -226,7 +226,7 @@
             // 
             this.tileEditor1.Ink = null;
             this.tileEditor1.InkVal = 0;
-            this.tileEditor1.Location = new System.Drawing.Point(1772, 41);
+            this.tileEditor1.Location = new System.Drawing.Point(1578, 41);
             this.tileEditor1.Name = "tileEditor1";
             this.tileEditor1.palette = null;
             this.tileEditor1.PaletteOffset = 0;
@@ -243,7 +243,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel3.Controls.Add(this.pnlPalettePicker);
             this.panel3.Controls.Add(this.pnlTilePalette);
-            this.panel3.Location = new System.Drawing.Point(1332, 41);
+            this.panel3.Location = new System.Drawing.Point(1138, 41);
             this.panel3.MaximumSize = new System.Drawing.Size(272, 696);
             this.panel3.MinimumSize = new System.Drawing.Size(272, 696);
             this.panel3.Name = "panel3";
@@ -334,7 +334,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2140, 1033);
+            this.ClientSize = new System.Drawing.Size(1864, 1033);
             this.Controls.Add(this.btnSavePalette);
             this.Controls.Add(this.btnSaveTiles);
             this.Controls.Add(this.btnSaveTileMap);

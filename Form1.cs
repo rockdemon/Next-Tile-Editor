@@ -13,7 +13,8 @@ namespace Next_tile_editor
         List<PictureBox> pictureBoxes = new List<PictureBox>();
         int noFrames = 0;
         string curDir = Application.ExecutablePath;
-
+        public static int TileSize = 24;
+        public static int PixelSize = 3;
 
         public Form1()
         {
@@ -78,7 +79,7 @@ namespace Next_tile_editor
         {
             Point pos  = new Point(e.X, e.Y);
             //pos = this.PointToClient(pos);
-            int idx = ((int)(pos.X/32))+((int)pos.Y/32)*4;
+            int idx = ((int)(pos.X/Form1.TileSize))+((int)pos.Y/Form1.TileSize)*4;
             if (e.Button == MouseButtons.Left)
             {
                 InkIndex = idx;
@@ -108,8 +109,8 @@ namespace Next_tile_editor
         {
             if (e.Button == MouseButtons.Left && mousePos.Value != null)
             {
-                int tmX = mousePos.Value.X / 32;
-                int tmY = mousePos.Value.Y / 32;
+                int tmX = mousePos.Value.X / Form1.TileSize;
+                int tmY = mousePos.Value.Y / Form1.TileSize;
                 baMap[tmX + tmY * 40] = (byte)iSourceIndex;
                 UpdateTileMap();
                 pnlTileMap.Invalidate();
@@ -121,8 +122,8 @@ namespace Next_tile_editor
         private void PnlTileMap_MouseEnter(object? sender, EventArgs e)
         {
                 Point ptemp = (sender as Control).PointToClient(Cursor.Position);
-            int mX = ((int)(ptemp.X / 32) * 32);
-            int mY = ((int)(ptemp.Y / 32) * 32);
+            int mX = ((int)(ptemp.X / Form1.TileSize) * Form1.TileSize);
+            int mY = ((int)(ptemp.Y / Form1.TileSize) * Form1.TileSize);
 
             mousePos = new Point(mX, mY);
             pnlTileMap.Invalidate();
@@ -139,8 +140,8 @@ namespace Next_tile_editor
             if (mousePos != null)
             {
                 Point ptemp = (sender as Control).PointToClient(Cursor.Position);
-                int mX = ((int)(ptemp.X / 32) * 32);
-                int mY = ((int)(ptemp.Y / 32) * 32);
+                int mX = ((int)(ptemp.X / Form1.TileSize) * Form1.TileSize);
+                int mY = ((int)(ptemp.Y / Form1.TileSize) * Form1.TileSize);
                 if (mX != mousePos.Value.X || mY != mousePos.Value.Y)
                 {
                     mousePos = new Point(mX, mY);
@@ -154,7 +155,7 @@ namespace Next_tile_editor
         private void Panel1_Paint(object? sender, PaintEventArgs e)
         {
             if (bmTileBuffer == null)
-                bmTileBuffer = new Bitmap(40 * 32, 256 * 32);
+                bmTileBuffer = new Bitmap(40 * Form1.TileSize, 256 * Form1.TileSize);
             pnlTileMap.Size = bmTileBuffer.Size;
             e.Graphics.DrawImage(bmTileBuffer, 0, 0);
             if (mousePos != null && SourceImage != null)
@@ -343,13 +344,13 @@ namespace Next_tile_editor
         //private IReadWriteBitmapData Get4BitBitmap()// 16 x 16 x4 bit. Colours are 9 bit
         //{
         //    // Gray8 format has no built-in support
-        //    var bitmap = new WriteableBitmap(16, 16, 32, 32, PixelFormats.Indexed4, null);
+        //    var bitmap = new WriteableBitmap(16, 16, Form1.TileSize, Form1.TileSize, PixelFormats.Indexed4, null);
 
         //    // But we can specify how to use it
         //    var customPixelFormat = new PixelFormatInfo { BitsPerPixel = 4, Grayscale = false };
-        //    Func<ICustomBitmapDataRow, int, Color32> getPixel =
-        //        (row, x) => Color32.FromRgb(row.UnsafeGetRefAs<byte>(x));// byte will be 2 pixels?
-        //    Action<ICustomBitmapDataRow, int, Color32> setPixel =
+        //    Func<ICustomBitmapDataRow, int, ColorForm1.TileSize> getPixel =
+        //        (row, x) => ColorForm1.TileSize.FromRgb(row.UnsafeGetRefAs<byte>(x));// byte will be 2 pixels?
+        //    Action<ICustomBitmapDataRow, int, ColorForm1.TileSize> setPixel =
         //        (row, x, c) => row.UnsafeGetRefAs<byte>(x) = c.Blend(row.BitmapData.BackColor).GetBrightness();
 
         //    // Now we specify also a dispose callback to be executed when the returned instance is disposed:
@@ -358,7 +359,7 @@ namespace Next_tile_editor
         //        customPixelFormat, getPixel, setPixel,
         //        disposeCallback: () =>
         //        {
-        //            bitmap.AddDirtyRect(new System.Windows.Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
+        //            bitmap.AddDirtyRect(new System.Windows.IntForm1.TileSizeRect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
         //            bitmap.Unlock();
         //        });
         //}
@@ -416,12 +417,12 @@ namespace Next_tile_editor
                         {
                             byte firstNibble = (byte)((baTiles[offset] & 0b11110000) >> 4);
                             byte secondNibble = (byte)(baTiles[offset] & 0b00001111);
-                            Rectangle R1 = new Rectangle(ix * 4, iy * 4, 4, 4);
+                            Rectangle R1 = new Rectangle(ix * PixelSize, iy * PixelSize, PixelSize, PixelSize);
                             g.FillRectangle(new System.Drawing.SolidBrush(
                                     pal.Palettearray[firstNibble].PalColor),    R1);
                             g.FillRectangle(new System.Drawing.SolidBrush(
                                     pal.Palettearray[secondNibble].PalColor), 
-                                        (ix+1) * 4, iy * 4, 4, 4);
+                                        (ix+1) * PixelSize, iy * PixelSize, PixelSize, PixelSize);
                             ix += 2;
                             offset++;
                             if (ix > 7)
@@ -462,7 +463,7 @@ namespace Next_tile_editor
                 tileEditor1.palette = Palette9bit.FromByteArray(baTilePalette);
 
                 List<byte> list = new List<byte>();
-                for (int i = (iSourceIndex * 32); i < iSourceIndex * 32+32; i++)
+                for (int i = (iSourceIndex * 32); i < iSourceIndex * 32 + 32; i++)
                     list.Add(baTiles[i]);
                 this.tileEditor1.Tile = list.ToArray<byte>();
                 
@@ -477,7 +478,7 @@ namespace Next_tile_editor
         {
             for( int i = 0; i<256; i++ )
             {
-                Bitmap bmTemp = new Bitmap(32, 32);
+                Bitmap bmTemp = new Bitmap(Form1.TileSize, Form1.TileSize);
                 Graphics g = Graphics.FromImage(bmTemp);
                 g.DrawString("" + i, new Font("Arial", 8), System.Drawing.Brushes.Black, 0, 0);
                 Tiles[i] = bmTemp;
@@ -488,14 +489,14 @@ namespace Next_tile_editor
         {
             int arrLength = baMap.Length;
             int height = arrLength / 40 +1;
-            if (bmTileBuffer != null && bmTileBuffer.Height != height * 32)
+            if (bmTileBuffer != null && bmTileBuffer.Height != height * TileSize)
             {
                 bmTileBuffer.Dispose();
                 bmTileBuffer = null;
             }
                 
             if (bmTileBuffer == null)
-                bmTileBuffer = new Bitmap(40 * 32, 256 * 32);
+                bmTileBuffer = new Bitmap(40 * Form1.TileSize, 256 * TileSize);
 
             using (Graphics g = Graphics.FromImage(bmTileBuffer))
             {
@@ -507,9 +508,9 @@ namespace Next_tile_editor
                         for (int x = 0; x < 40; x++)
                         {
                          if ((Tiles[baMap[x + (y * 40)]]) == null)
-                            Tiles[baMap[x + (y * 40)]] = new Bitmap(32, 32);
+                            Tiles[baMap[x + (y * 40)]] = new Bitmap(TileSize,TileSize);
                         if (this.baMap[x + (y * 40)]<128)
-                                g.DrawImage(Tiles[this.baMap[x+(y*40)]], (x * 32), y * 32);
+                                g.DrawImage(Tiles[this.baMap[x+(y*40)]], (x * TileSize), y * TileSize);
                             
                         }
                         y++;
@@ -567,7 +568,7 @@ namespace Next_tile_editor
             int px = 0; int py = 0;
             foreach (paletteValue9bit v in pal.Palettearray)
             {
-                Graphics.FromImage(bmPalettePicker).FillRectangle(new SolidBrush(v.PalColor), px, py, 32, 32);
+                Graphics.FromImage(bmPalettePicker).FillRectangle(new SolidBrush(v.PalColor), px, py, 32,32);
                 px += 32;
                 if (px == 128)
                 {
@@ -613,7 +614,7 @@ namespace Next_tile_editor
         {
             
             
-            for ( int ix = 0; ix<32 ; ix++)
+            for ( int ix = 0; ix<Form1.TileSize ; ix++)
             {
                 baTiles[ix + (iSourceIndex * 32)] = tileEditor1.Tile[ix];
             }
@@ -636,7 +637,7 @@ namespace Next_tile_editor
             for (int i = 0; i < baTiles.Length / 32 && iTile < 128; i++)
             {
           
-                Tiles[iTile] = new Bitmap(32, 32);
+                Tiles[iTile] = new Bitmap(32,32);
                 using (Graphics g = Graphics.FromImage(Tiles[iTile]))
                 {
                     int ix = 0; int iy = 0;
@@ -649,7 +650,7 @@ namespace Next_tile_editor
                                 pal.Palettearray[firstNibble].PalColor), R1);
                         g.FillRectangle(new System.Drawing.SolidBrush(
                                 pal.Palettearray[secondNibble].PalColor),
-                                    (ix + 1) * 4, iy * 4, 4, 4);
+                                    (ix + 1) * PixelSize, iy * 4, 4, 4);
                         ix += 2;
                         offset++;
                         if (ix > 7)
@@ -663,7 +664,7 @@ namespace Next_tile_editor
                     tilePB.Click += TilePB_Click;
                     pnlTilePalette.Controls.Add(tilePB);
                     iPaletteX += 32;
-                    if (iPaletteX == 128)
+                    if (iPaletteX >= 128)
                     {
                         iPaletteY += 32;
                         iPaletteX = 0;
@@ -711,13 +712,13 @@ namespace Next_tile_editor
         //private IReadWriteBitmapData Get8BitBitmap()// 16 x 16 x4 bit. Colours are 9 bit
         //{
         //    // Gray8 format has no built-in support
-        //    var bitmap = new WriteableBitmap(16, 16, 32, 32, PixelFormats., null);
+        //    var bitmap = new WriteableBitmap(16, 16, Form1.TileSize, Form1.TileSize, PixelFormats., null);
 
         //    // But we can specify how to use it
         //    var customPixelFormat = new PixelFormatInfo { BitsPerPixel = 4, Grayscale = false };
-        //    Func<ICustomBitmapDataRow, int, Color32> getPixel =
-        //        (row, x) => Color32.FromRgb(row.UnsafeGetRefAs<byte>(x));// byte will be 2 pixels?
-        //    Action<ICustomBitmapDataRow, int, Color32> setPixel =
+        //    Func<ICustomBitmapDataRow, int, ColorForm1.TileSize> getPixel =
+        //        (row, x) => ColorForm1.TileSize.FromRgb(row.UnsafeGetRefAs<byte>(x));// byte will be 2 pixels?
+        //    Action<ICustomBitmapDataRow, int, ColorForm1.TileSize> setPixel =
         //        (row, x, c) => row.UnsafeGetRefAs<byte>(x) = c.Blend(row.BitmapData.BackColor).GetBrightness();
 
         //    // Now we specify also a dispose callback to be executed when the returned instance is disposed:
@@ -726,7 +727,7 @@ namespace Next_tile_editor
         //        customPixelFormat, getPixel, setPixel,
         //        disposeCallback: () =>
         //        {
-        //            bitmap.AddDirtyRect(new System.Windows.Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
+        //            bitmap.AddDirtyRect(new System.Windows.IntForm1.TileSizeRect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
         //            bitmap.Unlock();
         //        });
         //}
