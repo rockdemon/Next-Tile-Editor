@@ -19,7 +19,7 @@ namespace Next_tile_editor
         public Form1()
         {
             this.Size = new System.Drawing.Size(1400, 800);
-
+            this.AutoScaleMode = AutoScaleMode.None;
             InitializeComponent();
             DefaultTileBitmaps();
             
