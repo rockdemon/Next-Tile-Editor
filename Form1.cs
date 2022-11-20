@@ -79,7 +79,7 @@ namespace Next_tile_editor
         {
             Point pos  = new Point(e.X, e.Y);
             //pos = this.PointToClient(pos);
-            int idx = ((int)(pos.X/Form1.TileSize))+((int)pos.Y/Form1.TileSize)*4;
+            int idx = ((int)(pos.X/32))+((int)pos.Y/32)*4;
             if (e.Button == MouseButtons.Left)
             {
                 InkIndex = idx;
@@ -92,6 +92,7 @@ namespace Next_tile_editor
 
                 tileEditor1.PaperVal = idx;
             }
+            tileEditor1.Invalidate();
             
         }
         
@@ -109,12 +110,14 @@ namespace Next_tile_editor
         {
             if (e.Button == MouseButtons.Left && mousePos.Value != null)
             {
-                int tmX = mousePos.Value.X / Form1.TileSize;
-                int tmY = mousePos.Value.Y / Form1.TileSize;
-                baMap[tmX + tmY * 40] = (byte)iSourceIndex;
-                UpdateTileMap();
-                pnlTileMap.Invalidate();
-
+                if (baMap != null)
+                {
+                    int tmX = mousePos.Value.X / Form1.TileSize;
+                    int tmY = mousePos.Value.Y / Form1.TileSize;
+                    baMap[tmX + tmY * 40] = (byte)iSourceIndex;
+                    UpdateTileMap();
+                    pnlTileMap.Invalidate();
+                }
             }
         }
 
@@ -197,19 +200,74 @@ namespace Next_tile_editor
             }
             UpdatePictureBoxes();
         }
+        List<Sprite> lstSprites = new List<Sprite>();
+        public void UpdateSprites(byte[] SpriteList, bool b4bit = true)
+        {
+            if (SpriteList == null)
+            {
+                return;
+            }
+            if (SpriteList.Length != 0)
+            {
+                lstSprites.Clear();
+                //2 pixels per byte 16x16. 16 * 8 = 128 bytes
+                int noblocks = SpriteList.Length / 128;// .Count;
+                for (int i = 0; i < noblocks; i++)
+                {
+                    byte[] baCurSpr = new byte[128];
+                    Array.Copy(SpriteList, i * 128, baCurSpr, 0,128);
+                    Sprite spr = new Sprite(palette:Palette9bit.FromByteArray(baSpritePalette),0,spriteNibbles:null,spriteData: baCurSpr);
+                    // Image tempImage = LockUnlockBitsLowLevelUpdate((Bitmap)Bitmap.FromFile(listFileNames[i]));
+
+                    spriteImages.Add(spr.bitmapData);
+                    lstSprites.Add(spr);
+                    if (i >= pictureBoxes.Count)
+                    {
+                        PictureBox pb = new PictureBox();
+                        pb.Name = "" + i;
+                        pb.Click += Pb_Click;
+                        pictureBoxes.Add(pb);
+
+                    };
+
+                    pictureBoxes[i].Image = spr.bitmapData;
+                    pictureBoxes[i].SizeMode = PictureBoxSizeMode.StretchImage;
+
+                }
+            }
+            UpdatePictureBoxes();
+        }
+
+        /// <summary>
+        /// Sprite selected for editing
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Pb_Click(object? sender, EventArgs e)
+        {
+            if (int.TryParse(((sender)as PictureBox).Name, out int idx ))
+            {
+                spriteEditor1.Sprite = lstSprites[idx];
+                spriteEditor1.Invalidate();
+            }
+            else
+            {
+                spriteEditor1.Sprite = null;
+            }
+        }
 
         public void UpdatePictureBoxes()
         {
-            this.panelParent.Controls.Clear();
+            this.pnlSprites.Controls.Clear();
             int tempx = 0; int tempy = 0;
-            for (int i = 0; i < noFrames; i++)
+            for (int i = 0; i < ((noFrames== 0)? (128): noFrames); i++)
             {
-                pictureBoxes[i].Size = new Size(pictureBoxes[i].Image.Width, pictureBoxes[i].Image.Height);
-                this.panelParent.Controls.Add(pictureBoxes[i]);
+                pictureBoxes[i].Size = new Size(64, 64);
+                this.pnlSprites.Controls.Add(pictureBoxes[i]);
                 this.pictureBoxes[i].Location = new Point(tempx, tempy);
                 this.pictureBoxes[i].Visible = true;
                 tempx = tempx + 64;
-                if (tempx + 64 > pnlTileMap.Width)
+                if (tempx + 64 > pnlSprites.Width)
                 {
                     tempy = tempy + 64;
                     tempx = 0;
@@ -321,24 +379,28 @@ namespace Next_tile_editor
             var customPixelFormat = new PixelFormatInfo { BitsPerPixel = 8, Grayscale = false, HasAlpha=false,  };
 
             var targetFormat = System.Drawing.Imaging.PixelFormat.Format4bppIndexed; // feel free to try other formats as well
-            using (Bitmap? bmpSrc = Icons.Shield.ExtractBitmap(new Size(256, 256)))
-            using (Bitmap bmpDst = new Bitmap(16, 16, targetFormat))
+            for (int ix = 0; ix < this.spriteImages.Count;ix++)
             {
-                using (IReadableBitmapData? dataSrc = bmpSrc.GetReadableBitmapData())
-                using (IWritableBitmapData dataDst = bmpDst.GetWritableBitmapData())
+                using (Bitmap bmpSrc = (Bitmap)this.spriteImages[ix])
+                using (Bitmap bmpDst = new Bitmap(8, 8, targetFormat))
                 {
-                    IReadableBitmapDataRow rowSrc = dataSrc.FirstRow;
-                    IWritableBitmapDataRow rowDst = dataDst.FirstRow;
-                    do
+                    using (IReadableBitmapData? dataSrc = bmpSrc.GetReadableBitmapData())
+                    using (IWritableBitmapData dataDst = bmpDst.GetWritableBitmapData())
                     {
-                        for (int x = 0; x < dataSrc.Width; x++)
-                            rowDst[x] = rowSrc[x]; // works also between different pixel formats
+                        IReadableBitmapDataRow rowSrc = dataSrc.FirstRow;
+                        IWritableBitmapDataRow rowDst = dataDst.FirstRow;
+                        do
+                        {
+                            for (int x = 0; x < dataSrc.Width; x++)
+                                rowDst[x] = rowSrc[x]; // works also between different pixel formats
 
-                    } while (rowSrc.MoveNextRow() && rowDst.MoveNextRow());
+                        } while (rowSrc.MoveNextRow() && rowDst.MoveNextRow());
+                    }
+
+                    //bmpSrc.SaveAsPng(@"c:\temp\bmpSrc.png");
+                    bmpDst.SaveAsPng(@"c:\temp\bmpDst"+ix+".png"); // or saveAsGif/SaveAsTiff to preserve the indexed format
+                                                             //      bmpDst.Palette.
                 }
-
-                bmpSrc.SaveAsPng(@"c:\temp\bmpSrc.png");
-                bmpDst.SaveAsPng(@"c:\temp\bmpDst.png"); // or saveAsGif/SaveAsTiff to preserve the indexed format
             }
         }
         //private IReadWriteBitmapData Get4BitBitmap()// 16 x 16 x4 bit. Colours are 9 bit
@@ -370,8 +432,12 @@ namespace Next_tile_editor
             ofd.InitialDirectory = curDir;
             var res = ofd.ShowDialog();
             byte[] bin = File.ReadAllBytes(ofd.FileName);
-
+            baSprites = bin;
+            UpdateSprites(baSprites);
         }
+
+        byte[] baSprites = null;
+
 
         byte[] baMap = null;
 
@@ -507,10 +573,23 @@ namespace Next_tile_editor
                     {
                         for (int x = 0; x < 40; x++)
                         {
-                         if ((Tiles[baMap[x + (y * 40)]]) == null)
-                            Tiles[baMap[x + (y * 40)]] = new Bitmap(TileSize,TileSize);
-                        if (this.baMap[x + (y * 40)]<128)
-                                g.DrawImage(Tiles[this.baMap[x+(y*40)]], (x * TileSize), y * TileSize);
+                            int index = x + (y * 40);
+                            if ((Tiles[baMap[index]]) == null)
+                                Tiles[baMap[index]] = new Bitmap(TileSize,TileSize);
+                            if (this.baMap[index] < 128)
+                            {
+                                Color color;
+                                g.DrawImage(Tiles[this.baMap[index]], (x * TileSize), y * TileSize);
+                                if (((x & 1 ) ^ (y & 1))==0) //even?
+                                {
+                                    color = Color.FromArgb(50,255,255,255);
+                                }
+                                else
+                                {
+                                    color = Color.FromArgb(0,0,0,0);
+                                }
+                                g.FillRectangle(new SolidBrush(color),x*TileSize,y*TileSize,TileSize,TileSize);
+                            }
                             
                         }
                         y++;
@@ -698,14 +777,50 @@ namespace Next_tile_editor
             }
         }
 
-        private void btnLoadTileMap_Click_1(object sender, EventArgs e)
+   
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.baMap = new byte[(int)numWidth.Value * (int)numHeight.Value];
+            
+            UpdateTileMap();
+            
+        }
+
+        private void btnSaveAsPNG_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void pnlTileMap_Paint(object sender, PaintEventArgs e)
+        byte[] baSpritePalette = null;
+        private void button4_Click(object sender, EventArgs e)
         {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.InitialDirectory = curDir;
+            if (ofd.ShowDialog(this) == DialogResult.OK)
+            {
+                baSpritePalette = File.ReadAllBytes(ofd.FileName);
+                Palette9bit pal = Palette9bit.FromByteArray(baSpritePalette);
+                //int px = 0; int py = 0;
+                //foreach (paletteValue9bit v in pal.Palettearray)
+                //{
+                //    Graphics.FromImage(bmPalettePicker).FillRectangle(new SolidBrush(v.PalColor), px, py, 32, 32);
+                //    px += 32;
+                //    if (px == 128)
+                //    {
+                //        px = 0; py += 32;
+                //    }
+                //}
+                //NextPalette.Palette = pal;
 
+                //pnlPalettePicker.Location = new Point(132, 0);
+                //pnlTilePalette.Location = new Point(0, 0);
+
+
+                //pnlTileMap.Invalidate();
+                //pnlPalettePicker.Invalidate();
+                //pnlTilePalette.Invalidate();
+
+            }
         }
 
 
