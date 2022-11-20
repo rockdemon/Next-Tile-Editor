@@ -24,11 +24,11 @@ namespace Next_tile_editor
             DefaultTileBitmaps();
             
             this.pnlTileMap.Paint += Panel1_Paint;
+            this.TilemapPaletteInkAndPaperPicker.InkColourChanged += PnlPalettePicker_InkColourChanged;
+            this.TilemapPaletteInkAndPaperPicker.PaperColourChanged += PnlPalettePicker_PaperColourChanged;
             
-            this.pnlPalettePicker.Paint += PnlPalettePicker_Paint;
             pnlTileMap.Invalidate();
-            pnlPalettePicker.Invalidate();
-            pnlPalettePicker.MouseClick += PnlPalettePicker_MouseClick;
+            
             NextPalette.InkColoursChanged += NextPalette_SelectedColoursChanged;
             NextPalette.PaperColoursChanged += NextPalette_PaperColoursChanged;
             pnlTilePalette.Invalidate();
@@ -37,6 +37,24 @@ namespace Next_tile_editor
             pnlTileMap.MouseEnter += PnlTileMap_MouseEnter;
             pnlTileMap.MouseClick += PnlTileMap_MouseClick;
             NextPalette.InkColoursChanged += NextPalette_SelectedColoursChanged1;
+        }
+
+        private void PnlPalettePicker_PaperColourChanged(object sender, ColourChangedEventArgs e)
+        {
+
+            
+            tileEditor1.PaperVal = e.colourIdx;
+            
+            tileEditor1.Invalidate();
+        }
+
+        private void PnlPalettePicker_InkColourChanged(object sender, ColourChangedEventArgs e)
+        {
+
+        
+                tileEditor1.InkVal = e.colourIdx;
+            
+            tileEditor1.Invalidate();
         }
 
         private void NextPalette_SelectedColoursChanged1(object? sender, EventArgs e)
@@ -59,7 +77,7 @@ namespace Next_tile_editor
             this.baTilePalette[InkIndex * 2  + 1] = bs[1];
             tileEditor1.palette = Palette9bit.FromByteArray(baTilePalette);
             UpdatePalettePicker();
-            this.pnlPalettePicker.Invalidate();
+            this.TilemapPaletteInkAndPaperPicker.Invalidate();
             
         }
 
@@ -72,43 +90,21 @@ namespace Next_tile_editor
             this.baTilePalette[PaperIndex * 2 + 1] = bs[1];
             tileEditor1.palette = Palette9bit.FromByteArray(baTilePalette);
             UpdatePalettePicker();
-            this.pnlPalettePicker.Invalidate();
+            this.TilemapPaletteInkAndPaperPicker.Invalidate();
         }
 
-        private void PnlPalettePicker_MouseClick(object? sender, MouseEventArgs e)
-        {
-            Point pos  = new Point(e.X, e.Y);
-            //pos = this.PointToClient(pos);
-            int idx = ((int)(pos.X/32))+((int)pos.Y/32)*4;
-            if (e.Button == MouseButtons.Left)
-            {
-                InkIndex = idx;
-                tileEditor1.InkVal = idx;
-                tileEditor1.Ink = paletteValue9bit.From2bytes(baTilePalette[idx * 2], baTilePalette[idx * 2 + 1]);
-            }
-            else
-            {
-                PaperIndex = idx;
-
-                tileEditor1.PaperVal = idx;
-            }
-            tileEditor1.Invalidate();
-            
-        }
+      
         
         public int InkIndex
         { get; set; }
 
         public int PaperIndex { get; set; }
 
-        private void PnlPalettePicker_Paint(object? sender, PaintEventArgs e)
-        {
-            e.Graphics.DrawImage(bmPalettePicker, 0, 0);
-        }
+       
 
         private void PnlTileMap_MouseClick(object? sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && mousePos.Value != null)
+            if (e.Button == MouseButtons.Left && mousePos!= null && mousePos.Value!= null)
             {
                 if (baMap != null)
                 {
@@ -247,7 +243,7 @@ namespace Next_tile_editor
         {
             if (int.TryParse(((sender)as PictureBox).Name, out int idx ))
             {
-                spriteEditor1.Sprite = lstSprites[idx];
+                spriteEditor1.Sprite = (Sprite) lstSprites[idx].Clone();
                 spriteEditor1.Invalidate();
             }
             else
@@ -603,12 +599,11 @@ namespace Next_tile_editor
                 }
             }
             pnlTileMap.Invalidate();
-            pnlPalettePicker.Invalidate();
+            TilemapPaletteInkAndPaperPicker.Invalidate();
             pnlTilePalette.Invalidate();
 
         }
 
-        Bitmap bmPalettePicker = new Bitmap(128, 1024);
         byte[] baTilePalette = null;
         private void btnLoadPalette_Click(object sender, EventArgs e)
         {
@@ -618,42 +613,24 @@ namespace Next_tile_editor
             {
                 baTilePalette = File.ReadAllBytes(ofd.FileName);
                 Palette9bit pal = Palette9bit.FromByteArray(baTilePalette);
-                int px = 0; int py = 0;
-                foreach (paletteValue9bit v in pal.Palettearray)
-                {
-                    Graphics.FromImage(bmPalettePicker).FillRectangle(new SolidBrush(v.PalColor), px, py, 32, 32);
-                    px += 32;
-                    if (px == 128)
-                    {
-                        px = 0; py += 32;
-                    }
-                }
+                this.TilemapPaletteInkAndPaperPicker.pal= pal;
+              
                 NextPalette.Palette = pal;
 
-                pnlPalettePicker.Location = new Point (132,0);
+                TilemapPaletteInkAndPaperPicker.Location = new Point (132,0);
                 pnlTilePalette.Location = new Point (0,0);
                 
                 
                 pnlTileMap.Invalidate();
-                pnlPalettePicker.Invalidate();
+                TilemapPaletteInkAndPaperPicker.Invalidate();
                 pnlTilePalette.Invalidate();
 
             }
         }
-
         private void UpdatePalettePicker()
         {
             Palette9bit pal = Palette9bit.FromByteArray(baTilePalette);
-            int px = 0; int py = 0;
-            foreach (paletteValue9bit v in pal.Palettearray)
-            {
-                Graphics.FromImage(bmPalettePicker).FillRectangle(new SolidBrush(v.PalColor), px, py, 32,32);
-                px += 32;
-                if (px == 128)
-                {
-                    px = 0; py += 32;
-                }
-            }
+           
             NextPalette.Palette = pal;
         }
 
@@ -689,9 +666,8 @@ namespace Next_tile_editor
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void button2_Click(object sender, EventArgs e)
+        private void btnSaveTileDef(object sender, EventArgs e)
         {
-            
             
             for ( int ix = 0; ix<Form1.TileSize ; ix++)
             {
@@ -792,7 +768,7 @@ namespace Next_tile_editor
         }
 
         byte[] baSpritePalette = null;
-        private void button4_Click(object sender, EventArgs e)
+        private void btnLoadSpritePalette_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.InitialDirectory = curDir;
@@ -800,27 +776,29 @@ namespace Next_tile_editor
             {
                 baSpritePalette = File.ReadAllBytes(ofd.FileName);
                 Palette9bit pal = Palette9bit.FromByteArray(baSpritePalette);
-                //int px = 0; int py = 0;
-                //foreach (paletteValue9bit v in pal.Palettearray)
-                //{
-                //    Graphics.FromImage(bmPalettePicker).FillRectangle(new SolidBrush(v.PalColor), px, py, 32, 32);
-                //    px += 32;
-                //    if (px == 128)
-                //    {
-                //        px = 0; py += 32;
-                //    }
-                //}
-                //NextPalette.Palette = pal;
-
-                //pnlPalettePicker.Location = new Point(132, 0);
-                //pnlTilePalette.Location = new Point(0, 0);
-
-
-                //pnlTileMap.Invalidate();
-                //pnlPalettePicker.Invalidate();
-                //pnlTilePalette.Invalidate();
-
+                this.SpritePaletteInkAndPaperPicker.pal = pal;
+                
             }
+        }
+
+        private void SpritePaletteInkAndPaperPicker_InkColourChanged(object sender, ColourChangedEventArgs e)
+        {
+            this.spriteEditor1.InkIdx = e.colourIdx;
+        }
+
+        private void SpritePaletteInkAndPaperPicker_PaperColourChanged(object sender, ColourChangedEventArgs e)
+        {
+            this.spriteEditor1.PaperIdx = e.colourIdx;
+        }
+
+        private void btnWriteToSprite_Click(object sender, EventArgs e)
+        {
+            int sprNum = (int)numSpriteNum.Value ;
+            PictureBox pb = pnlSprites.Controls[sprNum] as PictureBox;
+            if (pb != null)
+                pb.Image = spriteEditor1.Sprite.bitmapData;
+            spriteImages[sprNum] = spriteEditor1.Sprite.bitmapData;
+            lstSprites[sprNum] = (Sprite)this.spriteEditor1.Sprite.Clone();
         }
 
 

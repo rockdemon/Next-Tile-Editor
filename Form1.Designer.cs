@@ -41,6 +41,9 @@
             this.btnQuantizeImages = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.SpritePaletteInkAndPaperPicker = new Next_tile_editor.PalettePicker();
+            this.btnWriteToSprite = new System.Windows.Forms.Button();
+            this.numSpriteNum = new System.Windows.Forms.NumericUpDown();
             this.spriteEditor1 = new Next_tile_editor.SpriteEditor();
             this.pnlSprites = new System.Windows.Forms.Panel();
             this.TileEditor = new System.Windows.Forms.TabPage();
@@ -50,7 +53,7 @@
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.tileEditor1 = new Next_tile_editor.TileEditor();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.pnlPalettePicker = new Next_tile_editor.PalettePicker();
+            this.TilemapPaletteInkAndPaperPicker = new Next_tile_editor.PalettePicker();
             this.pnlTilePalette = new System.Windows.Forms.Panel();
             this.btnSavePalette = new System.Windows.Forms.Button();
             this.btnSaveTiles = new System.Windows.Forms.Button();
@@ -64,14 +67,17 @@
             this.label3 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.numSpritePaletteOffset = new System.Windows.Forms.NumericUpDown();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numSpriteNum)).BeginInit();
             this.TileEditor.SuspendLayout();
             this.panelParent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSpritePaletteOffset)).BeginInit();
             this.SuspendLayout();
             // 
             // NextPalette
@@ -168,6 +174,10 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.numSpritePaletteOffset);
+            this.tabPage1.Controls.Add(this.SpritePaletteInkAndPaperPicker);
+            this.tabPage1.Controls.Add(this.btnWriteToSprite);
+            this.tabPage1.Controls.Add(this.numSpriteNum);
             this.tabPage1.Controls.Add(this.spriteEditor1);
             this.tabPage1.Controls.Add(this.pnlSprites);
             this.tabPage1.Location = new System.Drawing.Point(4, 29);
@@ -178,10 +188,40 @@
             this.tabPage1.Text = "Sprite Import";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // SpritePaletteInkAndPaperPicker
+            // 
+            this.SpritePaletteInkAndPaperPicker.Location = new System.Drawing.Point(333, 479);
+            this.SpritePaletteInkAndPaperPicker.Name = "SpritePaletteInkAndPaperPicker";
+            this.SpritePaletteInkAndPaperPicker.pal = null;
+            this.SpritePaletteInkAndPaperPicker.Size = new System.Drawing.Size(433, 348);
+            this.SpritePaletteInkAndPaperPicker.TabIndex = 4;
+            this.SpritePaletteInkAndPaperPicker.InkColourChanged += new Next_tile_editor.PalettePicker.InkColourChangedEventHandler(this.SpritePaletteInkAndPaperPicker_InkColourChanged);
+            this.SpritePaletteInkAndPaperPicker.PaperColourChanged += new Next_tile_editor.PalettePicker.PaperColourChangedEventHandler(this.SpritePaletteInkAndPaperPicker_PaperColourChanged);
+            // 
+            // btnWriteToSprite
+            // 
+            this.btnWriteToSprite.Location = new System.Drawing.Point(1531, 562);
+            this.btnWriteToSprite.Name = "btnWriteToSprite";
+            this.btnWriteToSprite.Size = new System.Drawing.Size(168, 88);
+            this.btnWriteToSprite.TabIndex = 3;
+            this.btnWriteToSprite.Text = "^\r\n||\r\nWrite To Sprite\r\n";
+            this.btnWriteToSprite.UseVisualStyleBackColor = true;
+            this.btnWriteToSprite.Click += new System.EventHandler(this.btnWriteToSprite_Click);
+            // 
+            // numSpriteNum
+            // 
+            this.numSpriteNum.Location = new System.Drawing.Point(1531, 656);
+            this.numSpriteNum.Name = "numSpriteNum";
+            this.numSpriteNum.Size = new System.Drawing.Size(150, 27);
+            this.numSpriteNum.TabIndex = 2;
+            // 
             // spriteEditor1
             // 
-            this.spriteEditor1.Location = new System.Drawing.Point(10, 562);
+            this.spriteEditor1.InkIdx = 0;
+            this.spriteEditor1.Location = new System.Drawing.Point(10, 482);
             this.spriteEditor1.Name = "spriteEditor1";
+            this.spriteEditor1.Palette = null;
+            this.spriteEditor1.PaperIdx = 15;
             this.spriteEditor1.Size = new System.Drawing.Size(304, 300);
             this.spriteEditor1.Sprite = null;
             this.spriteEditor1.TabIndex = 1;
@@ -235,7 +275,7 @@
             this.button2.TabIndex = 17;
             this.button2.Text = "SaveTile";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.btnSaveTileDef);
             // 
             // numericUpDown1
             // 
@@ -269,7 +309,7 @@
             this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel3.Controls.Add(this.pnlPalettePicker);
+            this.panel3.Controls.Add(this.TilemapPaletteInkAndPaperPicker);
             this.panel3.Controls.Add(this.pnlTilePalette);
             this.panel3.Location = new System.Drawing.Point(1138, 41);
             this.panel3.MaximumSize = new System.Drawing.Size(272, 696);
@@ -278,16 +318,16 @@
             this.panel3.Size = new System.Drawing.Size(272, 696);
             this.panel3.TabIndex = 10;
             // 
-            // pnlPalettePicker
+            // TilemapPaletteInkAndPaperPicker
             // 
-            this.pnlPalettePicker.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.TilemapPaletteInkAndPaperPicker.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlPalettePicker.BackColor = System.Drawing.Color.RosyBrown;
-            this.pnlPalettePicker.Location = new System.Drawing.Point(143, 0);
-            this.pnlPalettePicker.Name = "pnlPalettePicker";
-            this.pnlPalettePicker.pal = null;
-            this.pnlPalettePicker.Size = new System.Drawing.Size(128, 696);
-            this.pnlPalettePicker.TabIndex = 10;
+            this.TilemapPaletteInkAndPaperPicker.BackColor = System.Drawing.Color.RosyBrown;
+            this.TilemapPaletteInkAndPaperPicker.Location = new System.Drawing.Point(143, 0);
+            this.TilemapPaletteInkAndPaperPicker.Name = "TilemapPaletteInkAndPaperPicker";
+            this.TilemapPaletteInkAndPaperPicker.pal = null;
+            this.TilemapPaletteInkAndPaperPicker.Size = new System.Drawing.Size(128, 696);
+            this.TilemapPaletteInkAndPaperPicker.TabIndex = 10;
             // 
             // pnlTilePalette
             // 
@@ -439,7 +479,14 @@
             this.button4.TabIndex = 31;
             this.button4.Text = "Load Palette";
             this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.button4.Click += new System.EventHandler(this.btnLoadSpritePalette_Click);
+            // 
+            // numSpritePaletteOffset
+            // 
+            this.numSpritePaletteOffset.Location = new System.Drawing.Point(332, 835);
+            this.numSpritePaletteOffset.Name = "numSpritePaletteOffset";
+            this.numSpritePaletteOffset.Size = new System.Drawing.Size(150, 27);
+            this.numSpritePaletteOffset.TabIndex = 5;
             // 
             // Form1
             // 
@@ -469,12 +516,14 @@
             this.Text = "Form1";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numSpriteNum)).EndInit();
             this.TileEditor.ResumeLayout(false);
             this.panelParent.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSpritePaletteOffset)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -495,7 +544,7 @@
         private Panel pnlTileMap;
         private Panel panel2;
         private Panel panel3;
-        public PalettePicker pnlPalettePicker;
+        public PalettePicker TilemapPaletteInkAndPaperPicker;
         public Panel pnlTilePalette;
         private TileEditor tileEditor1;
         private NumericUpDown numericUpDown1;
@@ -514,5 +563,10 @@
         private Button button4;
         private Panel pnlSprites;
         private SpriteEditor spriteEditor1;
+        private Button button5;
+        private NumericUpDown numSpriteNum;
+        private PalettePicker SpritePaletteInkAndPaperPicker;
+        private Button btnWriteToSprite;
+        private NumericUpDown numSpritePaletteOffset;
     }
 }
