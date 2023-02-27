@@ -14,7 +14,7 @@ namespace Next_tile_editor
         int noFrames = 0;
         string curDir = Application.ExecutablePath;
         public static int TileSize = 24;
-        public static int PixelSize = 3;
+        public static int PixelSize = 4;
 
         public Form1()
         {
@@ -230,8 +230,9 @@ namespace Next_tile_editor
                     pictureBoxes[i].SizeMode = PictureBoxSizeMode.StretchImage;
 
                 }
+                UpdatePictureBoxes();
             }
-            UpdatePictureBoxes();
+            
         }
 
         /// <summary>
@@ -269,25 +270,9 @@ namespace Next_tile_editor
                     tempx = 0;
                 }
                 this.label1.Text = String.Format("width {0} height {1}", pictureBoxes[i].Image.Width, pictureBoxes[i].Image.Height);
-
             }
         }
         
-        //public Image Get9Bit(Image im)
-        //{
-        //    if (im == null)
-        //        return null;
-
-        //    using (Graphics tempWorking = Graphics.FromImage(im))
-        //    {
-
-        //        Bitmap bitmap = new Bitmap(im.Width,im.Height,16,1, PixelFormat.,);
-        //        im.Con = 256;
-
-        //    }
-
-        //}
-
         private Bitmap LockUnlockBitsLowLevelUpdate(Bitmap bmp)
         {
 
@@ -442,7 +427,6 @@ namespace Next_tile_editor
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.InitialDirectory = curDir;
             ofd.Filter = "map files (*.map)|*.map";
-   //         ofd.DefaultExt = "*.map";
             if (ofd.ShowDialog(this) == DialogResult.OK)
             { 
                 baMap = File.ReadAllBytes(ofd.FileName);
@@ -609,6 +593,8 @@ namespace Next_tile_editor
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.InitialDirectory = curDir;
+
+            ofd.Filter = "map files (*.pal)|*.pal";
             if (ofd.ShowDialog(this) == DialogResult.OK)
             {
                 baTilePalette = File.ReadAllBytes(ofd.FileName);
@@ -642,7 +628,7 @@ namespace Next_tile_editor
 
             this.tileEditor1.Paper = NextPalette.Paper9bit;
             tileEditor1.PaperVal = NextPalette.PaperIndex;
-
+            
         }
 
         private void btnSaveTileMap_Click(object sender, EventArgs e)
@@ -656,13 +642,14 @@ namespace Next_tile_editor
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {   int val= (int)(sender as NumericUpDown).Value;
-                tileEditor1.PaletteOffset = val;
+        {   
+            int val= (int)(sender as NumericUpDown).Value;
+            tileEditor1.PaletteOffset = val;
             
         }
 
         /// <summary>
-        /// Save tile
+        /// Save tile back into 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -673,6 +660,7 @@ namespace Next_tile_editor
             {
                 baTiles[ix + (iSourceIndex * 32)] = tileEditor1.Tile[ix];
             }
+
             foreach (Control c in pnlTilePalette.Controls)
             {
                 if ((PictureBox)c != null)
@@ -756,6 +744,63 @@ namespace Next_tile_editor
    
         private void button3_Click(object sender, EventArgs e)
         {
+            List<byte> listByes = new List<byte>();
+            for (int ix = 0; ix <=255 ;ix++)
+                listByes.Add((byte)ix);
+
+            baTilePalette = listByes.ToArray();
+            Palette9bit pal = Palette9bit.FromByteArray(baTilePalette);
+            this.TilemapPaletteInkAndPaperPicker.pal = pal;
+            int offset = 0, iPaletteX=0, iPaletteY=0;
+            NextPalette.Palette = pal;
+
+            for (int iTile = 0; iTile <= 255; iTile++)
+            {
+                Tiles[iTile] = new Bitmap(32, 32);
+                baTiles = new byte[8192];
+                using (Graphics g = Graphics.FromImage(Tiles[iTile]))
+                {
+                    int ix = 0;
+                    int iy = 0;
+                    for (int j = 0; j < 32; j++)
+                    {
+                        byte firstNibble = (byte)((baTiles[offset] & 0b11110000) >> 4);
+                        byte secondNibble = (byte)(baTiles[offset] & 0b00001111);
+                        Rectangle R1 = new Rectangle(ix * PixelSize, iy * PixelSize, PixelSize, PixelSize);
+                        g.FillRectangle(new System.Drawing.SolidBrush(
+                            pal.Palettearray[firstNibble].PalColor), R1);
+                        g.FillRectangle(new System.Drawing.SolidBrush(
+                                pal.Palettearray[secondNibble].PalColor),
+                            (ix + 1) * PixelSize, iy * PixelSize, PixelSize, PixelSize);
+                        ix += 2;
+                        offset++;
+                        if (ix > 7)
+                        {
+                            ix = 0;
+                            iy++;
+                        }
+
+                    }
+
+                    PictureBox tilePB = new PictureBox
+                    {
+                        Location = new Point(iPaletteX, iPaletteY), Image = Tiles[iTile], Visible = true,
+                        Size = new Size(32, 32), Name = "Tile_" + iTile
+                    };
+
+                    tilePB.Click += TilePB_Click;
+                    pnlTilePalette.Controls.Add(tilePB);
+                    iPaletteX += 32;
+                    if (iPaletteX == 128)
+                    {
+                        iPaletteY += 32;
+                        iPaletteX = 0;
+                    }
+
+                    iTile++;
+                }
+            }
+
             this.baMap = new byte[(int)numWidth.Value * (int)numHeight.Value];
             
             UpdateTileMap();
@@ -772,11 +817,13 @@ namespace Next_tile_editor
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.InitialDirectory = curDir;
+            ofd.Filter = "map files (*.pal)|*.pal";
             if (ofd.ShowDialog(this) == DialogResult.OK)
             {
                 baSpritePalette = File.ReadAllBytes(ofd.FileName);
                 Palette9bit pal = Palette9bit.FromByteArray(baSpritePalette);
                 this.SpritePaletteInkAndPaperPicker.pal = pal;
+                this.SpritePaletteInkAndPaperPicker.Invalidate();
                 
             }
         }
@@ -801,28 +848,17 @@ namespace Next_tile_editor
             lstSprites[sprNum] = (Sprite)this.spriteEditor1.Sprite.Clone();
         }
 
-
-        //private IReadWriteBitmapData Get8BitBitmap()// 16 x 16 x4 bit. Colours are 9 bit
-        //{
-        //    // Gray8 format has no built-in support
-        //    var bitmap = new WriteableBitmap(16, 16, Form1.TileSize, Form1.TileSize, PixelFormats., null);
-
-        //    // But we can specify how to use it
-        //    var customPixelFormat = new PixelFormatInfo { BitsPerPixel = 4, Grayscale = false };
-        //    Func<ICustomBitmapDataRow, int, ColorForm1.TileSize> getPixel =
-        //        (row, x) => ColorForm1.TileSize.FromRgb(row.UnsafeGetRefAs<byte>(x));// byte will be 2 pixels?
-        //    Action<ICustomBitmapDataRow, int, ColorForm1.TileSize> setPixel =
-        //        (row, x, c) => row.UnsafeGetRefAs<byte>(x) = c.Blend(row.BitmapData.BackColor).GetBrightness();
-
-        //    // Now we specify also a dispose callback to be executed when the returned instance is disposed:
-        //    return BitmapDataFactory.CreateBitmapData(
-        //        bitmap.BackBuffer, new Size(bitmap.PixelWidth, bitmap.PixelHeight), bitmap.BackBufferStride,
-        //        customPixelFormat, getPixel, setPixel,
-        //        disposeCallback: () =>
-        //        {
-        //            bitmap.AddDirtyRect(new System.Windows.IntForm1.TileSizeRect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
-        //            bitmap.Unlock();
-        //        });
-        //}
+        private void numSpritePaletteOffset_ValueChanged(object sender, EventArgs e)
+        {
+            int offset = (int)((sender as NumericUpDown).Value);
+            foreach (Sprite sprite in lstSprites)
+            {
+                sprite.paletteOffsetFor4bit = offset;
+                
+            }
+            UpdatePictureBoxes();
+            this.spriteEditor1.Sprite.paletteOffsetFor4bit = offset;
+            this.spriteEditor1.Invalidate();
+        }
     }
 }

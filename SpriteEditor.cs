@@ -35,19 +35,15 @@ namespace Next_tile_editor
         
         private void SpriteEditor_Click(object? sender, MouseEventArgs e)
         {
-
-            paletteValue9bit paletteValue9BitPaint = null;
+            if (this.Sprite == null)
+                return;
             int val = 1;
             if (e.Button == MouseButtons.Left)
             {
-                //get ink colour
-                // paletteValue9BitPaint = this.Ink;
-                val = InkIdx;
+                val = this.InkIdx;
             }
             else if (e.Button == MouseButtons.Right)
             {
-                // get paper colour
-                //paletteValue9BitPaint = this.Paper;
                 val = this.PaperIdx;
             }
             // get tile byte array that corresponds,
@@ -64,13 +60,10 @@ namespace Next_tile_editor
             if ((tx & 0b1) != 0) // are we odd?
             {
                 this.Sprite.sprBytes[byteNo] = (byte)((this.Sprite.sprBytes[byteNo] & 0b11110000) + val);
-              //  Tile[byteNo] = (byte)((Tile[byteNo] & 0b11110000) + val);
             }
             else
             {   // we mus be even
                 this.Sprite.sprBytes[byteNo] = (byte)((this.Sprite.sprBytes[byteNo] & 0b1111) +( val<<4));
-                //Tile[byteNo] = (byte)((Tile[byteNo] & 0b1111) + (val << 4));
-
             }
             
             Invalidate();
@@ -92,8 +85,14 @@ namespace Next_tile_editor
 
                 for (int ix = 0; ix < 16; ix++)
                 {
-                    e.Graphics.FillRectangle(new SolidBrush(Sprite.Palette.Palettearray[Sprite.sprNibbles[idx]].PalColor), _x, _y, tempwidth, tempheight);
-                        idx++;
+                    e.Graphics.FillRectangle(
+                        new SolidBrush(Sprite.Palette.Palettearray[Sprite.sprNibbles[idx]+(Sprite.paletteOffsetFor4bit*16)].PalColor),
+                        _x,
+                        _y,
+                        tempwidth,
+                        tempheight
+                        );
+                    idx++;
                     _x += tempwidth;
                 }
                 _y += tempheight;_x = 0;

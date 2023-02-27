@@ -16,6 +16,7 @@ namespace Next_tile_editor
             this.sprData = spriteData;
         }
 
+        
         public Palette9bit Palette { get; set; }
         public int paletteOffsetFor4bit { get; set; }
 

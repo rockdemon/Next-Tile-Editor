@@ -30,23 +30,37 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Next_tile_editor.paletteValue9bit paletteValue9bit1 = new Next_tile_editor.paletteValue9bit();
-            Next_tile_editor.paletteValue9bit paletteValue9bit2 = new Next_tile_editor.paletteValue9bit();
+            Next_tile_editor.paletteValue9bit paletteValue9bit3 = new Next_tile_editor.paletteValue9bit();
+            Next_tile_editor.paletteValue9bit paletteValue9bit4 = new Next_tile_editor.paletteValue9bit();
             this.NextPalette = new Next_tile_editor.NextPaletteColourPicker();
-            this.btnImportFromPNG = new System.Windows.Forms.Button();
-            this.btnImportFromNext = new System.Windows.Forms.Button();
-            this.btnSaveAsPNG = new System.Windows.Forms.Button();
-            this.btnSaveAsNextFormat = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnQuantizeImages = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.button4 = new System.Windows.Forms.Button();
+            this.btnQuantizeImages = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnSaveAsNextFormat = new System.Windows.Forms.Button();
+            this.btnSaveAsPNG = new System.Windows.Forms.Button();
+            this.btnImportFromNext = new System.Windows.Forms.Button();
+            this.btnImportFromPNG = new System.Windows.Forms.Button();
+            this.numSpritePaletteOffset = new System.Windows.Forms.NumericUpDown();
             this.SpritePaletteInkAndPaperPicker = new Next_tile_editor.PalettePicker();
             this.btnWriteToSprite = new System.Windows.Forms.Button();
             this.numSpriteNum = new System.Windows.Forms.NumericUpDown();
             this.spriteEditor1 = new Next_tile_editor.SpriteEditor();
             this.pnlSprites = new System.Windows.Forms.Panel();
             this.TileEditor = new System.Windows.Forms.TabPage();
+            this.button3 = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.numHeight = new System.Windows.Forms.NumericUpDown();
+            this.numWidth = new System.Windows.Forms.NumericUpDown();
+            this.btnSavePalette = new System.Windows.Forms.Button();
+            this.btnSaveTiles = new System.Windows.Forms.Button();
+            this.btnSaveTileMap = new System.Windows.Forms.Button();
+            this.btnLoadPalette = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.btnLoadTileMap = new System.Windows.Forms.Button();
             this.panelParent = new System.Windows.Forms.Panel();
             this.pnlTileMap = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
@@ -55,109 +69,38 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.TilemapPaletteInkAndPaperPicker = new Next_tile_editor.PalettePicker();
             this.pnlTilePalette = new System.Windows.Forms.Panel();
-            this.btnSavePalette = new System.Windows.Forms.Button();
-            this.btnSaveTiles = new System.Windows.Forms.Button();
-            this.btnSaveTileMap = new System.Windows.Forms.Button();
-            this.btnLoadPalette = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.btnLoadTileMap = new System.Windows.Forms.Button();
-            this.numWidth = new System.Windows.Forms.NumericUpDown();
-            this.numHeight = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.numSpritePaletteOffset = new System.Windows.Forms.NumericUpDown();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numSpritePaletteOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpriteNum)).BeginInit();
             this.TileEditor.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numWidth)).BeginInit();
             this.panelParent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numWidth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numSpritePaletteOffset)).BeginInit();
             this.SuspendLayout();
             // 
             // NextPalette
             // 
             this.NextPalette.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            paletteValue9bit1.Blue = ((byte)(0));
-            paletteValue9bit1.Green = ((byte)(0));
-            paletteValue9bit1.Red = ((byte)(0));
-            this.NextPalette.Ink9bit = paletteValue9bit1;
+            paletteValue9bit3.Blue = ((byte)(0));
+            paletteValue9bit3.Green = ((byte)(0));
+            paletteValue9bit3.Red = ((byte)(0));
+            this.NextPalette.Ink9bit = paletteValue9bit3;
             this.NextPalette.InkIndex = 0;
             this.NextPalette.Location = new System.Drawing.Point(1428, 41);
             this.NextPalette.Name = "NextPalette";
             this.NextPalette.Palette = null;
-            paletteValue9bit2.Blue = ((byte)(7));
-            paletteValue9bit2.Green = ((byte)(7));
-            paletteValue9bit2.Red = ((byte)(7));
-            this.NextPalette.Paper9bit = paletteValue9bit2;
+            paletteValue9bit4.Blue = ((byte)(7));
+            paletteValue9bit4.Green = ((byte)(7));
+            paletteValue9bit4.Red = ((byte)(7));
+            this.NextPalette.Paper9bit = paletteValue9bit4;
             this.NextPalette.PaperIndex = 0;
             this.NextPalette.ScaleVal = 0;
             this.NextPalette.Size = new System.Drawing.Size(128, 696);
             this.NextPalette.TabIndex = 12;
-            // 
-            // btnImportFromPNG
-            // 
-            this.btnImportFromPNG.Location = new System.Drawing.Point(3, 3);
-            this.btnImportFromPNG.Name = "btnImportFromPNG";
-            this.btnImportFromPNG.Size = new System.Drawing.Size(121, 29);
-            this.btnImportFromPNG.TabIndex = 0;
-            this.btnImportFromPNG.Text = "PNG Import";
-            this.btnImportFromPNG.UseVisualStyleBackColor = true;
-            this.btnImportFromPNG.Click += new System.EventHandler(this.btnImportFromPNG_Click);
-            // 
-            // btnImportFromNext
-            // 
-            this.btnImportFromNext.Location = new System.Drawing.Point(130, 3);
-            this.btnImportFromNext.Name = "btnImportFromNext";
-            this.btnImportFromNext.Size = new System.Drawing.Size(115, 29);
-            this.btnImportFromNext.TabIndex = 1;
-            this.btnImportFromNext.Text = "Next Import";
-            this.btnImportFromNext.UseVisualStyleBackColor = true;
-            this.btnImportFromNext.Click += new System.EventHandler(this.btnImportFromNext_Click);
-            // 
-            // btnSaveAsPNG
-            // 
-            this.btnSaveAsPNG.Location = new System.Drawing.Point(408, 3);
-            this.btnSaveAsPNG.Name = "btnSaveAsPNG";
-            this.btnSaveAsPNG.Size = new System.Drawing.Size(94, 29);
-            this.btnSaveAsPNG.TabIndex = 2;
-            this.btnSaveAsPNG.Text = "PNG Save";
-            this.btnSaveAsPNG.UseVisualStyleBackColor = true;
-            this.btnSaveAsPNG.Click += new System.EventHandler(this.btnSaveAsPNG_Click);
-            // 
-            // btnSaveAsNextFormat
-            // 
-            this.btnSaveAsNextFormat.Location = new System.Drawing.Point(508, 3);
-            this.btnSaveAsNextFormat.Name = "btnSaveAsNextFormat";
-            this.btnSaveAsNextFormat.Size = new System.Drawing.Size(94, 29);
-            this.btnSaveAsNextFormat.TabIndex = 3;
-            this.btnSaveAsNextFormat.Text = "Next Save";
-            this.btnSaveAsNextFormat.UseVisualStyleBackColor = true;
-            this.btnSaveAsNextFormat.Click += new System.EventHandler(this.btnSaveAsNextFormat_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(251, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(50, 20);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "label1";
-            // 
-            // btnQuantizeImages
-            // 
-            this.btnQuantizeImages.Location = new System.Drawing.Point(308, 6);
-            this.btnQuantizeImages.Name = "btnQuantizeImages";
-            this.btnQuantizeImages.Size = new System.Drawing.Size(94, 29);
-            this.btnQuantizeImages.TabIndex = 6;
-            this.btnQuantizeImages.Text = "Quantize";
-            this.btnQuantizeImages.UseVisualStyleBackColor = true;
-            this.btnQuantizeImages.Click += new System.EventHandler(this.btnQuantizeImages_Click);
             // 
             // tabControl1
             // 
@@ -166,7 +109,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.TileEditor);
-            this.tabControl1.Location = new System.Drawing.Point(3, 74);
+            this.tabControl1.Location = new System.Drawing.Point(2, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1809, 994);
@@ -174,6 +117,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.panel1);
             this.tabPage1.Controls.Add(this.numSpritePaletteOffset);
             this.tabPage1.Controls.Add(this.SpritePaletteInkAndPaperPicker);
             this.tabPage1.Controls.Add(this.btnWriteToSprite);
@@ -187,6 +131,97 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Sprite Import";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.button4);
+            this.panel1.Controls.Add(this.btnQuantizeImages);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.btnSaveAsNextFormat);
+            this.panel1.Controls.Add(this.btnSaveAsPNG);
+            this.panel1.Controls.Add(this.btnImportFromNext);
+            this.panel1.Controls.Add(this.btnImportFromPNG);
+            this.panel1.Location = new System.Drawing.Point(488, 835);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(965, 37);
+            this.panel1.TabIndex = 6;
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(735, 4);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(99, 29);
+            this.button4.TabIndex = 38;
+            this.button4.Text = "Load Palette";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.btnLoadSpritePalette_Click);
+            // 
+            // btnQuantizeImages
+            // 
+            this.btnQuantizeImages.Location = new System.Drawing.Point(435, 5);
+            this.btnQuantizeImages.Name = "btnQuantizeImages";
+            this.btnQuantizeImages.Size = new System.Drawing.Size(94, 29);
+            this.btnQuantizeImages.TabIndex = 37;
+            this.btnQuantizeImages.Text = "Quantize";
+            this.btnQuantizeImages.UseVisualStyleBackColor = true;
+            this.btnQuantizeImages.Click += new System.EventHandler(this.btnQuantizeImages_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(378, 8);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(50, 20);
+            this.label1.TabIndex = 36;
+            this.label1.Text = "label1";
+            // 
+            // btnSaveAsNextFormat
+            // 
+            this.btnSaveAsNextFormat.Location = new System.Drawing.Point(635, 2);
+            this.btnSaveAsNextFormat.Name = "btnSaveAsNextFormat";
+            this.btnSaveAsNextFormat.Size = new System.Drawing.Size(94, 29);
+            this.btnSaveAsNextFormat.TabIndex = 35;
+            this.btnSaveAsNextFormat.Text = "Next Save";
+            this.btnSaveAsNextFormat.UseVisualStyleBackColor = true;
+            this.btnSaveAsNextFormat.Click += new System.EventHandler(this.btnSaveAsNextFormat_Click);
+            // 
+            // btnSaveAsPNG
+            // 
+            this.btnSaveAsPNG.Location = new System.Drawing.Point(535, 2);
+            this.btnSaveAsPNG.Name = "btnSaveAsPNG";
+            this.btnSaveAsPNG.Size = new System.Drawing.Size(94, 29);
+            this.btnSaveAsPNG.TabIndex = 34;
+            this.btnSaveAsPNG.Text = "PNG Save";
+            this.btnSaveAsPNG.UseVisualStyleBackColor = true;
+            this.btnSaveAsPNG.Click += new System.EventHandler(this.btnSaveAsPNG_Click);
+            // 
+            // btnImportFromNext
+            // 
+            this.btnImportFromNext.Location = new System.Drawing.Point(257, 2);
+            this.btnImportFromNext.Name = "btnImportFromNext";
+            this.btnImportFromNext.Size = new System.Drawing.Size(115, 29);
+            this.btnImportFromNext.TabIndex = 33;
+            this.btnImportFromNext.Text = "Next Import";
+            this.btnImportFromNext.UseVisualStyleBackColor = true;
+            this.btnImportFromNext.Click += new System.EventHandler(this.btnImportFromNext_Click);
+            // 
+            // btnImportFromPNG
+            // 
+            this.btnImportFromPNG.Location = new System.Drawing.Point(130, 2);
+            this.btnImportFromPNG.Name = "btnImportFromPNG";
+            this.btnImportFromPNG.Size = new System.Drawing.Size(121, 29);
+            this.btnImportFromPNG.TabIndex = 32;
+            this.btnImportFromPNG.Text = "PNG Import";
+            this.btnImportFromPNG.UseVisualStyleBackColor = true;
+            this.btnImportFromPNG.Click += new System.EventHandler(this.btnImportFromPNG_Click);
+            // 
+            // numSpritePaletteOffset
+            // 
+            this.numSpritePaletteOffset.Location = new System.Drawing.Point(332, 835);
+            this.numSpritePaletteOffset.Name = "numSpritePaletteOffset";
+            this.numSpritePaletteOffset.Size = new System.Drawing.Size(150, 27);
+            this.numSpritePaletteOffset.TabIndex = 5;
+            this.numSpritePaletteOffset.ValueChanged += new System.EventHandler(this.numSpritePaletteOffset_ValueChanged);
             // 
             // SpritePaletteInkAndPaperPicker
             // 
@@ -235,6 +270,17 @@
             // 
             // TileEditor
             // 
+            this.TileEditor.Controls.Add(this.button3);
+            this.TileEditor.Controls.Add(this.label3);
+            this.TileEditor.Controls.Add(this.label2);
+            this.TileEditor.Controls.Add(this.numHeight);
+            this.TileEditor.Controls.Add(this.numWidth);
+            this.TileEditor.Controls.Add(this.btnSavePalette);
+            this.TileEditor.Controls.Add(this.btnSaveTiles);
+            this.TileEditor.Controls.Add(this.btnSaveTileMap);
+            this.TileEditor.Controls.Add(this.btnLoadPalette);
+            this.TileEditor.Controls.Add(this.button1);
+            this.TileEditor.Controls.Add(this.btnLoadTileMap);
             this.TileEditor.Controls.Add(this.panelParent);
             this.TileEditor.Controls.Add(this.button2);
             this.TileEditor.Controls.Add(this.numericUpDown1);
@@ -248,6 +294,138 @@
             this.TileEditor.TabIndex = 1;
             this.TileEditor.Text = "Tile Editor";
             this.TileEditor.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(658, 0);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(58, 29);
+            this.button3.TabIndex = 41;
+            this.button3.Text = "New";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(540, 4);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(54, 20);
+            this.label3.TabIndex = 40;
+            this.label3.Text = "Height";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(424, 3);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(46, 20);
+            this.label2.TabIndex = 39;
+            this.label2.Text = "width";
+            // 
+            // numHeight
+            // 
+            this.numHeight.Location = new System.Drawing.Point(592, 0);
+            this.numHeight.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numHeight.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numHeight.Name = "numHeight";
+            this.numHeight.Size = new System.Drawing.Size(63, 27);
+            this.numHeight.TabIndex = 38;
+            this.numHeight.Value = new decimal(new int[] {
+            32,
+            0,
+            0,
+            0});
+            // 
+            // numWidth
+            // 
+            this.numWidth.Location = new System.Drawing.Point(476, 0);
+            this.numWidth.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numWidth.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numWidth.Name = "numWidth";
+            this.numWidth.Size = new System.Drawing.Size(63, 27);
+            this.numWidth.TabIndex = 37;
+            this.numWidth.Value = new decimal(new int[] {
+            40,
+            0,
+            0,
+            0});
+            // 
+            // btnSavePalette
+            // 
+            this.btnSavePalette.Location = new System.Drawing.Point(1210, 0);
+            this.btnSavePalette.Name = "btnSavePalette";
+            this.btnSavePalette.Size = new System.Drawing.Size(97, 29);
+            this.btnSavePalette.TabIndex = 36;
+            this.btnSavePalette.Text = "Save Palette";
+            this.btnSavePalette.UseVisualStyleBackColor = true;
+            this.btnSavePalette.Click += new System.EventHandler(this.btnSavePalette_Click);
+            // 
+            // btnSaveTiles
+            // 
+            this.btnSaveTiles.Location = new System.Drawing.Point(1124, 0);
+            this.btnSaveTiles.Name = "btnSaveTiles";
+            this.btnSaveTiles.Size = new System.Drawing.Size(84, 29);
+            this.btnSaveTiles.TabIndex = 35;
+            this.btnSaveTiles.Text = "Save Tiles";
+            this.btnSaveTiles.UseVisualStyleBackColor = true;
+            this.btnSaveTiles.Click += new System.EventHandler(this.btnSaveTiles_Click);
+            // 
+            // btnSaveTileMap
+            // 
+            this.btnSaveTileMap.Location = new System.Drawing.Point(1018, 0);
+            this.btnSaveTileMap.Name = "btnSaveTileMap";
+            this.btnSaveTileMap.Size = new System.Drawing.Size(102, 29);
+            this.btnSaveTileMap.TabIndex = 34;
+            this.btnSaveTileMap.Text = "SaveTileMap";
+            this.btnSaveTileMap.UseVisualStyleBackColor = true;
+            this.btnSaveTileMap.Click += new System.EventHandler(this.btnSaveTileMap_Click);
+            // 
+            // btnLoadPalette
+            // 
+            this.btnLoadPalette.Location = new System.Drawing.Point(913, 0);
+            this.btnLoadPalette.Name = "btnLoadPalette";
+            this.btnLoadPalette.Size = new System.Drawing.Size(99, 29);
+            this.btnLoadPalette.TabIndex = 33;
+            this.btnLoadPalette.Text = "Load Palette";
+            this.btnLoadPalette.UseVisualStyleBackColor = true;
+            this.btnLoadPalette.Click += new System.EventHandler(this.btnLoadPalette_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(828, 0);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(80, 29);
+            this.button1.TabIndex = 31;
+            this.button1.Text = "LoadTiles";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.btnLoadTiles_Click);
+            // 
+            // btnLoadTileMap
+            // 
+            this.btnLoadTileMap.Location = new System.Drawing.Point(722, 0);
+            this.btnLoadTileMap.Name = "btnLoadTileMap";
+            this.btnLoadTileMap.Size = new System.Drawing.Size(104, 29);
+            this.btnLoadTileMap.TabIndex = 32;
+            this.btnLoadTileMap.Text = "LoadTileMap";
+            this.btnLoadTileMap.UseVisualStyleBackColor = true;
+            this.btnLoadTileMap.Click += new System.EventHandler(this.btnLoadTileMap_Click);
             // 
             // panelParent
             // 
@@ -339,204 +517,32 @@
             this.pnlTilePalette.Size = new System.Drawing.Size(128, 696);
             this.pnlTilePalette.TabIndex = 9;
             // 
-            // btnSavePalette
-            // 
-            this.btnSavePalette.Location = new System.Drawing.Point(1418, 12);
-            this.btnSavePalette.Name = "btnSavePalette";
-            this.btnSavePalette.Size = new System.Drawing.Size(97, 29);
-            this.btnSavePalette.TabIndex = 25;
-            this.btnSavePalette.Text = "Save Palette";
-            this.btnSavePalette.UseVisualStyleBackColor = true;
-            this.btnSavePalette.Click += new System.EventHandler(this.btnSavePalette_Click);
-            // 
-            // btnSaveTiles
-            // 
-            this.btnSaveTiles.Location = new System.Drawing.Point(1332, 12);
-            this.btnSaveTiles.Name = "btnSaveTiles";
-            this.btnSaveTiles.Size = new System.Drawing.Size(84, 29);
-            this.btnSaveTiles.TabIndex = 24;
-            this.btnSaveTiles.Text = "Save Tiles";
-            this.btnSaveTiles.UseVisualStyleBackColor = true;
-            this.btnSaveTiles.Click += new System.EventHandler(this.btnSaveTiles_Click);
-            // 
-            // btnSaveTileMap
-            // 
-            this.btnSaveTileMap.Location = new System.Drawing.Point(1226, 12);
-            this.btnSaveTileMap.Name = "btnSaveTileMap";
-            this.btnSaveTileMap.Size = new System.Drawing.Size(102, 29);
-            this.btnSaveTileMap.TabIndex = 23;
-            this.btnSaveTileMap.Text = "SaveTileMap";
-            this.btnSaveTileMap.UseVisualStyleBackColor = true;
-            this.btnSaveTileMap.Click += new System.EventHandler(this.btnSaveTileMap_Click);
-            // 
-            // btnLoadPalette
-            // 
-            this.btnLoadPalette.Location = new System.Drawing.Point(1121, 12);
-            this.btnLoadPalette.Name = "btnLoadPalette";
-            this.btnLoadPalette.Size = new System.Drawing.Size(99, 29);
-            this.btnLoadPalette.TabIndex = 22;
-            this.btnLoadPalette.Text = "Load Palette";
-            this.btnLoadPalette.UseVisualStyleBackColor = true;
-            this.btnLoadPalette.Click += new System.EventHandler(this.btnLoadPalette_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(1036, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(80, 29);
-            this.button1.TabIndex = 20;
-            this.button1.Text = "LoadTiles";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.btnLoadTiles_Click);
-            // 
-            // btnLoadTileMap
-            // 
-            this.btnLoadTileMap.Location = new System.Drawing.Point(930, 12);
-            this.btnLoadTileMap.Name = "btnLoadTileMap";
-            this.btnLoadTileMap.Size = new System.Drawing.Size(104, 29);
-            this.btnLoadTileMap.TabIndex = 21;
-            this.btnLoadTileMap.Text = "LoadTileMap";
-            this.btnLoadTileMap.UseVisualStyleBackColor = true;
-            this.btnLoadTileMap.Click += new System.EventHandler(this.btnLoadTileMap_Click);
-            // 
-            // numWidth
-            // 
-            this.numWidth.Location = new System.Drawing.Point(684, 12);
-            this.numWidth.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numWidth.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numWidth.Name = "numWidth";
-            this.numWidth.Size = new System.Drawing.Size(63, 27);
-            this.numWidth.TabIndex = 26;
-            this.numWidth.Value = new decimal(new int[] {
-            40,
-            0,
-            0,
-            0});
-            // 
-            // numHeight
-            // 
-            this.numHeight.Location = new System.Drawing.Point(800, 12);
-            this.numHeight.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numHeight.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numHeight.Name = "numHeight";
-            this.numHeight.Size = new System.Drawing.Size(63, 27);
-            this.numHeight.TabIndex = 27;
-            this.numHeight.Value = new decimal(new int[] {
-            32,
-            0,
-            0,
-            0});
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(632, 15);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(46, 20);
-            this.label2.TabIndex = 28;
-            this.label2.Text = "width";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(748, 16);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 20);
-            this.label3.TabIndex = 29;
-            this.label3.Text = "Height";
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(866, 12);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(58, 29);
-            this.button3.TabIndex = 30;
-            this.button3.Text = "New";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(7, 38);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(99, 29);
-            this.button4.TabIndex = 31;
-            this.button4.Text = "Load Palette";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.btnLoadSpritePalette_Click);
-            // 
-            // numSpritePaletteOffset
-            // 
-            this.numSpritePaletteOffset.Location = new System.Drawing.Point(332, 835);
-            this.numSpritePaletteOffset.Name = "numSpritePaletteOffset";
-            this.numSpritePaletteOffset.Size = new System.Drawing.Size(150, 27);
-            this.numSpritePaletteOffset.TabIndex = 5;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1864, 1033);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.numHeight);
-            this.Controls.Add(this.numWidth);
-            this.Controls.Add(this.btnSavePalette);
-            this.Controls.Add(this.btnSaveTiles);
-            this.Controls.Add(this.btnSaveTileMap);
-            this.Controls.Add(this.btnLoadPalette);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.btnLoadTileMap);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.btnQuantizeImages);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.btnSaveAsNextFormat);
-            this.Controls.Add(this.btnSaveAsPNG);
-            this.Controls.Add(this.btnImportFromNext);
-            this.Controls.Add(this.btnImportFromPNG);
             this.Name = "Form1";
             this.Text = "Form1";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numSpritePaletteOffset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpriteNum)).EndInit();
             this.TileEditor.ResumeLayout(false);
+            this.TileEditor.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numWidth)).EndInit();
             this.panelParent.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.panel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numWidth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numSpritePaletteOffset)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private Button btnImportFromPNG;
-        private Button btnImportFromNext;
-        private Button btnSaveAsPNG;
-        private Button btnSaveAsNextFormat;
-        private Label label1;
-        private Button btnQuantizeImages;
         private TabControl tabControl1;
         private TabPage tabPage1;
         private TabPage TileEditor;
@@ -549,18 +555,6 @@
         private TileEditor tileEditor1;
         private NumericUpDown numericUpDown1;
         private Button button2;
-        private Button btnSavePalette;
-        private Button btnSaveTiles;
-        private Button btnSaveTileMap;
-        private Button btnLoadPalette;
-        private Button button1;
-        private Button btnLoadTileMap;
-        private NumericUpDown numWidth;
-        private NumericUpDown numHeight;
-        private Label label2;
-        private Label label3;
-        private Button button3;
-        private Button button4;
         private Panel pnlSprites;
         private SpriteEditor spriteEditor1;
         private Button button5;
@@ -568,5 +562,24 @@
         private PalettePicker SpritePaletteInkAndPaperPicker;
         private Button btnWriteToSprite;
         private NumericUpDown numSpritePaletteOffset;
+        private Panel panel1;
+        private Button button4;
+        private Button btnQuantizeImages;
+        private Label label1;
+        private Button btnSaveAsNextFormat;
+        private Button btnSaveAsPNG;
+        private Button btnImportFromNext;
+        private Button btnImportFromPNG;
+        private Button button3;
+        private Label label3;
+        private Label label2;
+        private NumericUpDown numHeight;
+        private NumericUpDown numWidth;
+        private Button btnSavePalette;
+        private Button btnSaveTiles;
+        private Button btnSaveTileMap;
+        private Button btnLoadPalette;
+        private Button button1;
+        private Button btnLoadTileMap;
     }
 }
