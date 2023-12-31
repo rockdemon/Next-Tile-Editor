@@ -23,7 +23,32 @@ namespace Next_tile_editor
                 return ret;
             }
 
+            public Palette9bit()
+            {
+                List<paletteValue9bit> lstPaletteEntries = new List<paletteValue9bit>();
+
+
+                for (int i = 0; i < 255; i ++)
+                {
+                    lstPaletteEntries.Add(paletteValue9bit.FromColor(Color.FromArgb(i & 0b11100000, i & 0b00011100, i& 0b00000011)));
+                }
+                this.Palettearray = lstPaletteEntries.ToArray();
+
         }
+        public byte[] SaveByteArray
+        {
+            get
+            {
+                List<byte> ret = new List<byte>();
+                foreach (paletteValue9bit pv in  this.Palettearray)
+                {
+                    ret.AddRange(pv.toSaveBytes());
+                }
+                return ret.ToArray();
+            }
+        }
+
+    }
 
         public class paletteValue9bit
         {

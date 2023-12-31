@@ -11,9 +11,64 @@ namespace Next_tile_editor
         public SpriteEditor() :base()
         {
             this.Paint += SpriteEditor_Paint;
+            this.MouseDown += SpriteEditor_MouseDown;
+            this.MouseUp += SpriteEditor_MouseUp;
+            this.MouseMove += SpriteEditor_MouseMove;
+            this.MouseLeave += SpriteEditor_MouseLeave;
             this.MouseClick += SpriteEditor_Click;
             PaperIdx = 15;
             InkIdx = 0;
+        }
+        bool mousedown = false;
+        private void SpriteEditor_MouseLeave(object? sender, EventArgs e)
+        {
+            mousedown = false;
+        }
+
+        private void SpriteEditor_MouseMove(object? sender, MouseEventArgs e)
+        {
+            if (this.Sprite == null || ! mousedown)
+                return;
+            int val = 1;
+            if (e.Button == MouseButtons.Left)
+            {
+                val = this.InkIdx;
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                val = this.PaperIdx;
+            }
+            // get tile byte array that corresponds,
+            int tx = (int)(e.X / (this.Width / 16));
+            int ty = (int)(e.Y / (this.Height / 16));
+            if (tx > 15)
+                tx = 15;
+            if (ty > 15)
+                ty = 15;
+
+
+
+            int byteNo = tx / 2 + ty * 8;
+            if ((tx & 0b1) != 0) // are we odd?
+            {
+                this.Sprite.sprBytes[byteNo] = (byte)((this.Sprite.sprBytes[byteNo] & 0b11110000) + val);
+            }
+            else
+            {   // we mus be even
+                this.Sprite.sprBytes[byteNo] = (byte)((this.Sprite.sprBytes[byteNo] & 0b1111) + (val << 4));
+            }
+
+            Invalidate();
+        }
+
+        private void SpriteEditor_MouseUp(object? sender, MouseEventArgs e)
+        {
+            mousedown = false;
+        }
+
+        private void SpriteEditor_MouseDown(object? sender, MouseEventArgs e)
+        {
+            mousedown=true;
         }
 
         public Palette9bit Palette
@@ -35,39 +90,7 @@ namespace Next_tile_editor
         
         private void SpriteEditor_Click(object? sender, MouseEventArgs e)
         {
-            if (this.Sprite == null)
-                return;
-            int val = 1;
-            if (e.Button == MouseButtons.Left)
-            {
-                val = this.InkIdx;
-            }
-            else if (e.Button == MouseButtons.Right)
-            {
-                val = this.PaperIdx;
-            }
-            // get tile byte array that corresponds,
-            int tx = (int)(e.X / (this.Width/16));
-            int ty = (int)(e.Y / (this.Height/16));
-            if (tx > 15)
-                tx = 15;
-            if (ty > 15)
-                ty = 15;
-
-
-
-            int byteNo = tx / 2 + ty * 8;
-            if ((tx & 0b1) != 0) // are we odd?
-            {
-                this.Sprite.sprBytes[byteNo] = (byte)((this.Sprite.sprBytes[byteNo] & 0b11110000) + val);
-            }
-            else
-            {   // we mus be even
-                this.Sprite.sprBytes[byteNo] = (byte)((this.Sprite.sprBytes[byteNo] & 0b1111) +( val<<4));
-            }
             
-            Invalidate();
-
         }
 
         private void SpriteEditor_Paint(object? sender, PaintEventArgs e)

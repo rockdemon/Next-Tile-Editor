@@ -61,7 +61,7 @@ namespace Next_tile_editor
                     {
                         for (int ix = 0; ix < 16; ix++)
                         {
-                            g.FillRectangle(new SolidBrush(Palette.Palettearray[sprNibbles[idx]].PalColor), ix, iy, 1, 1);
+                            g.FillRectangle(new SolidBrush(Palette.Palettearray[sprNibbles[idx]+this.paletteOffsetFor4bit*16].PalColor), ix, iy, 1, 1);
                             idx++;
                         }
                     }
@@ -80,18 +80,5 @@ namespace Next_tile_editor
         }
     }
     
-    public class nibble
-    {
-        private int _Value;
-
-        public static implicit operator nibble(int value)
-        {
-            return new nibble { _Value = ((value >15) ? 15: (value<0?0:value    ))};
-        }
-
-        public static implicit operator int(nibble value)
-        {
-            return value._Value;
-        }
-    }
+    
 }
