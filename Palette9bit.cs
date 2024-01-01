@@ -47,6 +47,25 @@ namespace Next_tile_editor
                 return ret.ToArray();
             }
         }
+        public byte[] FromSaveByteArray
+        {
+            set
+            {
+                this.Palettearray = new paletteValue9bit[256];
+                int idx = 0;
+                for (int i = 0; i < value.Length; i ++)
+                {
+                    byte byte1 = value[i];
+                    if (i + 1 == value.Length)
+                        throw new Exception("invalid 9 bit palette");
+                    byte byte2 = value[i + 1];
+                    i++;
+                    Palettearray[i] = paletteValue9bit.From2bytes(byte1, byte2);
+                    idx++;
+                }
+
+            }
+        }
 
     }
 
