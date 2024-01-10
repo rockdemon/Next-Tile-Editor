@@ -557,21 +557,21 @@ namespace Next_tile_editor
         {
 
 
-            int tileX = e.Location.X / 66;
+            int tileX = e.Location.X / 64;
 
-            int tileY = e.Location.Y / 66;
+            int tileY = e.Location.Y / 64;
 
 
             //this.textBox1.Text = "" + tileX + " " + tileY + " " + (tileY * 8 + tileX);
 
             int oldy = iSelectedIndex / 8;
             int oldx = iSelectedIndex % 8;
-            pnl_32_32_TilePalette.Invalidate(new Rectangle(oldx * 66 + 1, oldy * 66 + 1, 64, 64));
+            pnl_32_32_TilePalette.Invalidate(new Rectangle(oldx * 64 + 1, oldy * 64 + 1, 64, 64));
             iSelectedIndex = tileY * 8 + tileX;
 
             int newy = iSelectedIndex / 8;
             int newx = iSelectedIndex % 8;
-            pnl_32_32_TilePalette.Invalidate(new Rectangle(newx * 66 + 1, newy * 66 + 1, 64, 64));
+            pnl_32_32_TilePalette.Invalidate(new Rectangle(newx * 64 + 1, newy * 64 + 1, 64, 64));
         }
 
         List<byte[]> gauntletMap = new List<byte[]>();
@@ -580,9 +580,9 @@ namespace Next_tile_editor
 
             if (gauntletMap.Count == 0)
             {
-                for (int j = 0; j < 66; j++)
+                for (int j = 0; j < 64; j++)
                 {
-                    gauntletMap.Add(new byte[66]);
+                    gauntletMap.Add(new byte[64]);
 
                 }
             }
@@ -592,9 +592,9 @@ namespace Next_tile_editor
             int iBigTile = 0;
             try
             {
-                for (int iy = 0; iy < 66; iy++)
+                for (int iy = 0; iy < 64; iy++)
                 {
-                    for (int ix = 0; ix < 66; ix++)
+                    for (int ix = 0; ix < 64; ix++)
                     {
                         if (e.Graphics.ClipBounds.IntersectsWith(new RectangleF(ix * 32, iy * 32, 32, 32)))
                         {
@@ -686,17 +686,17 @@ namespace Next_tile_editor
             {
                 byte[] baBytes = File.ReadAllBytes(openFileDialog.FileName);
                 this.gauntletMap.Clear();
-                for (int iy = 0; iy < 66; iy++)
+                for (int iy = 0; iy < 64; iy++)
                 {
-                    byte[] baRow = new byte[66];
-                    for (int ix = 0; ix < 66; ix++)
+                    byte[] baRow = new byte[64];
+                    for (int ix = 0; ix < 64; ix++)
                     {
-                        baRow[ix] = baBytes[iy * 66 + ix];
+                        baRow[ix] = baBytes[iy * 64 + ix];
                     }
                     gauntletMap.Add(baRow);
                 }
 
-                //    this.gauntletMap = (List<byte[]>) baBytes.Chunk(66);
+                //    this.gauntletMap = (List<byte[]>) baBytes.Chunk(64);
             }
         }
 
@@ -712,23 +712,50 @@ namespace Next_tile_editor
                     list.RemoveAt(list.Count - 1);
                     FileName = string.Join(".", list);
                 }
-                tileMap = new List<byte>(File.ReadAllBytes(FileName + ".tileMap" ));
-               palette = Palette9bit.FromByteArray(
-                    File.ReadAllBytes(FileName + ".tilePal"));
+                tileMap = new List<byte>(File.ReadAllBytes(FileName + ".tileMap"));
+                palette = Palette9bit.FromByteArray(
+                     File.ReadAllBytes(FileName + ".tilePal"));
                 byte[] outTileBytes = File.ReadAllBytes(FileName + ".tileDefs");
                 // now reverse park those bytes into tiles
 
                 tiles = new List<Tile>();
-                for (int i = 0; i < outTileBytes.Length/32;i++)
+                for (int i = 0; i < outTileBytes.Length / 32; i++)
                 {
                     byte[] baTemp = new byte[32];
-                    for ( int j = 0;j <32; j++) 
+                    for (int j = 0; j < 32; j++)
                     {
                         baTemp[j] = (byte)(outTileBytes[i * 32 + j]);
                     }
                     tiles.Add(new Tile(palette, 0, null, baTemp));
                 }
-                
+
+            }
+        }
+
+        private void btnTileLeft_Click(object sender, EventArgs e)
+        {
+            if (iSelectedIndex > 0)
+            {
+                List<Image> itemp = images[iSelectedIndex]; // from
+
+            //    int idx2 = Math.DivRem(iSelectedIndex-1,8, out int rem2);
+                images[iSelectedIndex] = images[iSelectedIndex-1];
+                images[iSelectedIndex-1] = itemp;
+                btnQuantizeColours_Click(null, null);
+
+
+                pnl_32_32_tiles.Invalidate();
+            }
+        }
+
+        private void btnRightTile_Click(object sender, EventArgs e)
+        {
+            if (iSelectedIndex < tiles.Count-1 )
+            {
+                Tile temp = tiles[iSelectedIndex+1];
+                tiles[iSelectedIndex+1] = tiles[iSelectedIndex];
+                tiles[iSelectedIndex] = temp;
+                this.pnl_32_32_TilePalette.Invalidate();
             }
         }
     }

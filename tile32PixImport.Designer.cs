@@ -46,6 +46,8 @@
             panel3 = new Panel();
             pnl_32x32_gauntletMap = new DBPanel();
             panel1 = new Panel();
+            btnRightTile = new Button();
+            btnTileLeft = new Button();
             button2 = new Button();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pct_OriginalTileBitmap).BeginInit();
@@ -210,7 +212,7 @@
             pnl_32x32_gauntletMap.CausesValidation = false;
             pnl_32x32_gauntletMap.Location = new Point(3, 14);
             pnl_32x32_gauntletMap.Name = "pnl_32x32_gauntletMap";
-            pnl_32x32_gauntletMap.Size = new Size(2112, 2112);
+            pnl_32x32_gauntletMap.Size = new Size(2048, 2048);
             pnl_32x32_gauntletMap.TabIndex = 7;
             pnl_32x32_gauntletMap.Paint += pnl_32x32_gauntletMap_Paint;
             pnl_32x32_gauntletMap.MouseDown += panel7_MouseDown;
@@ -219,6 +221,8 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(btnRightTile);
+            panel1.Controls.Add(btnTileLeft);
             panel1.Controls.Add(button2);
             panel1.Controls.Add(panel3);
             panel1.Controls.Add(pnl_32_32_TilePalette);
@@ -232,6 +236,26 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1693, 712);
             panel1.TabIndex = 1;
+            // 
+            // btnRightTile
+            // 
+            btnRightTile.Location = new Point(1490, 472);
+            btnRightTile.Name = "btnRightTile";
+            btnRightTile.Size = new Size(94, 91);
+            btnRightTile.TabIndex = 11;
+            btnRightTile.Text = ">>";
+            btnRightTile.UseVisualStyleBackColor = true;
+            btnRightTile.Click += btnRightTile_Click;
+            // 
+            // btnTileLeft
+            // 
+            btnTileLeft.Location = new Point(1370, 472);
+            btnTileLeft.Name = "btnTileLeft";
+            btnTileLeft.Size = new Size(97, 91);
+            btnTileLeft.TabIndex = 10;
+            btnTileLeft.Text = "<<";
+            btnTileLeft.UseVisualStyleBackColor = true;
+            btnTileLeft.Click += btnTileLeft_Click;
             // 
             // button2
             // 
@@ -284,5 +308,7 @@
         private Button button2;
         private Button btnLoad_32_32_px_tilemap;
         private Button button3;
+        private Button btnRightTile;
+        private Button btnTileLeft;
     }
 }
