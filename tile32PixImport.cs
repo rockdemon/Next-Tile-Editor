@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,9 +20,52 @@ namespace Next_tile_editor
 {
     public partial class tile32PixImport : UserControl
     {
+        public class TileSettings
+        {
+            /// <summary>
+            /// Number of 8x8 px tiles in each supertile
+            /// </summary>
+            public int NumberOfTilesPerSuperTile { get; set; } = 16;
+            /// <summary>
+            /// How many super tiles in the import horizontally
+            /// </summary>
+            public int ImportTilesInX { get; set; } = 8;
+            /// <summary>
+            /// How many super tiles in the import vertically
+            /// </summary>
+            public int ImportTilesInY { get; set; } = 8;
+
+            /// <summary>
+            /// How many 8px squares are there horizontally in one super tile
+            /// </summary>
+            public int superTileTileWidth { get; set; } = 4;
+            /// <summary>
+            /// How many 8px squares are there vertically in one super tile
+            /// </summary>
+            public int superTileTileHeight { get; set; } = 4;
+            /// <summary>
+            /// How manage 8 px squares in the import horizontally
+            /// </summary>
+            public int tileWidth {get;set; }
+            /// How manage 8 px squares in the import vertically
+            public int tileHeight { get;set; }
+
+            /// <summary>
+            /// /  how many groups of 1,2 or 4 tiles left to right
+            /// </summary>
+            public int tileGroupWidth { get; set; }
+            /// <summary>
+            /// //  how many groups of 1,2 or 4 tiles top to bottom
+            /// </summary>
+            public int tileGroupHeight { get; set; } //  how many groups of 1,2 or 4 tiles top to bottom
+
+        }
+
+        public TileSettings ImportSettings { get; set; }
         Image imgOrigin = null;
         public tile32PixImport()
         {
+            this.ImportSettings = new TileSettings();
             InitializeComponent();
         }
 
@@ -35,77 +79,73 @@ namespace Next_tile_editor
                 this.pct_OriginalTileBitmap.Image = imgOrigin;
             }
         }
-        List<List<int>> TileIndexes = new List<List<int>>();
-        List<List<Image>> images = new List<List<Image>>();
-        private void button1_Click(object sender, EventArgs e)
+        List<List<Image>> InitialTileImages = new List<List<Image>>();
+        private void btn_CutIntoTiles_Click(object sender, EventArgs e)
         {
-            images.Clear();
-            TileIndexes.Clear();
-
+            InitialTileImages.Clear();
+     
             int width = imgOrigin.Width;
             int height = imgOrigin.Height;
             int BigTileIdx = 0;
-            int tileWidth = width / 8;
-            int tileHeight = height / 8;
+            ImportSettings.tileWidth = width / 8;
+            ImportSettings.tileHeight = height / 8;
 
-            int tileGroupWidth = tileWidth / 4;
-            int tileGroupHeight = tileHeight / 4;
-
-            for (int iy = 0; iy < tileGroupWidth && iy < 5; iy++)
+            ImportSettings.tileGroupWidth = ImportSettings.tileWidth / this.ImportSettings.superTileTileWidth;
+            ImportSettings.tileGroupHeight = ImportSettings.tileHeight / this.ImportSettings.superTileTileHeight;
+            
+            for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
             {
-                for (int ix = 0; ix < tileGroupHeight; ix++)
+                for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
                 {
-
                     int idx = 0;
                     List<Image> imageList = new List<Image>();
-                    TileIndexes.Add(new List<int>());
-                    for (int y = 0; y < 4; y++)
+       
+                    for (int y = 0; y < this.ImportSettings.superTileTileHeight; y++)
                     {
-                        for (int x = 0; x < 4; x++)
+                        for (int x = 0; x < this.ImportSettings.superTileTileWidth ; x++)
                         {
-                            //Image  = imgOrigin.
                             Bitmap imTemp = new Bitmap(8, 8);
+                            
+                            Rectangle rect = new Rectangle((ix * (this.ImportSettings.superTileTileWidth * 8) + (x * 8)), 
+                                                           (iy * (this.ImportSettings.superTileTileHeight * 8) + (y * 8)), 
+                                                            8, 
+                                                            8);
+                            using (Graphics g = Graphics.FromImage(imTemp))
                             {
-                                using (Graphics g = Graphics.FromImage(imTemp))
-                                {
-                                    g.DrawImage(imgOrigin, new Rectangle(0, 0, 8, 8),
-                                        new Rectangle((ix * 32 + x * 8), (iy * 32 + y * 8), 8, 8),
-                                        GraphicsUnit.Pixel);
-                                }
+                                g.DrawImage(imgOrigin, new Rectangle(0, 0, 8, 8),
+                                    rect,
+                                    GraphicsUnit.Pixel);
                             }
                             imageList.Add(imTemp);
-
-                            TileIndexes[BigTileIdx].Add(idx);
+                                                        
                             idx++;
                         }
                     }
-                    images.Add(imageList);
+                    InitialTileImages.Add(imageList);
                     BigTileIdx++;
                 }
             }
-
             pnl_32_32_tiles.Invalidate();
-
         }
 
         private void pnl_32_32_tiles_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.Clear(Color.Black);
             int iTile = 0;
-            for (int iy = 0; iy < 4 && iy < images.Count; iy++)
+            for (int iy = 0; iy < ImportSettings.tileGroupHeight ; iy++)
             {
-                for (int ix = 0; ix < 8 && ix < images[iy].Count; ix++)
+                for (int ix = 0; ix < ImportSettings.tileGroupWidth /*&& ix < images[iy].Count*/; ix++)
                 {
-                    for (int y = 0; y < 4; y++)
+                    for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
                     {
-                        for (int x = 0; x < 4; x++)
+                        for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                         {
                             try
                             {
                                 e.Graphics.DrawImageUnscaled(
-                                    images[iTile][y * 4 + x],
-                                    ix * 32 + 2 * ix + x * 8,
-                                    iy * 32 + 2 * iy + y * 8);
+                                    InitialTileImages[iTile][y * ImportSettings.superTileTileWidth + x],
+                                    ix * (8 * ImportSettings.superTileTileWidth) + scaleFactor * ix + x * 8,
+                                    iy * (8 * ImportSettings.superTileTileHeight) + scaleFactor * iy + y * 8);
                             }
                             catch { }
                         }
@@ -116,29 +156,29 @@ namespace Next_tile_editor
             }
         }
 
-        List<List<paletteValue9bit[]>> Lists9BitColours = new List<List<paletteValue9bit[]>>();
+        List<List<paletteValue9bit[]>> NextQuantisedTiles = new List<List<paletteValue9bit[]>>();
 
         private void btnQuantizeColours_Click(object sender, EventArgs e)
         {
-            Lists9BitColours.Clear();
-            foreach (List<Image> images in images)
+            NextQuantisedTiles.Clear();
+            foreach (List<Image> images in this.InitialTileImages)
             {
                 List<paletteValue9bit[]> List9BitColours = new List<paletteValue9bit[]>();
                 foreach (Image image in images)
                 {
                     paletteValue9bit[] baImg = new paletteValue9bit[image.Width * image.Height];
-                    for (int y = 0; y < 8; y++)
+                    for (int y = 0; y < image.Height; y++)
                     {
-                        for (int x = 0; x < 8; x++)
+                        for (int x = 0; x < image.Width; x++)
                         {
                             Color c = (image as Bitmap).GetPixel(x, y);
-                            baImg[y * 8 + x] = paletteValue9bit.FromColor(c);
+                            baImg[y * image.Width + x] = paletteValue9bit.FromColor(c);
                         }
                     }
                     List9BitColours.Add(baImg);
 
                 }
-                Lists9BitColours.Add(List9BitColours);
+                NextQuantisedTiles.Add(List9BitColours);
             }
             pnl_QuantizedColour.Invalidate();
         }
@@ -149,18 +189,18 @@ namespace Next_tile_editor
             int iTiles = 0;
             try
             {
-                for (int iy = 0; iy < 4; iy++)
+                for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
                 {
-                    for (int ix = 0; ix < 8; ix++)
+                    for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
                     {
 
-                        for (int y = 0; y < 4; y++)
+                        for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
                         {
 
 
-                            for (int x = 0; x < 4; x++)
+                            for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                             {
-                                var paletteValue9Bits = Lists9BitColours[iTiles][y * 4 + x];
+                                var paletteValue9Bits = NextQuantisedTiles[iTiles][y * ImportSettings.superTileTileHeight + x];
 
 
                                 Bitmap bmTemp = new Bitmap(8, 8);
@@ -175,8 +215,8 @@ namespace Next_tile_editor
                                 }
                                 e.Graphics.DrawImageUnscaled(
                                        bmwrite.ToBitmap(),
-                                       ix * 32 + 2 * ix + x * 8,
-                                       iy * 32 + 2 * iy + y * 8);
+                                       ix * (ImportSettings.superTileTileWidth*8) + 2 * ix + x * 8,
+                                       iy * (ImportSettings.superTileTileHeight*8)  + 2 * iy + y * 8);
                             }
 
 
@@ -202,15 +242,15 @@ namespace Next_tile_editor
             palette = new Palette9bit();
             int iPaletteIdx = 0;
             int iTiles = 0;
-            for (int iy = 0; iy < 4; iy++)
+            for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
             {
-                for (int ix = 0; ix < 8; ix++)
+                for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
                 {
-                    for (int y = 0; y < 4; y++)
+                    for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
                     {
-                        for (int x = 0; x < 4; x++)
+                        for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                         {
-                            paletteValue9bit[] paletteValue9Bits = Lists9BitColours[iTiles][y * 4 + x];
+                            paletteValue9bit[] paletteValue9Bits = NextQuantisedTiles[iTiles][y * ImportSettings.superTileTileWidth + x];
                             foreach (paletteValue9bit pv in paletteValue9Bits)
                             {
                                 bool contained = false;
@@ -247,16 +287,16 @@ namespace Next_tile_editor
 
             iTiles = 0;
             TileList.Clear();
-            for (int iy = 0; iy < 4; iy++)
+            for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
             {
-                for (int ix = 0; ix < 8; ix++)
+                for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
                 {
                     TileList.Add(new List<Tile>());
-                    for (int y = 0; y < 4; y++)
+                    for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
                     {
-                        for (int x = 0; x < 4; x++)
+                        for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                         {
-                            var paletteValue9Bits = Lists9BitColours[iTiles][y * 4 + x];
+                            var paletteValue9Bits = NextQuantisedTiles[iTiles][y * ImportSettings.superTileTileWidth + x];
 
 
                             TileList[iTiles].Add(Tile.FromPalette9ValArray(paletteValue9Bits, palette));
@@ -267,6 +307,7 @@ namespace Next_tile_editor
                     iTiles++;
                 }
             }
+     //       this.label3.Text = "" + NextQuantisedTiles.Count;
             pnl_CommonTiles.Invalidate();
         }
 
@@ -278,16 +319,16 @@ namespace Next_tile_editor
                 int iTiles = 0;
                 try
                 {
-                    for (int iy = 0; iy < 4; iy++)
+                    for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
                     {
-                        for (int ix = 0; ix < 8; ix++)
+                        for (int ix = 0; ix < ImportSettings.tileGroupWidth ; ix++)
                         {
 
-                            for (int y = 0; y < 4; y++)
+                            for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
                             {
 
 
-                                for (int x = 0; x < 4; x++)
+                                for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                                 {
 
                                     Bitmap bmTemp = new Bitmap(8, 8);
@@ -296,17 +337,25 @@ namespace Next_tile_editor
                                     {
                                         for (int ik = 0; ik < 8; ik++)
                                         {
-                                            nibble n = TileList[iy * 8 + ix][y * 4 + x].tileNibbles[ij * 8 + ik];
+                                            nibble n = null;
+                                            try
+                                            {
+                                                n     = TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x].tileNibbles[ij * 8 + ik];
 
 
-                                            bmwrite.SetPixel(ik, ij, palette.Palettearray[n].PalColor);
 
+                                                bmwrite.SetPixel(ik, ij, palette.Palettearray[n].PalColor);
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                int ififif = 888;
+                                            }
                                         }
                                     }
                                     e.Graphics.DrawImageUnscaled(
                                            bmwrite.ToBitmap(),
-                                           ix * 32 + 2 * ix + x * 8,
-                                           iy * 32 + 2 * iy + y * 8);
+                                           ix * (8 * ImportSettings.superTileTileWidth) + 2 * ix + x * 8,
+                                           iy * (8* ImportSettings.superTileTileHeight) + 2 * iy + y * 8);
                                 }
 
 
@@ -333,21 +382,21 @@ namespace Next_tile_editor
             int iTiles = 0;
             tileMap.Clear();
             tiles.Clear();
-            for (int iy = 0; iy < 4; iy++)
+            for (int iy = 0; iy <  ImportSettings.tileGroupHeight; iy++)
             {
-                for (int ix = 0; ix < 8; ix++)
+                for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
                 {
                     TileList.Add(new List<Tile>());
-                    for (int y = 0; y < 4; y++)
+                    for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
                     {
-                        for (int x = 0; x < 4; x++)
+                        for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                         {
 
                             bool found = false;
                             for (int z = 0; z < tiles.Count; z++)
                             {
                                 Tile tile = tiles[z];
-                                if (!found && TileList[iy * 8 + ix][y * 4 + x].Equals(tile))
+                                if (!found && TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x].Equals(tile))
                                 {
                                     found = true;
                                     tileMap.Add((byte)z);
@@ -355,13 +404,10 @@ namespace Next_tile_editor
                             }
                             if (!found)
                             {
-                                tiles.Add(TileList[iy * 8 + ix][y * 4 + x]);
+                                tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
                                 tileMap.Add((byte)(tiles.Count - 1));
                             }
-                            //            var paletteValue9Bits = Lists9BitColours[iTiles][y * 4 + x];
 
-
-                            ///          TileList[iTiles].Add(Tile.FromPalette9ValArray(paletteValue9Bits, palette));
                         }
 
                     }
@@ -369,6 +415,7 @@ namespace Next_tile_editor
                     iTiles++;
                 }
             }
+            this.label3.Text = "8x8 Tiles : " + tiles.Count;
             pnl_fromActualTilemap.Invalidate();
             pnl_32x32_gauntletMap.Invalidate();
             pnl_32_32_TilePalette.Invalidate();
@@ -381,15 +428,16 @@ namespace Next_tile_editor
             int iBigTile = 0;
             try
             {
-                for (int iy = 0; iy < 4; iy++)
+                for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
                 {
-                    for (int ix = 0; ix < 8; ix++)
+                    for (int ix = 0;ix < ImportSettings.tileGroupWidth ; ix++)
                     {
-                        for (int y = 0; y < 4; y++)
+                        for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
                         {
-                            for (int x = 0; x < 4; x++)
+                            for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                             {
-                                byte bTile = tileMap[(iBigTile * 16) + (y * 4) + x];
+                                byte bTile = tileMap[(iBigTile * (ImportSettings.superTileTileHeight*ImportSettings.superTileTileWidth) 
+                                        + (y*ImportSettings.superTileTileWidth ) + x)];
                                 Tile t = tiles[bTile];
                                 Bitmap bmTemp = new Bitmap(8, 8);
                                 IReadWriteBitmapData bmwrite = bmTemp.GetReadWriteBitmapData();
@@ -397,33 +445,26 @@ namespace Next_tile_editor
                                 {
                                     for (int ik = 0; ik < 8; ik++)
                                     {
-
-
                                         nibble n = t.tileNibbles[ij * 8 + ik];
-
-
                                         bmwrite.SetPixel(ik, ij, palette.Palettearray[n].PalColor);
-
                                     }
                                 }
                                 e.Graphics.DrawImageUnscaled(
                                        bmwrite.ToBitmap(),
-                                       ix * 32 + 2 * ix + x * 8,
-                                       iy * 32 + 2 * iy + y * 8);
+                                       ix * (ImportSettings.superTileTileWidth*8) + 2 * ix + x * 8,
+                                       iy * (ImportSettings.superTileTileHeight*8) + 2 * iy + y * 8);
 
 
                             }
                         }
 
                         iBigTile++;
-
-
                     }
                 }
             }
             catch (Exception ex)
             {
-
+                int ffff = 9;
             }
             this.btnExportTile_32_Tile_8.Enabled = true;
         }
@@ -454,19 +495,19 @@ namespace Next_tile_editor
             int iBigTile = 0;
             try
             {
-                for (int iy = 0; iy < 4; iy++)
+                for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
                 {
-                    for (int ix = 0; ix < 8; ix++)
+                    for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
                     {
-                        if (e.Graphics.ClipBounds.IntersectsWith(new Rectangle(ix * 64, iy * 64, 64, 64)))
+                        if (e.Graphics.ClipBounds.IntersectsWith(new Rectangle(ix * (ImportSettings.superTileTileWidth * 16), iy *(ImportSettings.superTileTileHeight *16), (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16))))
                         {
 
 
-                            for (int y = 0; y < 4; y++)
+                            for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
                             {
-                                for (int x = 0; x < 4; x++)
+                                for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                                 {
-                                    byte bTile = tileMap[(iBigTile * 16) + (y * 4) + x];
+                                    byte bTile = tileMap[(iBigTile * (ImportSettings.superTileTileWidth*ImportSettings.superTileTileHeight)) + (y * ImportSettings.superTileTileWidth) + x];
                                     Tile t = tiles[bTile];
                                     Bitmap bmTemp = new Bitmap(16, 16);
                                     IReadWriteBitmapData bmwrite = bmTemp.GetReadWriteBitmapData();
@@ -488,14 +529,14 @@ namespace Next_tile_editor
                                     }
                                     e.Graphics.DrawImageUnscaled(
                                            bmwrite.ToBitmap(),
-                                           ix * 64 + 4 * ix + x * 16 + 1,
-                                           iy * 64 + 4 * iy + y * 16 + 1);
+                                           ix * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * ix + x * 16 + 1,
+                                           iy * (ImportSettings.superTileTileHeight * 16) + ImportSettings.superTileTileHeight * iy + y * 16 + 1);
                                     if (iBigTile == iSelectedIndex)
                                     {
                                         e.Graphics.DrawRectangle(Pens.Black,
-                                                                ix * 64 + 4 * ix + x * 16,
-                                                                iy * 64 + 4 * iy + y * 16 + 1,
-                                                                18, 18);
+                                                                ix * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * ix + x * 16+(ix),
+                                                                iy * (ImportSettings.superTileTileHeight * 16) + ImportSettings.superTileTileHeight * iy + y * 16+(iy),
+                                                                16, 16);
                                     }
 
                                 }
@@ -515,12 +556,12 @@ namespace Next_tile_editor
 
         private Bitmap get_32_32_TileBitMap(int iBigTile)
         {
-            Bitmap retBm = new Bitmap(32, 32);
-            for (int y = 0; y < 4; y++)
+            Bitmap retBm = new Bitmap(BigtilewidthInPx,BigtileheightInPx);
+            for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
             {
-                for (int x = 0; x < 4; x++)
+                for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                 {
-                    byte bTile = tileMap[(iBigTile * 16) + (y * 4) + x];
+                    byte bTile = tileMap[(iBigTile * (ImportSettings.NumberOfTilesPerSuperTile)) + (ImportSettings.superTileTileWidth * y) + x];
                     Tile t = tiles[bTile];
                     Bitmap bmTemp = new Bitmap(8, 8);
                     IReadWriteBitmapData bmwrite = bmTemp.GetReadWriteBitmapData();
@@ -528,13 +569,8 @@ namespace Next_tile_editor
                     {
                         for (int ik = 0; ik < 8; ik++)
                         {
-
-
                             nibble n = t.tileNibbles[ij * 8 + ik];
-
-
                             bmwrite.SetPixel(ik, ij, palette.Palettearray[n].PalColor);
-
                         }
                     }
 
@@ -542,8 +578,6 @@ namespace Next_tile_editor
                            bmwrite.ToBitmap(),
                            x * 8,
                            y * 8);
-
-
                 }
             }
             return retBm;
@@ -551,67 +585,64 @@ namespace Next_tile_editor
 
         int iSelectedIndex = 0;
 
-
-
         private void pnl_32_32_TilePalette_MouseDown(object sender, MouseEventArgs e)
         {
 
 
-            int tileX = e.Location.X / 64;
+            int tileX = e.Location.X / (ImportSettings.superTileTileWidth * 16);
 
-            int tileY = e.Location.Y / 64;
+            int tileY = e.Location.Y / (ImportSettings.superTileTileHeight * 16);
 
 
             //this.textBox1.Text = "" + tileX + " " + tileY + " " + (tileY * 8 + tileX);
 
             int oldy = iSelectedIndex / 8;
             int oldx = iSelectedIndex % 8;
-            pnl_32_32_TilePalette.Invalidate(new Rectangle(oldx * 64 + 1, oldy * 64 + 1, 64, 64));
-            iSelectedIndex = tileY * 8 + tileX;
+            pnl_32_32_TilePalette.Invalidate(new Rectangle(oldx * (ImportSettings.superTileTileWidth*16) + 2*oldx, oldy * (ImportSettings.superTileTileHeight * 16) + 2 * oldy, (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
+            iSelectedIndex = tileY * ImportSettings.tileGroupWidth + tileX;
 
             int newy = iSelectedIndex / 8;
             int newx = iSelectedIndex % 8;
-            pnl_32_32_TilePalette.Invalidate(new Rectangle(newx * 64 + 1, newy * 64 + 1, 64, 64));
+            pnl_32_32_TilePalette.Invalidate(new Rectangle(newx * (ImportSettings.superTileTileWidth * 16) + 2*newx, newy * (ImportSettings.superTileTileHeight * 16) + 2*newy, (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
         }
 
         List<byte[]> gauntletMap = new List<byte[]>();
-        private void pnl_32x32_gauntletMap_Paint(object sender, PaintEventArgs e)
+        private void pnl_gauntletMap_Paint(object sender, PaintEventArgs e)
         {
-
             if (gauntletMap.Count == 0)
             {
-                for (int j = 0; j < 64; j++)
+                for (int j = 0; j < numMapHeight.Value; j++)
                 {
-                    gauntletMap.Add(new byte[64]);
-
+                    gauntletMap.Add(new byte[(int)numMapWidth.Value]);
                 }
             }
 
             e.Graphics.FillRectangle(new SolidBrush(Color.Azure), e.Graphics.ClipBounds);
             if (tileMap.Count == 0 || tiles.Count == 0) { return; }
-            int iBigTile = 0;
+            
             try
             {
-                for (int iy = 0; iy < 64; iy++)
+                for (int iy = 0; iy < numMapHeight.Value; iy++)
                 {
-                    for (int ix = 0; ix < 64; ix++)
+                    for (int ix = 0; ix < numMapWidth.Value; ix++)
                     {
-                        if (e.Graphics.ClipBounds.IntersectsWith(new RectangleF(ix * 32, iy * 32, 32, 32)))
+                        
+                        RectangleF clipRect = new RectangleF(ix * (this.BigtilewidthInPx),
+                            iy * (this.BigtileheightInPx),
+                            (this.BigtilewidthInPx),
+                            (this.BigtileheightInPx));
+                        if (e.Graphics.ClipBounds.IntersectsWith(clipRect))
                         {
                             byte bTile = gauntletMap[iy][ix];
                             Bitmap bmTemp = get_32_32_TileBitMap(bTile);
 
                             IReadWriteBitmapData bmwrite = bmTemp.GetReadWriteBitmapData();
-
                             e.Graphics.DrawImageUnscaled(
                                     bmwrite.ToBitmap(),
-                                    ix * 32,
-                                    iy * 32);
-
+                                    ix * (scaleFactor * ImportSettings.superTileTileWidth * ImportSettings.superTileTileWidth),
+                                    iy *  scaleFactor * ImportSettings.superTileTileHeight * ImportSettings.superTileTileHeight);
 
                         }
-
-                        iBigTile++;
 
 
                     }
@@ -628,10 +659,16 @@ namespace Next_tile_editor
         {
             try
             {
-                this.gauntletMap[(int)mouseLocation.Y / 32][(int)mouseLocation.X / 32] = (byte)iSelectedIndex;
+                int iy = (int)mouseLocation.Y / (( scaleFactor) * ImportSettings.superTileTileHeight*ImportSettings.superTileTileHeight);
+                int ix = (int)mouseLocation.X / (( scaleFactor) * ImportSettings.superTileTileWidth* ImportSettings.superTileTileWidth);
+                this.gauntletMap[iy][ix] = (byte)iSelectedIndex;
                 if (invalidate)
                 {
-                    Rectangle r = new Rectangle(((int)mouseLocation.X / 32) * 32, ((int)mouseLocation.Y / 32) * 32, 32, 32);
+                    Rectangle r = new Rectangle(
+                        (ix-1) * ((scaleFactor) * ImportSettings.superTileTileWidth * ImportSettings.superTileTileWidth), 
+                        (iy-1) * (( scaleFactor) * ImportSettings.superTileTileHeight * ImportSettings.superTileTileHeight), 
+                        (3* scaleFactor * ImportSettings.superTileTileWidth * ImportSettings.superTileTileWidth),
+                        (3* scaleFactor * ImportSettings.superTileTileHeight * ImportSettings.superTileTileHeight));
                     pnl_32x32_gauntletMap.Invalidate(r);
                 }
             }
@@ -736,11 +773,11 @@ namespace Next_tile_editor
         {
             if (iSelectedIndex > 0)
             {
-                List<Image> itemp = images[iSelectedIndex]; // from
+                List<Image> itemp = InitialTileImages[iSelectedIndex]; // from
 
-            //    int idx2 = Math.DivRem(iSelectedIndex-1,8, out int rem2);
-                images[iSelectedIndex] = images[iSelectedIndex-1];
-                images[iSelectedIndex-1] = itemp;
+                //    int idx2 = Math.DivRem(iSelectedIndex-1,8, out int rem2);
+                InitialTileImages[iSelectedIndex] = InitialTileImages[iSelectedIndex - 1];
+                InitialTileImages[iSelectedIndex - 1] = itemp;
                 btnQuantizeColours_Click(null, null);
 
 
@@ -750,12 +787,57 @@ namespace Next_tile_editor
 
         private void btnRightTile_Click(object sender, EventArgs e)
         {
-            if (iSelectedIndex < tiles.Count-1 )
+            if (iSelectedIndex < InitialTileImages.Count - 1)
             {
-                Tile temp = tiles[iSelectedIndex+1];
-                tiles[iSelectedIndex+1] = tiles[iSelectedIndex];
-                tiles[iSelectedIndex] = temp;
-                this.pnl_32_32_TilePalette.Invalidate();
+                List<Image> itemp = InitialTileImages[iSelectedIndex]; // from
+
+                //    int idx2 = Math.DivRem(iSelectedIndex-1,8, out int rem2);
+                InitialTileImages[iSelectedIndex] = InitialTileImages[iSelectedIndex + 1];
+                InitialTileImages[iSelectedIndex + 1] = itemp;
+                btnQuantizeColours_Click(null, null);
+
+
+                pnl_32_32_tiles.Invalidate();
+            }
+        }
+
+        private int scaleFactor = 2;
+        private int BigtilewidthInPx = 32;
+        private int BigtileheightInPx = 32;
+
+        private void DropDown_SuperTileSize_ValueChanged(object sender, EventArgs e)
+        {
+            switch (DropDown_SuperTileSize.SelectedIndex)
+            {
+                case 0:     //1x1
+                    this.ImportSettings.NumberOfTilesPerSuperTile = 1;
+                    this.ImportSettings.superTileTileHeight = 1;
+                    this.ImportSettings.superTileTileWidth = 1;
+                    this.scaleFactor = 8;
+                    this.BigtilewidthInPx = 8;
+                    this.BigtileheightInPx = 8;
+
+                    break;
+
+                case 1:     //2x2
+                    this.ImportSettings.NumberOfTilesPerSuperTile = 4;
+                    this.ImportSettings.superTileTileHeight = 2;
+                    this.ImportSettings.superTileTileWidth = 2;
+                    this.scaleFactor = 4;
+                    this.BigtilewidthInPx = 16;
+                    this.BigtileheightInPx = 16;
+
+                    break;
+                case 2:     //3x3
+                    this.ImportSettings.NumberOfTilesPerSuperTile = 16;
+                    this.ImportSettings.superTileTileHeight = 4;
+                    this.ImportSettings.superTileTileWidth = 4;
+                    this.scaleFactor = 2;
+                    this.BigtilewidthInPx = 32;
+                    this.BigtileheightInPx = 32;
+
+                    break;
+
             }
         }
     }

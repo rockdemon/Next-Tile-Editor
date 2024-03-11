@@ -517,6 +517,7 @@
             tile32PixImport1.Name = "tile32PixImport1";
             tile32PixImport1.Size = new Size(1795, 955);
             tile32PixImport1.TabIndex = 0;
+            tile32PixImport1.Click += btnLoadTiles_Click;
             // 
             // Form1
             // 
