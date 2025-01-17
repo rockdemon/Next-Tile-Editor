@@ -38,8 +38,11 @@ namespace Next_tile_editor
                         if (Palette.Palettearray[i].Red == p.Red &&
                             Palette.Palettearray[i].Green == p.Green &&
                             Palette.Palettearray[i].Blue == p.Blue
-                            )
+                           )
+                        {
                             nibbles.Add(i);
+                            break;
+                        }
                     }
                 }   
                 tileBytes = new byte[nibbles.Count/2];

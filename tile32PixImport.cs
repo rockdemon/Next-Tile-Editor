@@ -46,9 +46,9 @@ namespace Next_tile_editor
             /// <summary>
             /// How manage 8 px squares in the import horizontally
             /// </summary>
-            public int tileWidth {get;set; }
+            public int tileWidth { get; set; }
             /// How manage 8 px squares in the import vertically
-            public int tileHeight { get;set; }
+            public int tileHeight { get; set; }
 
             /// <summary>
             /// /  how many groups of 1,2 or 4 tiles left to right
@@ -83,7 +83,7 @@ namespace Next_tile_editor
         private void btn_CutIntoTiles_Click(object sender, EventArgs e)
         {
             InitialTileImages.Clear();
-     
+
             int width = imgOrigin.Width;
             int height = imgOrigin.Height;
             int BigTileIdx = 0;
@@ -92,23 +92,23 @@ namespace Next_tile_editor
 
             ImportSettings.tileGroupWidth = ImportSettings.tileWidth / this.ImportSettings.superTileTileWidth;
             ImportSettings.tileGroupHeight = ImportSettings.tileHeight / this.ImportSettings.superTileTileHeight;
-            
+
             for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
             {
                 for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
                 {
                     int idx = 0;
                     List<Image> imageList = new List<Image>();
-       
+
                     for (int y = 0; y < this.ImportSettings.superTileTileHeight; y++)
                     {
-                        for (int x = 0; x < this.ImportSettings.superTileTileWidth ; x++)
+                        for (int x = 0; x < this.ImportSettings.superTileTileWidth; x++)
                         {
                             Bitmap imTemp = new Bitmap(8, 8);
-                            
-                            Rectangle rect = new Rectangle((ix * (this.ImportSettings.superTileTileWidth * 8) + (x * 8)), 
-                                                           (iy * (this.ImportSettings.superTileTileHeight * 8) + (y * 8)), 
-                                                            8, 
+
+                            Rectangle rect = new Rectangle((ix * (this.ImportSettings.superTileTileWidth * 8) + (x * 8)),
+                                                           (iy * (this.ImportSettings.superTileTileHeight * 8) + (y * 8)),
+                                                            8,
                                                             8);
                             using (Graphics g = Graphics.FromImage(imTemp))
                             {
@@ -117,7 +117,7 @@ namespace Next_tile_editor
                                     GraphicsUnit.Pixel);
                             }
                             imageList.Add(imTemp);
-                                                        
+
                             idx++;
                         }
                     }
@@ -132,7 +132,7 @@ namespace Next_tile_editor
         {
             e.Graphics.Clear(Color.Black);
             int iTile = 0;
-            for (int iy = 0; iy < ImportSettings.tileGroupHeight ; iy++)
+            for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
             {
                 for (int ix = 0; ix < ImportSettings.tileGroupWidth /*&& ix < images[iy].Count*/; ix++)
                 {
@@ -215,8 +215,8 @@ namespace Next_tile_editor
                                 }
                                 e.Graphics.DrawImageUnscaled(
                                        bmwrite.ToBitmap(),
-                                       ix * (ImportSettings.superTileTileWidth*8) + 2 * ix + x * 8,
-                                       iy * (ImportSettings.superTileTileHeight*8)  + 2 * iy + y * 8);
+                                       ix * (ImportSettings.superTileTileWidth * 8) + 2 * ix + x * 8,
+                                       iy * (ImportSettings.superTileTileHeight * 8) + 2 * iy + y * 8);
                             }
 
 
@@ -307,7 +307,7 @@ namespace Next_tile_editor
                     iTiles++;
                 }
             }
-     //       this.label3.Text = "" + NextQuantisedTiles.Count;
+            //       this.label3.Text = "" + NextQuantisedTiles.Count;
             pnl_CommonTiles.Invalidate();
         }
 
@@ -321,7 +321,7 @@ namespace Next_tile_editor
                 {
                     for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
                     {
-                        for (int ix = 0; ix < ImportSettings.tileGroupWidth ; ix++)
+                        for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
                         {
 
                             for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
@@ -340,7 +340,7 @@ namespace Next_tile_editor
                                             nibble n = null;
                                             try
                                             {
-                                                n     = TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x].tileNibbles[ij * 8 + ik];
+                                                n = TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x].tileNibbles[ij * 8 + ik];
 
 
 
@@ -355,7 +355,7 @@ namespace Next_tile_editor
                                     e.Graphics.DrawImageUnscaled(
                                            bmwrite.ToBitmap(),
                                            ix * (8 * ImportSettings.superTileTileWidth) + 2 * ix + x * 8,
-                                           iy * (8* ImportSettings.superTileTileHeight) + 2 * iy + y * 8);
+                                           iy * (8 * ImportSettings.superTileTileHeight) + 2 * iy + y * 8);
                                 }
 
 
@@ -382,7 +382,7 @@ namespace Next_tile_editor
             int iTiles = 0;
             tileMap.Clear();
             tiles.Clear();
-            for (int iy = 0; iy <  ImportSettings.tileGroupHeight; iy++)
+            for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
             {
                 for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
                 {
@@ -430,14 +430,14 @@ namespace Next_tile_editor
             {
                 for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
                 {
-                    for (int ix = 0;ix < ImportSettings.tileGroupWidth ; ix++)
+                    for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
                     {
                         for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
                         {
                             for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                             {
-                                byte bTile = tileMap[(iBigTile * (ImportSettings.superTileTileHeight*ImportSettings.superTileTileWidth) 
-                                        + (y*ImportSettings.superTileTileWidth ) + x)];
+                                byte bTile = tileMap[(iBigTile * (ImportSettings.superTileTileHeight * ImportSettings.superTileTileWidth)
+                                        + (y * ImportSettings.superTileTileWidth) + x)];
                                 Tile t = tiles[bTile];
                                 Bitmap bmTemp = new Bitmap(8, 8);
                                 IReadWriteBitmapData bmwrite = bmTemp.GetReadWriteBitmapData();
@@ -451,8 +451,8 @@ namespace Next_tile_editor
                                 }
                                 e.Graphics.DrawImageUnscaled(
                                        bmwrite.ToBitmap(),
-                                       ix * (ImportSettings.superTileTileWidth*8) + 2 * ix + x * 8,
-                                       iy * (ImportSettings.superTileTileHeight*8) + 2 * iy + y * 8);
+                                       ix * (ImportSettings.superTileTileWidth * 8) + 2 * ix + x * 8,
+                                       iy * (ImportSettings.superTileTileHeight * 8) + 2 * iy + y * 8);
 
 
                             }
@@ -499,7 +499,7 @@ namespace Next_tile_editor
                 {
                     for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
                     {
-                        if (e.Graphics.ClipBounds.IntersectsWith(new Rectangle(ix * (ImportSettings.superTileTileWidth * 16), iy *(ImportSettings.superTileTileHeight *16), (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16))))
+                        if (e.Graphics.ClipBounds.IntersectsWith(new Rectangle(ix * (ImportSettings.superTileTileWidth * 16), iy * (ImportSettings.superTileTileHeight * 16), (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16))))
                         {
 
 
@@ -507,7 +507,7 @@ namespace Next_tile_editor
                             {
                                 for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                                 {
-                                    byte bTile = tileMap[(iBigTile * (ImportSettings.superTileTileWidth*ImportSettings.superTileTileHeight)) + (y * ImportSettings.superTileTileWidth) + x];
+                                    byte bTile = tileMap[(iBigTile * (ImportSettings.superTileTileWidth * ImportSettings.superTileTileHeight)) + (y * ImportSettings.superTileTileWidth) + x];
                                     Tile t = tiles[bTile];
                                     Bitmap bmTemp = new Bitmap(16, 16);
                                     IReadWriteBitmapData bmwrite = bmTemp.GetReadWriteBitmapData();
@@ -534,8 +534,8 @@ namespace Next_tile_editor
                                     if (iBigTile == iSelectedIndex)
                                     {
                                         e.Graphics.DrawRectangle(Pens.Black,
-                                                                ix * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * ix + x * 16+(ix),
-                                                                iy * (ImportSettings.superTileTileHeight * 16) + ImportSettings.superTileTileHeight * iy + y * 16+(iy),
+                                                                ix * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * ix + x * 16 + (ix),
+                                                                iy * (ImportSettings.superTileTileHeight * 16) + ImportSettings.superTileTileHeight * iy + y * 16 + (iy),
                                                                 16, 16);
                                     }
 
@@ -556,7 +556,7 @@ namespace Next_tile_editor
 
         private Bitmap get_32_32_TileBitMap(int iBigTile)
         {
-            Bitmap retBm = new Bitmap(BigtilewidthInPx,BigtileheightInPx);
+            Bitmap retBm = new Bitmap(BigtilewidthInPx, BigtileheightInPx);
             for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
             {
                 for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
@@ -598,12 +598,12 @@ namespace Next_tile_editor
 
             int oldy = iSelectedIndex / 8;
             int oldx = iSelectedIndex % 8;
-            pnl_32_32_TilePalette.Invalidate(new Rectangle(oldx * (ImportSettings.superTileTileWidth*16) + 2*oldx, oldy * (ImportSettings.superTileTileHeight * 16) + 2 * oldy, (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
+            pnl_32_32_TilePalette.Invalidate(new Rectangle(oldx * (ImportSettings.superTileTileWidth * 16) + 2 * oldx, oldy * (ImportSettings.superTileTileHeight * 16) + 2 * oldy, (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
             iSelectedIndex = tileY * ImportSettings.tileGroupWidth + tileX;
 
             int newy = iSelectedIndex / 8;
             int newx = iSelectedIndex % 8;
-            pnl_32_32_TilePalette.Invalidate(new Rectangle(newx * (ImportSettings.superTileTileWidth * 16) + 2*newx, newy * (ImportSettings.superTileTileHeight * 16) + 2*newy, (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
+            pnl_32_32_TilePalette.Invalidate(new Rectangle(newx * (ImportSettings.superTileTileWidth * 16) + 2 * newx, newy * (ImportSettings.superTileTileHeight * 16) + 2 * newy, (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
         }
 
         List<byte[]> gauntletMap = new List<byte[]>();
@@ -619,14 +619,14 @@ namespace Next_tile_editor
 
             e.Graphics.FillRectangle(new SolidBrush(Color.Azure), e.Graphics.ClipBounds);
             if (tileMap.Count == 0 || tiles.Count == 0) { return; }
-            
+
             try
             {
                 for (int iy = 0; iy < numMapHeight.Value; iy++)
                 {
                     for (int ix = 0; ix < numMapWidth.Value; ix++)
                     {
-                        
+
                         RectangleF clipRect = new RectangleF(ix * (this.BigtilewidthInPx),
                             iy * (this.BigtileheightInPx),
                             (this.BigtilewidthInPx),
@@ -640,7 +640,7 @@ namespace Next_tile_editor
                             e.Graphics.DrawImageUnscaled(
                                     bmwrite.ToBitmap(),
                                     ix * (scaleFactor * ImportSettings.superTileTileWidth * ImportSettings.superTileTileWidth),
-                                    iy *  scaleFactor * ImportSettings.superTileTileHeight * ImportSettings.superTileTileHeight);
+                                    iy * scaleFactor * ImportSettings.superTileTileHeight * ImportSettings.superTileTileHeight);
 
                         }
 
@@ -659,16 +659,16 @@ namespace Next_tile_editor
         {
             try
             {
-                int iy = (int)mouseLocation.Y / (( scaleFactor) * ImportSettings.superTileTileHeight*ImportSettings.superTileTileHeight);
-                int ix = (int)mouseLocation.X / (( scaleFactor) * ImportSettings.superTileTileWidth* ImportSettings.superTileTileWidth);
+                int iy = (int)mouseLocation.Y / ((scaleFactor) * ImportSettings.superTileTileHeight * ImportSettings.superTileTileHeight);
+                int ix = (int)mouseLocation.X / ((scaleFactor) * ImportSettings.superTileTileWidth * ImportSettings.superTileTileWidth);
                 this.gauntletMap[iy][ix] = (byte)iSelectedIndex;
                 if (invalidate)
                 {
                     Rectangle r = new Rectangle(
-                        (ix-1) * ((scaleFactor) * ImportSettings.superTileTileWidth * ImportSettings.superTileTileWidth), 
-                        (iy-1) * (( scaleFactor) * ImportSettings.superTileTileHeight * ImportSettings.superTileTileHeight), 
-                        (3* scaleFactor * ImportSettings.superTileTileWidth * ImportSettings.superTileTileWidth),
-                        (3* scaleFactor * ImportSettings.superTileTileHeight * ImportSettings.superTileTileHeight));
+                        (ix - 1) * ((scaleFactor) * ImportSettings.superTileTileWidth * ImportSettings.superTileTileWidth),
+                        (iy - 1) * ((scaleFactor) * ImportSettings.superTileTileHeight * ImportSettings.superTileTileHeight),
+                        (3 * scaleFactor * ImportSettings.superTileTileWidth * ImportSettings.superTileTileWidth),
+                        (3 * scaleFactor * ImportSettings.superTileTileHeight * ImportSettings.superTileTileHeight));
                     pnl_32x32_gauntletMap.Invalidate(r);
                 }
             }
@@ -839,6 +839,11 @@ namespace Next_tile_editor
                     break;
 
             }
+        }
+
+        private void tabPage2_Click(object sender, EventArgs e)
+        {
+
         }
     }
     class DBPanel : Panel
