@@ -80,6 +80,12 @@ namespace Next_tile_editor
             }
         }
         List<List<Image>> InitialTileImages = new List<List<Image>>();
+
+        /// <summary>
+        /// Creates a list of 8x8 px images from the original image for each supertile (either 8x8, 16x16 or 32x32)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btn_CutIntoTiles_Click(object sender, EventArgs e)
         {
             InitialTileImages.Clear();
@@ -157,7 +163,11 @@ namespace Next_tile_editor
         }
 
         List<List<paletteValue9bit[]>> NextQuantisedTiles = new List<List<paletteValue9bit[]>>();
-
+        /// <summary>
+        /// Goes through the 8x8 px images and quantises the colours to 9 bit colours
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnQuantizeColours_Click(object sender, EventArgs e)
         {
             NextQuantisedTiles.Clear();
@@ -234,14 +244,20 @@ namespace Next_tile_editor
             }
         }
 
-        List<List<List<byte>>> hashes = new List<List<List<byte>>>();
+        
         List<List<Tile>> TileList = new List<List<Tile>>();
         Palette9bit palette = new Palette9bit();
+        /// <summary>
+        /// Builds a list of 8x8 px tiles using palette data
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btn_CommonTileCheck_Click(object sender, EventArgs e)
         {
             palette = new Palette9bit();
             int iPaletteIdx = 0;
             int iTiles = 0;
+            TileList.Clear();
             for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
             {
                 for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
@@ -268,7 +284,7 @@ namespace Next_tile_editor
                                 if (contained)
                                     continue;
 
-                                if (!palette.Palettearray.Contains(pv))
+                                if (!palette.Palettearray.Contains(pv)) // add to palette
                                 {
                                     palette.Palettearray[iPaletteIdx] = pv;
 
@@ -281,7 +297,7 @@ namespace Next_tile_editor
 
                     }
 
-                    iTiles++;
+                    iTiles++; // go through the tile lists
                 }
             }
 
@@ -291,7 +307,7 @@ namespace Next_tile_editor
             {
                 for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
                 {
-                    TileList.Add(new List<Tile>());
+                    TileList.Add(new List<Tile>()); // new super tile
                     for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
                     {
                         for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
@@ -307,7 +323,7 @@ namespace Next_tile_editor
                     iTiles++;
                 }
             }
-     //       this.label3.Text = "" + NextQuantisedTiles.Count;
+     
             pnl_CommonTiles.Invalidate();
         }
 

@@ -38,8 +38,11 @@ namespace Next_tile_editor
                         if (Palette.Palettearray[i].Red == p.Red &&
                             Palette.Palettearray[i].Green == p.Green &&
                             Palette.Palettearray[i].Blue == p.Blue
-                            )
+                           )
+                        {
                             nibbles.Add(i);
+                            break; // tile found so stop comparison otherwise we will have duplicates
+                        }
                     }
                 }   
                 tileBytes = new byte[nibbles.Count/2];
@@ -116,10 +119,10 @@ namespace Next_tile_editor
             return (new Tile (this.Palette, this.paletteOffsetFor4bit,null, this.tileData ) as object);
         }
 
-        public  byte[] getHash()
-        {
-            return MD5.HashData(this.tileData);
-        }
+        //public  byte[] getHash()
+        //{
+        //    return MD5.HashData(this.tileData);
+        //}
             
 
         public bool Equals( Tile other )
