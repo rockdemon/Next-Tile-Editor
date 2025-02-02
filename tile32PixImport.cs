@@ -67,6 +67,7 @@ namespace Next_tile_editor
         {
             this.ImportSettings = new TileSettings();
             InitializeComponent();
+            this.DropDown_SuperTileSize.SelectedIndex = 2;
         }
 
         private void btnLoadImage_Click(object sender, EventArgs e)
@@ -77,6 +78,8 @@ namespace Next_tile_editor
                 Image image = new Bitmap(ofd.FileName);
                 imgOrigin = new Bitmap(image);
                 this.pct_OriginalTileBitmap.Image = imgOrigin;
+                this.tabCutIntoSuperTiles.Select();
+                btn_cutIntoTiles.BeginInvoke(btn_CutIntoTiles_Click, new object[] { this, new MouseEventArgs(MouseButtons.Left,1,0,0,0)});
             }
         }
         List<List<Image>> InitialTileImages = new List<List<Image>>();
@@ -132,6 +135,7 @@ namespace Next_tile_editor
                 }
             }
             pnl_32_32_tiles.Invalidate();
+            btn_cutIntoTiles.BeginInvoke(btnQuantizeColours_Click, new object[] { this, new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0) });
         }
 
         private void pnl_32_32_tiles_Paint(object sender, PaintEventArgs e)
@@ -191,6 +195,7 @@ namespace Next_tile_editor
                 NextQuantisedTiles.Add(List9BitColours);
             }
             pnl_QuantizedColour.Invalidate();
+            this.BeginInvoke(btn_CommonTileCheck_Click, new object[] { this, new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0) });
         }
 
         private void pnl_QuantizedColour_Paint(object sender, PaintEventArgs e)
@@ -267,15 +272,26 @@ namespace Next_tile_editor
                         for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                         {
                             paletteValue9bit[] paletteValue9Bits = NextQuantisedTiles[iTiles][y * ImportSettings.superTileTileWidth + x];
+
+                            //if (palette.Palettearray[0].Equals(paletteValue9Bits[]))
+                            //{
+
+                            //}
+                            //else if(palette.Palettearray[iPaletteIdx - 1].Equals(paletteValue9Bits[]))
+                            //{
+                                
+                            //}
+                            //else
+                            //{
+                            //}
+
+
                             foreach (paletteValue9bit pv in paletteValue9Bits)
                             {
                                 bool contained = false;
                                 for (int xx = 0; xx < iPaletteIdx; xx++)
                                 {
-                                    if (palette.Palettearray[xx].Red == pv.Red &&
-                                        palette.Palettearray[xx].Green == pv.Green &&
-                                        palette.Palettearray[xx].Blue == pv.Blue
-                                        )
+                                    if (palette.Palettearray[xx].Equals(pv))
                                     {
                                         contained = true;
                                         break;
@@ -325,6 +341,8 @@ namespace Next_tile_editor
             }
      
             pnl_CommonTiles.Invalidate();
+            this.BeginInvoke(btnCreateTileToolboxandMap_Click, new object[] { this, new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0) });
+            
         }
 
         private void pnl_CommonTiles_Paint(object sender, PaintEventArgs e)
@@ -393,7 +411,7 @@ namespace Next_tile_editor
         List<byte> tileMap = new List<byte>();
         List<Tile> tiles = new List<Tile>();
 
-        private void button4_Click(object sender, EventArgs e)
+        private void btnCreateTileToolboxandMap_Click(object sender, EventArgs e)
         {
             int iTiles = 0;
             tileMap.Clear();
@@ -432,6 +450,9 @@ namespace Next_tile_editor
                 }
             }
             this.label3.Text = "8x8 Tiles : " + tiles.Count;
+            pnl_32_32_TilePalette.Size =
+                new Size(ImportSettings.tileGroupWidth * ImportSettings.superTileTileWidth * 17,
+                    ImportSettings.tileGroupHeight * ImportSettings.superTileTileHeight * 17);
             pnl_fromActualTilemap.Invalidate();
             pnl_32x32_gauntletMap.Invalidate();
             pnl_32_32_TilePalette.Invalidate();
@@ -550,8 +571,8 @@ namespace Next_tile_editor
                                     if (iBigTile == iSelectedIndex)
                                     {
                                         e.Graphics.DrawRectangle(Pens.Black,
-                                                                ix * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * ix + x * 16+(ix),
-                                                                iy * (ImportSettings.superTileTileHeight * 16) + ImportSettings.superTileTileHeight * iy + y * 16+(iy),
+                                                                ix * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * ix + x * 16 +1 ,
+                                                                iy * (ImportSettings.superTileTileHeight * 16) + ImportSettings.superTileTileHeight * iy + y * 16 +1,
                                                                 16, 16);
                                     }
 
@@ -605,22 +626,35 @@ namespace Next_tile_editor
         {
 
 
-            int tileX = e.Location.X / (ImportSettings.superTileTileWidth * 16);
+            int tileX = (e.Location.X+1) / (ImportSettings.superTileTileWidth * 17 );
 
-            int tileY = e.Location.Y / (ImportSettings.superTileTileHeight * 16);
+            int tileY = (e.Location.Y+1) / (ImportSettings.superTileTileHeight * 17  );
 
 
             //this.textBox1.Text = "" + tileX + " " + tileY + " " + (tileY * 8 + tileX);
 
-            int oldy = iSelectedIndex / 8;
-            int oldx = iSelectedIndex % 8;
-            pnl_32_32_TilePalette.Invalidate(new Rectangle(oldx * (ImportSettings.superTileTileWidth*16) + 2*oldx, oldy * (ImportSettings.superTileTileHeight * 16) + 2 * oldy, (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
+            int oldy = iSelectedIndex / ImportSettings.tileGroupWidth;
+            int oldx = iSelectedIndex % ImportSettings.tileGroupWidth;
+            //pnl_32_32_TilePalette.Invalidate(new Rectangle(oldx * (ImportSettings.superTileTileWidth * 16)  /*+ 2 * oldx*/, oldy * (ImportSettings.superTileTileHeight * 16) + 2 * oldy, (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
+            pnl_32_32_TilePalette.Invalidate(new Rectangle(
+                oldx * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * oldx + 1,
+                oldy * (ImportSettings.superTileTileHeight * 16) + ImportSettings.superTileTileHeight * oldy + 1,
+                (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
+
             iSelectedIndex = tileY * ImportSettings.tileGroupWidth + tileX;
 
-            int newy = iSelectedIndex / 8;
-            int newx = iSelectedIndex % 8;
-            pnl_32_32_TilePalette.Invalidate(new Rectangle(newx * (ImportSettings.superTileTileWidth * 16) + 2*newx, newy * (ImportSettings.superTileTileHeight * 16) + 2*newy, (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
+            int newy = iSelectedIndex / ImportSettings.tileGroupWidth;
+            int newx = iSelectedIndex % ImportSettings.tileGroupWidth;
+            //pnl_32_32_TilePalette.Invalidate(new Rectangle(newx * (ImportSettings.superTileTileWidth * 16) /*+ 2 * newx*/, newy * (ImportSettings.superTileTileHeight * 16) + 2 * newy, (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
+            pnl_32_32_TilePalette.Invalidate(new Rectangle(
+                newx * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * newx+1,
+                newy * (ImportSettings.superTileTileHeight * 16) + ImportSettings.superTileTileHeight * newy + 1,
+                (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
+
         }
+        // mouse.locationx = newx * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * newx+1,
+        // mouselocx +1 = newx * sup*16 + sup *newx
+        // newx = mouselocx+1/((sup*16)+sup)
 
         List<byte[]> gauntletMap = new List<byte[]>();
         private void pnl_gauntletMap_Paint(object sender, PaintEventArgs e)
@@ -856,6 +890,11 @@ namespace Next_tile_editor
 
             }
         }
+
+        private void tabPage2_Click(object sender, EventArgs e)
+        {
+
+    }
     }
     class DBPanel : Panel
     {

@@ -32,6 +32,7 @@
         {
             paletteValue9bit paletteValue9bit1 = new paletteValue9bit();
             paletteValue9bit paletteValue9bit2 = new paletteValue9bit();
+            tile32PixImport.TileSettings tileSettings1 = new tile32PixImport.TileSettings();
             NextPalette = new NextPaletteColourPicker();
             tab32pixtileImport = new TabControl();
             tabPage1 = new TabPage();
@@ -108,14 +109,14 @@
             // 
             // tab32pixtileImport
             // 
-            tab32pixtileImport.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tab32pixtileImport.Controls.Add(tabPage1);
             tab32pixtileImport.Controls.Add(TileEditor);
             tab32pixtileImport.Controls.Add(tabPage2);
-            tab32pixtileImport.Location = new Point(2, 27);
+            tab32pixtileImport.Dock = DockStyle.Fill;
+            tab32pixtileImport.Location = new Point(0, 0);
             tab32pixtileImport.Name = "tab32pixtileImport";
             tab32pixtileImport.SelectedIndex = 0;
-            tab32pixtileImport.Size = new Size(1809, 994);
+            tab32pixtileImport.Size = new Size(1864, 1033);
             tab32pixtileImport.TabIndex = 7;
             // 
             // tabPage1
@@ -130,7 +131,7 @@
             tabPage1.Location = new Point(4, 29);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(1801, 961);
+            tabPage1.Size = new Size(1856, 1000);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Sprite Import";
             tabPage1.UseVisualStyleBackColor = true;
@@ -294,7 +295,7 @@
             TileEditor.Location = new Point(4, 29);
             TileEditor.Name = "TileEditor";
             TileEditor.Padding = new Padding(3);
-            TileEditor.Size = new Size(1801, 961);
+            TileEditor.Size = new Size(1853, 976);
             TileEditor.TabIndex = 1;
             TileEditor.Text = "Tile Editor";
             TileEditor.UseVisualStyleBackColor = true;
@@ -505,17 +506,28 @@
             tabPage2.Location = new Point(4, 29);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(1801, 961);
+            tabPage2.Size = new Size(1853, 976);
             tabPage2.TabIndex = 2;
             tabPage2.Text = "Import 4x4 Tiles";
             tabPage2.UseVisualStyleBackColor = true;
             // 
             // tile32PixImport1
             // 
+            tile32PixImport1.BackColor = Color.DarkGray;
             tile32PixImport1.Dock = DockStyle.Fill;
+            tileSettings1.ImportTilesInX = 8;
+            tileSettings1.ImportTilesInY = 8;
+            tileSettings1.NumberOfTilesPerSuperTile = 16;
+            tileSettings1.superTileTileHeight = 4;
+            tileSettings1.superTileTileWidth = 4;
+            tileSettings1.tileGroupHeight = 0;
+            tileSettings1.tileGroupWidth = 0;
+            tileSettings1.tileHeight = 0;
+            tileSettings1.tileWidth = 0;
+            tile32PixImport1.ImportSettings = tileSettings1;
             tile32PixImport1.Location = new Point(3, 3);
             tile32PixImport1.Name = "tile32PixImport1";
-            tile32PixImport1.Size = new Size(1795, 955);
+            tile32PixImport1.Size = new Size(1847, 970);
             tile32PixImport1.TabIndex = 0;
             tile32PixImport1.Click += btnLoadTiles_Click;
             // 

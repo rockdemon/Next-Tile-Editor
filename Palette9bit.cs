@@ -79,6 +79,16 @@ namespace Next_tile_editor
                 }
             }
 
+            public override bool Equals(object? obj)
+            {
+                if (obj != null && obj as paletteValue9bit != null)
+                {
+                    paletteValue9bit compare = (paletteValue9bit)obj;
+                    return this.Red == compare.Red&& this.Green == compare.Green && this.Blue == compare.Blue;
+                }
+                return false;
+                
+            }
 
             public byte Red { get; set; }
             public byte Green { get; set; }
