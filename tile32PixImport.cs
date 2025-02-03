@@ -263,14 +263,15 @@ namespace Next_tile_editor
             int iPaletteIdx = 0;
             int iTiles = 0;
             TileList.Clear();
-            for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
+            for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++) // count through supertiles
             {
-                for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
+                for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++) // count through supertiles
                 {
-                    for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
+                    for (int y = 0; y < ImportSettings.superTileTileHeight; y++) // count through 8x8 tiles within supertile
                     {
-                        for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
+                        for (int x = 0; x < ImportSettings.superTileTileWidth; x++) // count through 8x8 tiles within supertile
                         {
+                            // get palette array for tile we've counted to
                             paletteValue9bit[] paletteValue9Bits = NextQuantisedTiles[iTiles][y * ImportSettings.superTileTileWidth + x];
 
                             //if (palette.Palettearray[0].Equals(paletteValue9Bits[]))
@@ -300,7 +301,7 @@ namespace Next_tile_editor
                                 if (contained)
                                     continue;
 
-                                if (!palette.Palettearray.Contains(pv)) // add to palette
+                                if (!palette.Palettearray.Contains(pv)) // add to palette array (A palette array is a palette based bitmap)
                                 {
                                     palette.Palettearray[iPaletteIdx] = pv;
 

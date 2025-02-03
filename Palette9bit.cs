@@ -67,7 +67,26 @@ namespace Next_tile_editor
             }
         }
 
-    }
+        public override bool Equals(object? obj)
+        {
+            if (obj is Palette9bit otherPalette)
+            {
+                return this.Palettearray.SequenceEqual(otherPalette.Palettearray);
+            }
+            return false;
+        }
+
+        public bool EqualsReverse(Palette9bit other)
+        {
+            int x= 0;
+            while (x < this.Palettearray.Length)
+            {
+                if (other.Palettearray[Palettearray.Length-x-1] != this.Palettearray[x])
+                    return false;
+            }
+            return true;
+        }
+        }
 
         public class paletteValue9bit
         {

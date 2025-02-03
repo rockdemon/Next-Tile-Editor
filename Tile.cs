@@ -60,6 +60,7 @@ namespace Next_tile_editor
         public Palette9bit Palette { get; set; }
         public int paletteOffsetFor4bit { get; set; }
 
+        private bool 
         public nibble[] tileNibbles
         {
             get
