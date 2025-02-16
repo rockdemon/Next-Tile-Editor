@@ -10,6 +10,25 @@ namespace Next_tile_editor
 {
     public class Tile :ICloneable
     {
+        /// <summary>
+        ///
+        /// Palette Offset 4-bit palette offset for this tile. This allows shifting colours to other 16-colour
+        /// “banks” thus allowing us to reach the whole 256 colours from the palette.
+        /// X Mirror
+        /// Y Mirror
+        /// Rotate
+        /// If 1, this tile will be mirrored in X direction.
+        /// If 1, this tile will be mirrored in Y direction.
+        /// If 1, this tile will be rotated 90oclockwise.
+        /// ULA Mode If1, this tile will be rendered on top, if 0 below ULA display. However in 512
+        /// tile mode, this is the 8th bit of tile index.
+        /// Tile Index
+        /// 8-bit tile index within the tile definitions.
+        /// </summary>
+        /// <param name="palette"></param>
+        /// <param name="paletteOffsetFor4bit"></param>
+        /// <param name="spriteNibbles"></param>
+        /// <param name="tileData"></param>
         public Tile   (Palette9bit palette, int paletteOffsetFor4bit, nibble[] spriteNibbles, byte[] tileData)
         {
             Palette = palette;
@@ -41,7 +60,7 @@ namespace Next_tile_editor
                            )
                         {
                             nibbles.Add(i);
-                            break; // tile found so stop comparison otherwise we will have duplicates
+                            break; // palette value found so stop comparison otherwise we will have duplicates
                         }
                     }
                 }   
@@ -60,7 +79,7 @@ namespace Next_tile_editor
         public Palette9bit Palette { get; set; }
         public int paletteOffsetFor4bit { get; set; }
 
-        private bool 
+        
         public nibble[] tileNibbles
         {
             get
@@ -126,7 +145,7 @@ namespace Next_tile_editor
         //}
             
 
-        public bool Equals( Tile other )
+        public bool Equals( Tile? other )
         {
             if ( other == null ) return false;
             if ( this.tileBytes.Length != other.tileBytes.Length ) return false;
@@ -135,6 +154,65 @@ namespace Next_tile_editor
                 if (this.tileBytes[i] != other.tileBytes[i]) return false;
             }
             
+            return true;
+        }
+        //public override bool Equals(object? obj)
+        //{
+            
+        //    if (obj is Palette9bit otherPalette)
+        //    {
+        //        return this.Palettearray.SequenceEqual(otherPalette.Palettearray);
+        //    }
+        //    return false;
+        //}
+
+        public bool EqualsVerticalMirror(Tile? other)
+        {
+            if (other == null) return false;
+            if (this.tileBytes.Length != other.tileBytes.Length) return false;
+            for (int i = 0; i < this.tileBytes.Length; i+=4)
+            {
+                for (int ik = 0; ik < 4; ik++)
+                {
+                    int TileBytethis = i + ik;
+                    int TileByteother = (tileBytes.Length -i - 4) + ik;
+                    if (this.tileBytes[TileBytethis] != other.tileBytes[TileByteother]) return false;
+                }
+                
+            }
+
+            return true;
+        }
+        public bool EqualsHorizontalMirror(Tile? other)
+        {
+            if (other == null) return false;
+            if (this.tileNibbles.Length != other.tileNibbles.Length) return false;
+            for (int i = 0; i < this.tileNibbles.Length; i += 8)
+            {
+                for (int ik = 0; ik < 8; ik++)
+                {
+                    int TileNibblethis = i + ik;
+                    int TileNibblesother = i +7- ik;
+                    if (this.tileNibbles[TileNibblethis] != other.tileNibbles[TileNibblesother]) return false;
+                }
+
+            }
+            return true;
+        }
+        public bool EqualsVerticalAndHorizontalMirror(Tile? other)
+        {
+            if (other == null) return false;
+            if (this.tileNibbles.Length != other.tileNibbles.Length) return false;
+            for (int i = 0; i < this.tileNibbles.Length; i += 8)
+            {
+                for (int ik = 0; ik < 8; ik++)
+                {
+                    int TileBytethis = i + ik;
+                    int TileByteother = (tileNibbles.Length - i) - ik -1;
+                    if (this.tileNibbles[TileBytethis] != other.tileNibbles[TileByteother]) return false;
+                }
+
+            }
             return true;
         }
     }

@@ -76,17 +76,37 @@ namespace Next_tile_editor
             return false;
         }
 
-        public bool EqualsReverse(Palette9bit other)
+        public bool EqualsVerticalMirror(Palette9bit other)
         {
             int x= 0;
             while (x < this.Palettearray.Length)
             {
-                if (other.Palettearray[Palettearray.Length-x-1] != this.Palettearray[x])
+                if (!other.Palettearray[Palettearray.Length-x-1].Equals( this.Palettearray[x]))
                     return false;
             }
             return true;
         }
+        public bool EqualsHorizontalMirror(Palette9bit other)
+        {
+            int x = 0;
+            while (x < this.Palettearray.Length)
+            {
+                if (!other.Palettearray[Palettearray.Length - x - 1].Equals( this.Palettearray[x]))
+                    return false;
+            }
+            return true;
         }
+        public bool EqualsVerticalAndHorizontalMirror(Palette9bit other)
+        {
+            int x = 0;
+            while (x < this.Palettearray.Length)
+            {
+                if (other.Palettearray[Palettearray.Length - x - 1] != this.Palettearray[x])
+                    return false;
+            }
+            return true;
+        }
+    }
 
         public class paletteValue9bit
         {
