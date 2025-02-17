@@ -273,7 +273,7 @@ namespace Next_tile_editor
                         {
                             // get palette array for tile we've counted to
                             paletteValue9bit[] paletteValue9Bits = NextQuantisedTiles[iTiles][y * ImportSettings.superTileTileWidth + x];
-
+                            
                             //if (palette.Palettearray[0].Equals(paletteValue9Bits[]))
                             //{
 
@@ -419,7 +419,7 @@ namespace Next_tile_editor
         /// If 1, this tile will be mirrored in Y direction.
         /// If 1, this tile will be rotated 90oclockwise.
         /// ULA Mode If1, this tile will be rendered on top, if 0 below ULA display. However in 512
-        /// tile mode, this is the 8th bit of tile index.
+        /// tile mode, this is the 9th bit of tile index.
         /// Tile Index
         /// 8-bit tile index within the tile definitions.
         List<Tuple<byte,byte>> tileMap = new List<Tuple<byte, byte>>();
@@ -471,9 +471,12 @@ namespace Next_tile_editor
                                     { // tile less than 256
                                         tileMap.Add(new Tuple<byte, byte>(0, (byte)z));
                                     }
-                                    tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
 
-                                    break;
+                                    tile.flags = (int)Modifier.None;
+                                    tile.Index = z;
+                                    //           tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+
+
                                 }
                                 if (!found && TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x].EqualsHorizontalMirror(tile))
                                 {   // byte 11 for x mirror
@@ -486,8 +489,10 @@ namespace Next_tile_editor
                                     { // tile less than 256
                                         tileMap.Add(new Tuple<byte, byte>(0b1000, (byte)z));
                                     }
-                                    tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
-                                    break;
+                                    tile.flags = (int)Modifier.XMirror;
+                                    tile.Index = z;
+                                    //           tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+
                                 }
                                 if (!found && TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x].EqualsVerticalMirror((tile)))
                                 {
@@ -500,8 +505,82 @@ namespace Next_tile_editor
                                     { // tile less than 256
                                         tileMap.Add(new Tuple<byte, byte>(0b0100, (byte)z));
                                     }
-                                    tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
-                                    break;
+
+                                    tile.flags = (int)Modifier.YMirror;
+                                    tile.Index = z;
+                                    //        tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+
+                                }
+                                if (!found && TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x].EqualsVerticalAndHorizontalMirror((tile)))
+                                {
+                                    found = true;
+                                    if (z > 255 && z < 512)
+                                    {
+                                        tileMap.Add(new Tuple<byte, byte>(0b1101, (byte)(z - 256)));
+                                    }
+                                    else
+                                    { // tile less than 256
+                                        tileMap.Add(new Tuple<byte, byte>(0b1100, (byte)z));
+                                    }   
+                                    tile.flags = (int)Modifier.XMirror+(int)Modifier.YMirror;
+                                    tile.Index = z;
+                                    //                tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+                                }
+                  
+
+
+                            //----------------------------------------------------------//
+                                if (!found && TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x].Equals(tile.))
+                                {
+                                    found = true;
+                                    if (z > 255 && z < 512)
+                                    {
+                                        tileMap.Add(new Tuple<byte, byte>(1, (byte)(z - 256)));
+
+                                    }
+                                    else
+                                    { // tile less than 256
+                                        tileMap.Add(new Tuple<byte, byte>(0, (byte)z));
+                                    }
+
+                                    tile.flags = (int)Modifier.None;
+                                    tile.Index = z;
+                                    //           tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+
+
+                                }
+                                if (!found && TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x].EqualsHorizontalMirror(tile))
+                                {   // byte 11 for x mirror
+                                    found = true;
+                                    if (z > 255 && z < 512)
+                                    {
+                                        tileMap.Add(new Tuple<byte, byte>(0b1001, (byte)(z - 256)));
+                                    }
+                                    else
+                                    { // tile less than 256
+                                        tileMap.Add(new Tuple<byte, byte>(0b1000, (byte)z));
+                                    }
+                                    tile.flags = (int)Modifier.XMirror;
+                                    tile.Index = z;
+                                    //           tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+
+                                }
+                                if (!found && TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x].EqualsVerticalMirror((tile)))
+                                {
+                                    found = true;
+                                    if (z > 255 && z < 512)
+                                    {
+                                        tileMap.Add(new Tuple<byte, byte>(0b0101, (byte)(z - 256)));
+                                    }
+                                    else
+                                    { // tile less than 256
+                                        tileMap.Add(new Tuple<byte, byte>(0b0100, (byte)z));
+                                    }
+
+                                    tile.flags = (int)Modifier.YMirror;
+                                    tile.Index = z;
+                                    //        tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+
                                 }
                                 if (!found && TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x].EqualsVerticalAndHorizontalMirror((tile)))
                                 {
@@ -514,7 +593,9 @@ namespace Next_tile_editor
                                     { // tile less than 256
                                         tileMap.Add(new Tuple<byte, byte>(0b1100, (byte)z));
                                     }
-                                    tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+                                    tile.flags = (int)Modifier.XMirror + (int)Modifier.YMirror;
+                                    tile.Index = z;
+                                    //                tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
                                 }
                             }
                             if (!found)
@@ -526,10 +607,14 @@ namespace Next_tile_editor
                                 }
                                 else
                                 {
-                                    tileMap.Add(new Tuple<byte, byte>(1,(byte)(tiles.Count - 257)));
+                                    tileMap.Add(new Tuple<byte, byte>(1, (byte)(tiles.Count - 257)));
                                 }
+                                Tile tile = tiles[tiles.Count - 1];
+                                tile.flags = (int)Modifier.None;
+                                tile.Index = tiles.Count - 1;
+                                //            tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
                             }
-                       
+
                         }
 
                     }

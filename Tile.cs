@@ -8,6 +8,14 @@ using System.Threading.Tasks;
 
 namespace Next_tile_editor
 {
+    public enum Modifier :int
+    {
+        None = 0,
+        XMirror = 1,
+        YMirror = 2,
+        Rotate = 4
+        
+    }
     public class Tile :ICloneable
     {
         /// <summary>
@@ -79,7 +87,13 @@ namespace Next_tile_editor
         public Palette9bit Palette { get; set; }
         public int paletteOffsetFor4bit { get; set; }
 
-        
+        public int Index { get; set; }
+
+        /// <summary>
+        /// Modifier flags added together as a bitfield
+        /// </summary>
+        public int flags { get; set; }
+
         public nibble[] tileNibbles
         {
             get
@@ -145,15 +159,27 @@ namespace Next_tile_editor
         //}
             
 
-        public bool Equals( Tile? other )
+        public bool Equals( Tile? other , out bool rotated)
         {
+            rotated = false;
             if ( other == null ) return false;
+            bool retval = true;
             if ( this.tileBytes.Length != other.tileBytes.Length ) return false;
             for(int i = 0;i < this.tileBytes.Length;i++)
             {
-                if (this.tileBytes[i] != other.tileBytes[i]) return false;
+                if (this.tileBytes[i] != other.tileBytes[i])
+                {
+                    retval = false;
+                    break;
+                }
             }
-            
+            if (retval) return retval;
+            nibble[] rotatedNibbles = other.Rotated;
+            for (int i = 0; i < this.tileNibbles.Length; i++)
+            {
+                if (this.tileNibbles[i] != rotatedNibbles[i]) return false;
+            }
+
             return true;
         }
         //public override bool Equals(object? obj)
@@ -166,9 +192,11 @@ namespace Next_tile_editor
         //    return false;
         //}
 
-        public bool EqualsVerticalMirror(Tile? other)
+        public bool EqualsVerticalMirror(Tile? other, out bool rotated)
         {
+            rotated = false;
             if (other == null) return false;
+            bool retval = true;
             if (this.tileBytes.Length != other.tileBytes.Length) return false;
             for (int i = 0; i < this.tileBytes.Length; i+=4)
             {
@@ -183,7 +211,7 @@ namespace Next_tile_editor
 
             return true;
         }
-        public bool EqualsHorizontalMirror(Tile? other)
+        public bool EqualsHorizontalMirror(Tile? other, out bool rotated)
         {
             if (other == null) return false;
             if (this.tileNibbles.Length != other.tileNibbles.Length) return false;
@@ -199,7 +227,7 @@ namespace Next_tile_editor
             }
             return true;
         }
-        public bool EqualsVerticalAndHorizontalMirror(Tile? other)
+        public bool EqualsVerticalAndHorizontalMirror(Tile? other, out bool rotated)
         {
             if (other == null) return false;
             if (this.tileNibbles.Length != other.tileNibbles.Length) return false;
@@ -215,7 +243,22 @@ namespace Next_tile_editor
             }
             return true;
         }
-    }
+
+        public nibble[] Rotated
+        {
+            get
+            {
+                nibble[] result = new nibble[64];
+                for (int i = 0; i < 8; i++)
+                {
+                    for (int j = 0; j < 8; j++)
+                    {
+                        result[j * 8 + i] = tileNibbles[i * 8 + j];
+                    }
+                }
+                return result;
+            }
+        }
     
     
 }
