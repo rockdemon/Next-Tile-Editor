@@ -180,6 +180,7 @@ namespace Next_tile_editor
                 if (this.tileNibbles[i] != rotatedNibbles[i]) return false;
             }
 
+            rotated = true;
             return true;
         }
         //public override bool Equals(object? obj)
@@ -204,11 +205,31 @@ namespace Next_tile_editor
                 {
                     int TileBytethis = i + ik;
                     int TileByteother = (tileBytes.Length -i - 4) + ik;
-                    if (this.tileBytes[TileBytethis] != other.tileBytes[TileByteother]) return false;
+                    if (this.tileBytes[TileBytethis] != other.tileBytes[TileByteother])
+                    {
+                        return false;
+                    }
                 }
                 
             }
+            if (retval)
+                return retval;
+            nibble[] rotatedNibbles = other.Rotated;
+            for (int i = 0; i < this.tileNibbles.Length; i += 8)
+            {
+                for (int ik = 0; ik < 8; ik++)
+                {
+                    int TileNibblesthis = i + ik;
+                    int TileNibblesother = (tileNibbles.Length - i - 8) + ik;
+                    if (this.tileNibbles[TileNibblesthis] != rotatedNibbles[TileNibblesother])
+                    {
+                        return false;
+                    }
+                }
 
+            }
+
+            rotated = true;
             return true;
         }
         public bool EqualsHorizontalMirror(Tile? other, out bool rotated)
