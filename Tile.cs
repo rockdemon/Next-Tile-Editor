@@ -216,6 +216,20 @@ namespace Next_tile_editor
                 }
 
             }
+            if (retval)
+                return retval;
+            nibble[] rotatedNibbles = other.Rotated;
+            for (int i = 0; i < this.tileNibbles.Length; i += 8)
+            {
+                for (int ik = 0; ik < 8; ik++)
+                {
+                    int TileNibblesthis = i + ik;
+                    int TileNibblesother = (tileNibbles.Length - i - 8) + ik;
+                    if (this.tileNibbles[TileNibblesthis] != rotatedNibbles[TileNibblesother])
+                    {
+                        return false;
+                    }
+                }
 
             if (retval) return retval;
             nibble[] rotatedNibbles = other.Rotated;
