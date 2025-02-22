@@ -16,7 +16,8 @@ namespace Next_tile_editor
         Rotate = 4
         
     }
-    public class Tile :ICloneable
+
+    public class Tile : ICloneable
     {
         /// <summary>
         ///
@@ -37,7 +38,7 @@ namespace Next_tile_editor
         /// <param name="paletteOffsetFor4bit"></param>
         /// <param name="spriteNibbles"></param>
         /// <param name="tileData"></param>
-        public Tile   (Palette9bit palette, int paletteOffsetFor4bit, nibble[] spriteNibbles, byte[] tileData)
+        public Tile(Palette9bit palette, int paletteOffsetFor4bit, nibble[] spriteNibbles, byte[] tileData)
         {
             Palette = palette;
             this.paletteOffsetFor4bit = paletteOffsetFor4bit;
@@ -48,7 +49,7 @@ namespace Next_tile_editor
         {
         }
 
-        public static Tile FromPalette9ValArray( paletteValue9bit[] tileInNextColours,Palette9bit palette)
+        public static Tile FromPalette9ValArray(paletteValue9bit[] tileInNextColours, Palette9bit palette)
         {
             return new Tile { Palette = palette, TileFromNextColours = tileInNextColours };
         }
@@ -71,19 +72,21 @@ namespace Next_tile_editor
                             break; // palette value found so stop comparison otherwise we will have duplicates
                         }
                     }
-                }   
-                tileBytes = new byte[nibbles.Count/2];
-                List<byte> bytes = new List<byte>();
-                
-                for (int i = 0;i < nibbles.Count;i+=2)
-                {
-                    if (i < nibbles.Count-1)
-                    bytes.Add((byte)(nibbles[i] << 4 | nibbles[i+1]));
                 }
+
+                tileBytes = new byte[nibbles.Count / 2];
+                List<byte> bytes = new List<byte>();
+
+                for (int i = 0; i < nibbles.Count; i += 2)
+                {
+                    if (i < nibbles.Count - 1)
+                        bytes.Add((byte)(nibbles[i] << 4 | nibbles[i + 1]));
+                }
+
                 tileBytes = bytes.ToArray();
             }
         }
-        
+
         public Palette9bit Palette { get; set; }
         public int paletteOffsetFor4bit { get; set; }
 
@@ -107,65 +110,64 @@ namespace Next_tile_editor
                     result.Add(b);
 
                 }
+
                 return result.ToArray();
             }
         }
-        public byte[] tileBytes { 
-            get
-            { 
-                return tileData; 
-            }
-            set 
-            { 
-                tileData = value; 
-            }
+
+        public byte[] tileBytes
+        {
+            get { return tileData; }
+            set { tileData = value; }
         }
-        private byte [] tileData { get; set; }
+
+        private byte[] tileData { get; set; }
         private Bitmap _bitmapData = null;
+
         public Bitmap bitmapData
         {
             get
             {
                 int idx = 0;
-                if (_bitmapData == null )
+                if (_bitmapData == null)
                     _bitmapData = new Bitmap(8, 8);
-                using(Graphics g = Graphics.FromImage(_bitmapData))
+                using (Graphics g = Graphics.FromImage(_bitmapData))
                 {
                     for (int iy = 0; iy < 8; iy++)
                     {
                         for (int ix = 0; ix < 8; ix++)
                         {
-                            g.FillRectangle(new SolidBrush(Palette.Palettearray[tileNibbles[idx]+this.paletteOffsetFor4bit*16].PalColor), ix, iy, 1, 1);
+                            g.FillRectangle(
+                                new SolidBrush(Palette.Palettearray[tileNibbles[idx] + this.paletteOffsetFor4bit * 16]
+                                    .PalColor), ix, iy, 1, 1);
                             idx++;
                         }
                     }
                 }
+
                 return _bitmapData;
             }
-            set
-            {
-                _bitmapData = value;
-            }
+            set { _bitmapData = value; }
         }
 
         public object Clone()
         {
-            return (new Tile (this.Palette, this.paletteOffsetFor4bit,null, this.tileData ) as object);
+            return (new Tile(this.Palette, this.paletteOffsetFor4bit, null, this.tileData) as object);
         }
 
         //public  byte[] getHash()
         //{
         //    return MD5.HashData(this.tileData);
         //}
-            
 
-        public bool Equals( Tile? other , out bool rotated)
+
+        public bool Equals(Tile? other, out bool rotated)
         {
             rotated = false;
-            if ( other == null ) return false;
+            if (other == null) return false;
             bool retval = true;
-            if ( this.tileBytes.Length != other.tileBytes.Length ) return false;
-            for(int i = 0;i < this.tileBytes.Length;i++)
+            if (this.tileBytes.Length != other.tileBytes.Length) return false;
+            for (int i = 0; i < this.tileBytes.Length; i++)
             {
                 if (this.tileBytes[i] != other.tileBytes[i])
                 {
@@ -173,6 +175,7 @@ namespace Next_tile_editor
                     break;
                 }
             }
+
             if (retval) return retval;
             nibble[] rotatedNibbles = other.Rotated;
             for (int i = 0; i < this.tileNibbles.Length; i++)
@@ -180,11 +183,12 @@ namespace Next_tile_editor
                 if (this.tileNibbles[i] != rotatedNibbles[i]) return false;
             }
 
+            rotated = true;
             return true;
         }
         //public override bool Equals(object? obj)
         //{
-            
+
         //    if (obj is Palette9bit otherPalette)
         //    {
         //        return this.Palettearray.SequenceEqual(otherPalette.Palettearray);
@@ -198,49 +202,113 @@ namespace Next_tile_editor
             if (other == null) return false;
             bool retval = true;
             if (this.tileBytes.Length != other.tileBytes.Length) return false;
-            for (int i = 0; i < this.tileBytes.Length; i+=4)
+            for (int i = 0; i < this.tileBytes.Length; i += 4)
             {
                 for (int ik = 0; ik < 4; ik++)
                 {
                     int TileBytethis = i + ik;
-                    int TileByteother = (tileBytes.Length -i - 4) + ik;
-                    if (this.tileBytes[TileBytethis] != other.tileBytes[TileByteother]) return false;
+                    int TileByteother = (tileBytes.Length - i - 4) + ik;
+                    if (this.tileBytes[TileBytethis] != other.tileBytes[TileByteother])
+                    {
+                        retval = false;
+                        break;
+                    }
                 }
-                
+
             }
 
+            if (retval) return retval;
+            nibble[] rotatedNibbles = other.Rotated;
+            for (int i = 0; i < this.tileBytes.Length; i += 4)
+            {
+                for (int ik = 0; ik < 4; ik++)
+                {
+                    int TileBytethis = i + ik;
+                    int TileByteother = (tileBytes.Length - i - 4) + ik;
+                    if (this.tileBytes[TileBytethis] != rotatedNibbles[TileByteother]) return false;
+                }
+
+            }
+
+            rotated = true;
             return true;
         }
+
         public bool EqualsHorizontalMirror(Tile? other, out bool rotated)
         {
+            rotated = false;
             if (other == null) return false;
             if (this.tileNibbles.Length != other.tileNibbles.Length) return false;
+            bool retval = true;
             for (int i = 0; i < this.tileNibbles.Length; i += 8)
             {
                 for (int ik = 0; ik < 8; ik++)
                 {
                     int TileNibblethis = i + ik;
-                    int TileNibblesother = i +7- ik;
+                    int TileNibblesother = i + 7 - ik;
                     if (this.tileNibbles[TileNibblethis] != other.tileNibbles[TileNibblesother]) return false;
                 }
 
             }
+
+            if (retval) return retval;
+
+            for (int i = 0; i < this.tileNibbles.Length; i += 8)
+            {
+                for (int ik = 0; ik < 8; ik++)
+                {
+                    int TileNibblethis = i + ik;
+                    int TileNibblesother = i + 7 - ik;
+
+                    nibble[] rot = other.Rotated;
+                    if (this.tileNibbles[TileNibblethis] != rot[TileNibblesother]) return false;
+                }
+            }
+
+            rotated = true;
             return true;
         }
+
         public bool EqualsVerticalAndHorizontalMirror(Tile? other, out bool rotated)
         {
+            rotated = false;
             if (other == null) return false;
             if (this.tileNibbles.Length != other.tileNibbles.Length) return false;
+            bool retval = true;
             for (int i = 0; i < this.tileNibbles.Length; i += 8)
             {
                 for (int ik = 0; ik < 8; ik++)
                 {
                     int TileBytethis = i + ik;
-                    int TileByteother = (tileNibbles.Length - i) - ik -1;
-                    if (this.tileNibbles[TileBytethis] != other.tileNibbles[TileByteother]) return false;
+                    int TileByteother = (tileNibbles.Length - i) - ik - 1;
+                    if (this.tileNibbles[TileBytethis] != other.tileNibbles[TileByteother])
+                    {
+                        retval = false;
+                        break;
+                    }
+
                 }
 
             }
+
+            if (retval) return retval;
+            nibble[] rotatedNibbles = other.Rotated;
+            for (int i = 0; i < this.tileNibbles.Length; i += 8)
+            {
+                for (int ik = 0; ik < 8; ik++)
+                {
+                    int TileBytethis = i + ik;
+                    int TileByteother = (tileNibbles.Length - i) - ik - 1;
+                    if (this.tileNibbles[TileBytethis] != rotatedNibbles[TileByteother])
+                    {
+                        return false;
+                    }
+
+                }
+
+            }
+
+            rotated = true;
             return true;
         }
 
@@ -256,9 +324,10 @@ namespace Next_tile_editor
                         result[j * 8 + i] = tileNibbles[i * 8 + j];
                     }
                 }
+
                 return result;
             }
         }
-    
-    
+    }
+
 }
