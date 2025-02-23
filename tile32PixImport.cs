@@ -552,25 +552,26 @@ namespace Next_tile_editor
 
                                 //----------------------------------------------------------//
 
-                                if (!found)
-                                {
-                                    tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][
-                                        y * ImportSettings.superTileTileWidth + x]);
-                                    if (tiles.Count <= 256)
-                                    {
-                                        tileMap.Add(new Tuple<byte, byte>(0, (byte)(tiles.Count - 1)));
-                                    }
-                                    else
-                                    {
-                                        tileMap.Add(new Tuple<byte, byte>(1, (byte)(tiles.Count - 257)));
-                                    }
+                         
 
-                                    Tile newtile = tiles[tiles.Count - 1];
-                                    newtile.flags = (int)Modifier.None;
-                                    newtile.Index = tiles.Count - 1;
-                                    //            tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+                            }
+                            if (!found)
+                            {
+                                tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][
+                                    y * ImportSettings.superTileTileWidth + x]);
+                                if (tiles.Count <= 256)
+                                {
+                                    tileMap.Add(new Tuple<byte, byte>(0, (byte)(tiles.Count - 1)));
+                                }
+                                else
+                                {
+                                    tileMap.Add(new Tuple<byte, byte>(1, (byte)(tiles.Count - 257)));
                                 }
 
+                                Tile newtile = tiles[tiles.Count - 1];
+                                newtile.flags = (int)Modifier.None;
+                                newtile.Index = tiles.Count - 1;
+                                //            tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
                             }
 
                         }
