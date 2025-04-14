@@ -610,11 +610,70 @@ namespace Next_tile_editor
                                 Tile t = tiles[bTile];
                                 Bitmap bmTemp = new Bitmap(8, 8);
                                 IReadWriteBitmapData bmwrite = bmTemp.GetReadWriteBitmapData();
-                                for (int ij = 0; ij < 8; ij++)
+                                
+                                
+                                
+                                for (int ij = 0; ij < 8; ij++) // ycount
                                 {
-                                    for (int ik = 0; ik < 8; ik++)
+                                    for (int ik = 0; ik < 8; ik++) //xcount
                                     {
-                                        nibble n = t.tileNibbles[ij * 8 + ik];
+                                        
+                                        int nibbleOffset = ij * 8 + ik;
+                                        if (((int)t.flags & (int)Modifier.Rotate)==0)
+                                        {
+
+
+                                            if (((int)t.flags & (int)Modifier.XMirror) > 0)
+                                            {
+                                                nibbleOffset += (7 - ik);
+
+                                            }
+                                            else
+                                            {
+                                                nibbleOffset += ik;
+                                            }
+
+                                            if (((int)t.flags & (int)Modifier.YMirror)>0)
+                                            {
+                                                // flip vertically
+                                                nibbleOffset += 56-(ij * 8);
+                                            }
+                                            else
+                                            {
+                                                nibbleOffset += ij*8;
+                                                    
+
+                                            }
+                                        }
+                                        else
+                                        {
+
+
+                                            // rotate 90 degrees
+                                            if (((int)t.flags & (int)Modifier.YMirror) > 0)
+                                            {
+                                                nibbleOffset += (7 - ij);
+
+                                            }
+                                            else
+                                            {
+                                                nibbleOffset += ij;
+                                            }
+
+                                            if (((int)t.flags & (int)Modifier.XMirror) > 0)
+                                            {
+                                                // flip vertically
+                                                nibbleOffset += 56 - (ik * 8);
+                                            }
+                                            else
+                                            {
+                                                nibbleOffset += ik * 8;
+
+
+                                            }
+                                        }
+
+                                        nibble n = t.tileNibbles[nibbleOffset];
                                         bmwrite.SetPixel(ik, ij, palette.Palettearray[n].PalColor);
                                     }
                                 }
@@ -684,15 +743,76 @@ namespace Next_tile_editor
                                     {
                                         for (int ik = 0; ik < 8; ik++)
                                         {
+                                            nibble n;
+                                            int nibbleOffset = 0;//ij * 8 + ik;
+                                            if (((int)t.flags & (int)Modifier.Rotate) == 0)
+                                            {
+                                                if (((int)t.flags & (int)Modifier.XMirror) > 0)
+                                                {
+                                                    nibbleOffset += (7 - ik);
+                                                }
+                                                else
+                                                {
+                                                    nibbleOffset += ik;
+                                                }
+
+                                                if (((int)t.flags & (int)Modifier.YMirror) > 0)
+                                                {
+                                                    // flip vertically
+                                                    nibbleOffset += 56 - (ij * 8);
+                                                }
+                                                else
+                                                {
+                                                    nibbleOffset += ij * 8;
 
 
-                                            nibble n = t.tileNibbles[ij * 8 + ik];
+                                                }
+                                            }
+                                            else
+                                            {
 
 
-                                            bmwrite.SetPixel(ik * 2, ij * 2, palette.Palettearray[n].PalColor);
-                                            bmwrite.SetPixel(ik * 2 + 1, ij * 2, palette.Palettearray[n].PalColor);
-                                            bmwrite.SetPixel(ik * 2, ij * 2 + 1, palette.Palettearray[n].PalColor);
-                                            bmwrite.SetPixel(ik * 2 + 1, ij * 2 + 1, palette.Palettearray[n].PalColor);
+                                                // rotate 90 degrees
+                                                if (((int)t.flags & (int)Modifier.YMirror) > 0)
+                                                {
+                                                    nibbleOffset += (7 - ij);
+
+                                                }
+                                                else
+                                                {
+                                                    nibbleOffset += ij;
+                                                }
+
+                                                if (((int)t.flags & (int)Modifier.XMirror) > 0)
+                                                {
+                                                    // flip vertically
+                                                    nibbleOffset += 56 - (ik * 8);
+                                                }
+                                                else
+                                                {
+                                                    nibbleOffset += ik * 8;
+
+
+                                                }
+                                            }
+
+                                            try
+                                            {
+                                                 n = t.tileNibbles[nibbleOffset];
+                                                 bmwrite.SetPixel(ik * 2, ij * 2, palette.Palettearray[n].PalColor);
+                                                 bmwrite.SetPixel(ik * 2 + 1, ij * 2, palette.Palettearray[n].PalColor);
+                                                 bmwrite.SetPixel(ik * 2, ij * 2 + 1, palette.Palettearray[n].PalColor);
+                                                 bmwrite.SetPixel(ik * 2 + 1, ij * 2 + 1, palette.Palettearray[n].PalColor);
+                                            }
+                                            catch (Exception exception)
+                                            {
+                                                Console.WriteLine(exception);
+                                                throw;
+                                            }
+                                            
+
+
+                                   
 
                                         }
                                     }
@@ -719,7 +839,7 @@ namespace Next_tile_editor
             }
             catch (Exception ex)
             {
-
+                int x = 999999;
             }
         }
 
