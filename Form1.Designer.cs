@@ -295,7 +295,7 @@
             TileEditor.Location = new Point(4, 29);
             TileEditor.Name = "TileEditor";
             TileEditor.Padding = new Padding(3);
-            TileEditor.Size = new Size(1853, 976);
+            TileEditor.Size = new Size(1856, 1000);
             TileEditor.TabIndex = 1;
             TileEditor.Text = "Tile Editor";
             TileEditor.UseVisualStyleBackColor = true;
@@ -506,7 +506,7 @@
             tabPage2.Location = new Point(4, 29);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(1853, 976);
+            tabPage2.Size = new Size(1856, 1000);
             tabPage2.TabIndex = 2;
             tabPage2.Text = "Import 4x4 Tiles";
             tabPage2.UseVisualStyleBackColor = true;
@@ -527,8 +527,9 @@
             tile32PixImport1.ImportSettings = tileSettings1;
             tile32PixImport1.Location = new Point(3, 3);
             tile32PixImport1.Name = "tile32PixImport1";
-            tile32PixImport1.Size = new Size(1847, 970);
+            tile32PixImport1.Size = new Size(1850, 994);
             tile32PixImport1.TabIndex = 0;
+            tile32PixImport1.Load += tile32PixImport1_Load;
             tile32PixImport1.Click += btnLoadTiles_Click;
             // 
             // Form1

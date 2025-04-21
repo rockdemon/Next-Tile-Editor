@@ -8,12 +8,20 @@ using System.Threading.Tasks;
 
 namespace Next_tile_editor
 {
+    /***
+     *bits 15-12 : palette offset
+       bit 11 : x mirror
+       bit 10 : y mirror
+       bit 9 : rotate
+       bit 8 : ULA over tilemap (in 512 tile mode, bit 8 of the tile number)
+       bits 7-0 : tile number
+     */
     public enum Modifier :int
     {
         None = 0,
-        XMirror = 1,
-        YMirror = 2,
-        Rotate = 4
+        XMirror = 8,
+        YMirror = 4,
+        Rotate = 2
         
     }
 
@@ -92,11 +100,7 @@ namespace Next_tile_editor
 
         public int Index { get; set; }
 
-        /// <summary>
-        /// Modifier flags added together as a bitfield
-        /// </summary>
-        public int flags { get; set; }
-
+        
         public nibble[] tileNibbles
         {
             get

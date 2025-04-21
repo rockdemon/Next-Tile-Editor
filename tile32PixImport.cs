@@ -422,20 +422,46 @@ namespace Next_tile_editor
         /// tile mode, this is the 9th bit of tile index.
         /// Tile Index
         /// 8-bit tile index within the tile definitions.
-        List<Tuple<byte,byte>> tileMap = new List<Tuple<byte, byte>>();
+        List<TileRef> tileMap = new List<TileRef>();
+        class TileRef
+        {
+            private byte _flags = 0;
+            private byte _index = 0;
+            public byte flags { get; set; }
+            public byte index { get; set; }
+            public TileRef(byte flags, byte index)
+            {
+                this.flags = flags;
+                this.index = index;
+            }
+
+            public int tileIndex
+            {
+                get
+                {
+                    return (int)index + ((int)flags & 0b00000001 * 256);
+                }
+                set
+                {
+                    this.flags = (byte)(value >255 ? flags |1 : flags);
+                    this.index = (byte)(value & 0b11111111);
+                }
+
+            }
+        }
 
         public byte[] tileMapBytes
         {
             get
             {
-                byte[] ret = new byte[tileMap.Count * 2];
+                List<byte> retList = new List<byte>();// new byte[tileMap.Count * 2];
                 foreach (var tile in tileMap)
                 {
-                    ret.AddRange(new byte[]{
-                        tile.Item1,tile.Item2
+                    retList.AddRange(new byte[]{
+                        tile.flags,tile.index
                     });
                 }
-                return ret;
+                return retList.ToArray();
             }
         }
         List<Tile> tiles = new List<Tile>();
@@ -464,18 +490,19 @@ namespace Next_tile_editor
                                         y * ImportSettings.superTileTileWidth + x].Equals(tile, out bool rotated))
                                 {
                                     found = true;
+                                    byte iflags = (byte)((int)Modifier.None + (rotated ? (int)Modifier.Rotate : 0));
                                     if (z > 255 && z < 512)
                                     {
-                                        tileMap.Add(new Tuple<byte, byte>(1, (byte)(z - 256)));
+                                        tileMap.Add(new TileRef((byte)(1 + iflags), (byte)(z - 256)));
 
                                     }
                                     else
                                     {
                                         // tile less than 256
-                                        tileMap.Add(new Tuple<byte, byte>(0, (byte)z));
+                                        tileMap.Add(new TileRef(iflags, (byte)z));
                                     }
 
-                                    tile.flags = (int)Modifier.None + (rotated?(int)Modifier.Rotate:0) ;
+                                    
                                     tile.Index = z;
                                     //           tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
 
@@ -491,15 +518,16 @@ namespace Next_tile_editor
                                     found = true;
                                     if (z > 255 && z < 512)
                                     {
-                                        tileMap.Add(new Tuple<byte, byte>(0b1001, (byte)(z - 256)));
+                                        tileMap.Add(new TileRef((byte)(1+Modifier.XMirror), (byte)(z - 256)));
                                     }
                                     else
                                     {
                                         // tile less than 256
-                                        tileMap.Add(new Tuple<byte, byte>(0b1000, (byte)z));
+                                        tileMap.Add(new TileRef((byte)( Modifier.XMirror), (byte)(z - 256)));
+                                        
                                     }
 
-                                    tile.flags = (int)Modifier.XMirror +(rotated? (int)Modifier.Rotate : 0);
+                                    
                                     tile.Index = z;
                                     //           tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
 
@@ -513,15 +541,14 @@ namespace Next_tile_editor
                                     found = true;
                                     if (z > 255 && z < 512)
                                     {
-                                        tileMap.Add(new Tuple<byte, byte>(0b0101, (byte)(z - 256)));
+                                        tileMap.Add(new TileRef((byte)((int)Modifier.YMirror | 1), (byte)(z - 256)));
                                     }
-                                    else
+                                    else                                   
                                     {
                                         // tile less than 256
-                                        tileMap.Add(new Tuple<byte, byte>(0b0100, (byte)z));
+                                        tileMap.Add(new TileRef((byte)Modifier.YMirror, (byte)z));
                                     }
-
-                                    tile.flags = (int)Modifier.YMirror + (rotated ? (int)Modifier.Rotate : 0); ;
+                                    
                                     tile.Index = z;
                                     //        tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
 
@@ -535,25 +562,20 @@ namespace Next_tile_editor
                                     found = true;
                                     if (z > 255 && z < 512)
                                     {
-                                        tileMap.Add(new Tuple<byte, byte>(0b1101, (byte)(z - 256)));
+                                        
+                                        tileMap.Add(new TileRef((byte)(1 | (int)Modifier.XMirror | (int)Modifier.YMirror), (byte)(z - 256)));
                                     }
                                     else
                                     {
                                         // tile less than 256
-                                        tileMap.Add(new Tuple<byte, byte>(0b1100, (byte)z));
+                                        tileMap.Add(new TileRef((byte)( (int)Modifier.XMirror | (int)Modifier.YMirror), (byte)(z - 256)));
                                     }
 
-                                    tile.flags = (int)Modifier.XMirror + (int)Modifier.YMirror +( ( rotated )?(int)Modifier.Rotate:0);
+                                    
                                     tile.Index = z;
                                     //                tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
                                 }
-
-
-
                                 //----------------------------------------------------------//
-
-                         
-
                             }
                             if (!found)
                             {
@@ -561,21 +583,19 @@ namespace Next_tile_editor
                                     y * ImportSettings.superTileTileWidth + x]);
                                 if (tiles.Count <= 256)
                                 {
-                                    tileMap.Add(new Tuple<byte, byte>(0, (byte)(tiles.Count - 1)));
+                                    tileMap.Add(new TileRef(0, (byte)(tiles.Count - 1)));
                                 }
                                 else
                                 {
-                                    tileMap.Add(new Tuple<byte, byte>(1, (byte)(tiles.Count - 257)));
+                                    tileMap.Add(new TileRef(1, (byte)(tiles.Count - 257)));
                                 }
 
                                 Tile newtile = tiles[tiles.Count - 1];
-                                newtile.flags = (int)Modifier.None;
+                                
                                 newtile.Index = tiles.Count - 1;
                                 //            tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
                             }
-
                         }
-
                         iTiles++;
                     }
                 }
@@ -605,8 +625,11 @@ namespace Next_tile_editor
                         {
                             for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                             {
-                                byte bTile = tileMap[(iBigTile * (ImportSettings.superTileTileHeight*ImportSettings.superTileTileWidth) 
-                                        + (y*ImportSettings.superTileTileWidth ) + x)].Item2;
+                                TileRef tref = tileMap[
+                                    (iBigTile * (ImportSettings.superTileTileHeight * ImportSettings.superTileTileWidth)
+                                     + (y * ImportSettings.superTileTileWidth) + x)];
+                                int bTile = tref.tileIndex;
+                                
                                 Tile t = tiles[bTile];
                                 Bitmap bmTemp = new Bitmap(8, 8);
                                 IReadWriteBitmapData bmwrite = bmTemp.GetReadWriteBitmapData();
@@ -618,12 +641,12 @@ namespace Next_tile_editor
                                     for (int ik = 0; ik < 8; ik++) //xcount
                                     {
                                         
-                                        int nibbleOffset = ij * 8 + ik;
-                                        if (((int)t.flags & (int)Modifier.Rotate)==0)
+                                        int nibbleOffset = 0;
+                                        if (((int)tref.flags & (int)Modifier.Rotate)==0)
                                         {
 
 
-                                            if (((int)t.flags & (int)Modifier.XMirror) > 0)
+                                            if (((int)tref.flags & (int)Modifier.XMirror) > 0)
                                             {
                                                 nibbleOffset += (7 - ik);
 
@@ -633,7 +656,7 @@ namespace Next_tile_editor
                                                 nibbleOffset += ik;
                                             }
 
-                                            if (((int)t.flags & (int)Modifier.YMirror)>0)
+                                            if (((int)tref.flags & (int)Modifier.YMirror)>0)
                                             {
                                                 // flip vertically
                                                 nibbleOffset += 56-(ij * 8);
@@ -650,7 +673,7 @@ namespace Next_tile_editor
 
 
                                             // rotate 90 degrees
-                                            if (((int)t.flags & (int)Modifier.YMirror) > 0)
+                                            if (((int)tref.flags & (int)Modifier.YMirror) > 0)
                                             {
                                                 nibbleOffset += (7 - ij);
 
@@ -660,7 +683,7 @@ namespace Next_tile_editor
                                                 nibbleOffset += ij;
                                             }
 
-                                            if (((int)t.flags & (int)Modifier.XMirror) > 0)
+                                            if (((int)tref.flags & (int)Modifier.XMirror) > 0)
                                             {
                                                 // flip vertically
                                                 nibbleOffset += 56 - (ik * 8);
@@ -697,12 +720,55 @@ namespace Next_tile_editor
             this.btnExportTile_32_Tile_8.Enabled = true;
         }
 
+        public byte[] get_8_8_TileMap()
+        {
+            List<byte> retList = new List<byte>();
+            for (int iw = 0; iw < (ImportSettings.superTileTileWidth * ImportSettings.tileGroupWidth ) *(ImportSettings.superTileTileHeight * ImportSettings.tileGroupHeight) * 2; iw++)
+            {
+                retList.Add( (byte)0);
+            }
+
+            int iBigTile = 0;
+            for (int ij=0; ij < ImportSettings.tileGroupHeight; ij++)
+            {
+                for (int ik = 0; ik < ImportSettings.tileGroupWidth; ik++)
+                {
+                    for (int j = 0; j < ImportSettings.superTileTileHeight; j++)
+                    {
+                        for (int k = 0; k < ImportSettings.superTileTileWidth; k++)
+                        {
+                            TileRef tref = tileMap[(iBigTile * ImportSettings.superTileTileHeight * ImportSettings.superTileTileWidth) //big tile ref
+                                                             // big tile left
+                                                                + (j * ImportSettings.superTileTileWidth) + k];
+
+                            int rowChars = ImportSettings.tileGroupHeight * ImportSettings.superTileTileHeight;
+                            int rety = ij * ImportSettings.superTileTileHeight + j;
+                            int retx = ik * ImportSettings.superTileTileWidth + k;
+                            int idx = rety * rowChars + retx;
+
+                            
+
+                            retList[idx * 2] = tref.flags;
+                            retList[idx * 2 + 1] = tref.index;
+
+                            
+                        }
+                    }
+
+                    iBigTile++;
+                }
+            }
+
+            return retList.ToArray();
+        }
+
         private void btnExportTile_32_Tile_8_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllBytes(saveFileDialog.FileName + ".tileMap", tileMapBytes);
+                byte[] linearFileMapBytes = get_8_8_TileMap();
+                File.WriteAllBytes(saveFileDialog.FileName + ".tileMap", linearFileMapBytes);
                 //tileMap
                 //tileMap[(iBigTile * 16) + (y * 4) + x];
                 List<byte> outTileBytes = new List<byte>();
@@ -735,7 +801,11 @@ namespace Next_tile_editor
                             {
                                 for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                                 {
-                                    byte bTile = tileMap[(iBigTile * (ImportSettings.superTileTileWidth*ImportSettings.superTileTileHeight)) + (y * ImportSettings.superTileTileWidth) + x].Item2;
+                                    TileRef tref = tileMap[
+                                        (iBigTile * (ImportSettings.superTileTileHeight * ImportSettings.superTileTileWidth)
+                                         + (y * ImportSettings.superTileTileWidth) + x)];
+                                    
+                                    int bTile = tref.tileIndex;
                                     Tile t = tiles[bTile];
                                     Bitmap bmTemp = new Bitmap(16, 16);
                                     IReadWriteBitmapData bmwrite = bmTemp.GetReadWriteBitmapData();
@@ -745,9 +815,9 @@ namespace Next_tile_editor
                                         {
                                             nibble n;
                                             int nibbleOffset = 0;//ij * 8 + ik;
-                                            if (((int)t.flags & (int)Modifier.Rotate) == 0)
+                                            if (((int)tref.flags & (int)Modifier.Rotate) == 0)
                                             {
-                                                if (((int)t.flags & (int)Modifier.XMirror) > 0)
+                                                if (((int)tref.flags & (int)Modifier.XMirror) > 0)
                                                 {
                                                     nibbleOffset += (7 - ik);
                                                 }
@@ -756,7 +826,7 @@ namespace Next_tile_editor
                                                     nibbleOffset += ik;
                                                 }
 
-                                                if (((int)t.flags & (int)Modifier.YMirror) > 0)
+                                                if (((int)tref.flags & (int)Modifier.YMirror) > 0)
                                                 {
                                                     // flip vertically
                                                     nibbleOffset += 56 - (ij * 8);
@@ -773,7 +843,7 @@ namespace Next_tile_editor
 
 
                                                 // rotate 90 degrees
-                                                if (((int)t.flags & (int)Modifier.YMirror) > 0)
+                                                if (((int)tref.flags & (int)Modifier.YMirror) > 0)
                                                 {
                                                     nibbleOffset += (7 - ij);
 
@@ -783,7 +853,7 @@ namespace Next_tile_editor
                                                     nibbleOffset += ij;
                                                 }
 
-                                                if (((int)t.flags & (int)Modifier.XMirror) > 0)
+                                                if (((int)tref.flags & (int)Modifier.XMirror) > 0)
                                                 {
                                                     // flip vertically
                                                     nibbleOffset += 56 - (ik * 8);
@@ -850,7 +920,11 @@ namespace Next_tile_editor
             {
                 for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                 {
-                    byte bTile = tileMap[(iBigTile * (ImportSettings.NumberOfTilesPerSuperTile)) + (ImportSettings.superTileTileWidth * y) + x].Item2;
+                    TileRef tref =
+                        tileMap[
+                            (iBigTile * (ImportSettings.NumberOfTilesPerSuperTile)) +
+                            (ImportSettings.superTileTileWidth * y) + x];
+                    int bTile = tref.tileIndex;
                     Tile t = tiles[bTile];
                     Bitmap bmTemp = new Bitmap(8, 8);
                     IReadWriteBitmapData bmwrite = bmTemp.GetReadWriteBitmapData();
@@ -858,7 +932,59 @@ namespace Next_tile_editor
                     {
                         for (int ik = 0; ik < 8; ik++)
                         {
-                            nibble n = t.tileNibbles[ij * 8 + ik];
+                            
+                            int nibbleOffset = 0;//ij * 8 + ik;
+                            if (((int)tref.flags & (int)Modifier.Rotate) == 0)
+                            {
+                                if (((int)tref.flags & (int)Modifier.XMirror) > 0)
+                                {
+                                    nibbleOffset += (7 - ik);
+                                }
+                                else
+                                {
+                                    nibbleOffset += ik;
+                                }
+
+                                if (((int)tref.flags & (int)Modifier.YMirror) > 0)
+                                {
+                                    // flip vertically
+                                    nibbleOffset += 56 - (ij * 8);
+                                }
+                                else
+                                {
+                                    nibbleOffset += ij * 8;
+
+
+                                }
+                            }
+                            else
+                            {
+
+
+                                // rotate 90 degrees
+                                if (((int)tref.flags & (int)Modifier.YMirror) > 0)
+                                {
+                                    nibbleOffset += (7 - ij);
+
+                                }
+                                else
+                                {
+                                    nibbleOffset += ij;
+                                }
+
+                                if (((int)tref.flags & (int)Modifier.XMirror) > 0)
+                                {
+                                    // flip vertically
+                                    nibbleOffset += 56 - (ik * 8);
+                                }
+                                else
+                                {
+                                    nibbleOffset += ik * 8;
+
+
+                                }
+                            }
+                            nibble n = t.tileNibbles[nibbleOffset];
                             bmwrite.SetPixel(ik, ij, palette.Palettearray[n].PalColor);
                         }
                     }
@@ -1055,7 +1181,7 @@ namespace Next_tile_editor
                 byte[] tempBytes = File.ReadAllBytes(FileName + ".tileMap");
                 for (int i = 0; i < tempBytes.Length / 2; i++)
                 {
-                    tileMap.Add(new Tuple<byte, byte>(tempBytes[i * 2], tempBytes[i * 2 + 1]));
+                    tileMap.Add(new TileRef(tempBytes[i * 2], tempBytes[i * 2 + 1]));
                 }
                 
                 palette = Palette9bit.FromByteArray(

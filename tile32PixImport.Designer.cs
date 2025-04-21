@@ -187,7 +187,6 @@
             // 
             // btnExportTile_32_Tile_8
             // 
-            btnExportTile_32_Tile_8.Enabled = false;
             btnExportTile_32_Tile_8.Location = new Point(23, 457);
             btnExportTile_32_Tile_8.Name = "btnExportTile_32_Tile_8";
             btnExportTile_32_Tile_8.Size = new Size(84, 121);
