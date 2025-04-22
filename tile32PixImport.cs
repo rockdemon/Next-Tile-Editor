@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography;
@@ -706,7 +707,7 @@ namespace Next_tile_editor
                                        bmwrite.ToBitmap(),
                                        ix * (ImportSettings.superTileTileWidth*8) + 2 * ix + x * 8,
                                        iy * (ImportSettings.superTileTileHeight*8) + 2 * iy + y * 8);
-
+                                e.Graphics.DrawString(""+tref.tileIndex, SystemFonts.DialogFont,Brushes.Aqua, ix * (ImportSettings.superTileTileWidth * 8) + 2 * ix + x * 8, iy * (ImportSettings.superTileTileHeight * 8) + 2 * iy + y * 8);
 
                             }
                         }
@@ -731,9 +732,9 @@ namespace Next_tile_editor
             }
 
             int iBigTile = 0;
-            for (int ij=0; ij < ImportSettings.tileGroupHeight; ij++)
+            for (int ij=0; ij < ImportSettings.tileGroupHeight; ij++) // y (row)
             {
-                for (int ik = 0; ik < ImportSettings.tileGroupWidth; ik++)
+                for (int ik = 0; ik < ImportSettings.tileGroupWidth; ik++) // x
                 {
                     for (int j = 0; j < ImportSettings.superTileTileHeight; j++)
                     {
@@ -892,6 +893,9 @@ namespace Next_tile_editor
                                            bmwrite.ToBitmap(),
                                            ix * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * ix + x * 16 + 1,
                                            iy * (ImportSettings.superTileTileHeight * 16) + ImportSettings.superTileTileHeight * iy + y * 16 + 1);
+                                    e.Graphics.DrawString("" + tref.tileIndex, SystemFonts.DialogFont, Brushes.Aqua, 
+                                        ix * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * ix + x * 16 + 1, 
+                                        iy * (ImportSettings.superTileTileHeight * 16) + ImportSettings.superTileTileHeight * iy + y * 16 + 1);
                                     if (iBigTile == iSelectedIndex)
                                     {
                                         e.Graphics.DrawRectangle(Pens.Black,
@@ -929,7 +933,7 @@ namespace Next_tile_editor
                     int bTile = tref.tileIndex;
                     Tile t = tiles[bTile];
                     nibble[] nib = t.tileNibbles;
-                    if (((int)t.flags & (int)Modifier.Rotate) > 0)
+                    if (((int)tref.flags & (int)Modifier.Rotate) > 0)
                     {
                         nib = t.Rotated;
                     }
