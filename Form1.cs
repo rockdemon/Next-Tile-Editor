@@ -920,17 +920,23 @@ namespace Next_tile_editor
                 List<Bitmap> images = new List<Bitmap>();
                 if (im != null)
                 {
-                    for (int ix = 0; ix < im.Width; ix+=8) {
+                    for (int ix = 0; ix < im.Width; ix += 8)
+                    {
                         for (int iy = 0; iy < im.Height; iy += 8)
                         {
                             Bitmap bmTemp = new Bitmap(8, 8);
                             bmTemp.Clone(new Rectangle(ix, iy, 8, 8), PixelFormat.Format32bppRgb);
 
-                            images.Add((Bitmap) bmTemp);
+                            images.Add((Bitmap)bmTemp);
                         }
                     }
                 }
             }
+        }
+
+        private void tile32PixImport1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

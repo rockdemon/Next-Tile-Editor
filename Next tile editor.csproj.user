@@ -16,6 +16,15 @@
     <Compile Update="tile32PixImport.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="tile32PixImport.cs.BASE.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="tile32PixImport.cs.LOCAL.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="tile32PixImport.cs.REMOTE.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="TileEditor.cs">
       <SubType>Component</SubType>
     </Compile>
