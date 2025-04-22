@@ -478,7 +478,7 @@ namespace Next_tile_editor
                                     tile.flags = (int)Modifier.None + (rotated?(int)Modifier.Rotate:0) ;
                                     tile.Index = z;
                                     //           tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
-
+                                    break;
 
                                 }
 
@@ -502,6 +502,7 @@ namespace Next_tile_editor
                                     tile.flags = (int)Modifier.XMirror +(rotated? (int)Modifier.Rotate : 0);
                                     tile.Index = z;
                                     //           tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+                                    break;
 
                                 }
 
@@ -524,6 +525,7 @@ namespace Next_tile_editor
                                     tile.flags = (int)Modifier.YMirror + (rotated ? (int)Modifier.Rotate : 0); ;
                                     tile.Index = z;
                                     //        tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+                                    break;
 
                                 }
 
@@ -545,7 +547,7 @@ namespace Next_tile_editor
 
                                     tile.flags = (int)Modifier.XMirror + (int)Modifier.YMirror +( ( rotated )?(int)Modifier.Rotate:0);
                                     tile.Index = z;
-                                    //                tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+                                    break;
                                 }
 
 
@@ -618,7 +620,7 @@ namespace Next_tile_editor
                                     for (int ik = 0; ik < 8; ik++) //xcount
                                     {
                                         
-                                        int nibbleOffset = ij * 8 + ik;
+                                        int nibbleOffset = 0;
                                         if (((int)t.flags & (int)Modifier.Rotate)==0)
                                         {
 
@@ -852,13 +854,40 @@ namespace Next_tile_editor
                 {
                     byte bTile = tileMap[(iBigTile * (ImportSettings.NumberOfTilesPerSuperTile)) + (ImportSettings.superTileTileWidth * y) + x].Item2;
                     Tile t = tiles[bTile];
+                    nibble[] nib = t.tileNibbles;
+                    if (((int)t.flags & (int)Modifier.Rotate) > 0)
+                    {
+                        nib = t.Rotated;
+                    }
                     Bitmap bmTemp = new Bitmap(8, 8);
                     IReadWriteBitmapData bmwrite = bmTemp.GetReadWriteBitmapData();
                     for (int ij = 0; ij < 8; ij++)
                     {
                         for (int ik = 0; ik < 8; ik++)
                         {
-                            nibble n = t.tileNibbles[ij * 8 + ik];
+                            int index = 0;
+                            if (((int)t.flags & (int)Modifier.YMirror) > 0)
+                            {
+                                index = 56 - (ij * 8);
+                            }
+                            else
+                            {
+                                index = (ij * 8);
+                            }
+                            if (((int)t.flags & (int)Modifier.XMirror) > 0)
+                            {
+                                index += 7 - ik;
+                            }
+                            else
+                            {
+                                index += ik;
+                            }
+
+
+                            nibble n = nib[index];
+
+                            
+
                             bmwrite.SetPixel(ik, ij, palette.Palettearray[n].PalColor);
                         }
                     }
