@@ -726,25 +726,27 @@ namespace Next_tile_editor
         public byte[] get_8_8_TileMap()
         {
             List<byte> retList = new List<byte>();
-            for (int iw = 0; iw < (ImportSettings.superTileTileWidth * ImportSettings.tileGroupWidth ) *(ImportSettings.superTileTileHeight * ImportSettings.tileGroupHeight) * 2; iw++)
+            for (int iw = 0; iw < (ImportSettings.superTileTileWidth * numMapWidth.Value) *(ImportSettings.superTileTileHeight * numMapHeight.Value) * 2; iw++)
             {
                 retList.Add( (byte)0);
             }
-
+  
             int iBigTile = 0;
-            for (int ij=0; ij < ImportSettings.tileGroupHeight; ij++) // y (row)
+            //   for (int ij=0; ij < ImportSettings.tileGroupHeight; ij++) // y (row)
+            for (int ij = 0; ij < numMapHeight.Value; ij++) // y (row)
             {
-                for (int ik = 0; ik < ImportSettings.tileGroupWidth; ik++) // x
+                for (int ik = 0; ik < numMapWidth.Value; ik++) // x
                 {
+                    int bSuperTileIndex = gauntletMap[ij][ik];
                     for (int j = 0; j < ImportSettings.superTileTileHeight; j++)
                     {
                         for (int k = 0; k < ImportSettings.superTileTileWidth; k++)
                         {
-                            TileRef tref = tileMap[(iBigTile * ImportSettings.superTileTileHeight * ImportSettings.superTileTileWidth) //big tile ref
+                            TileRef tref = tileMap[(bSuperTileIndex * ImportSettings.superTileTileHeight * ImportSettings.superTileTileWidth) //big tile ref
                                                              // big tile left
                                                                 + (j * ImportSettings.superTileTileWidth) + k];
 
-                            int rowChars = ImportSettings.tileGroupHeight * ImportSettings.superTileTileHeight;
+                            int rowChars = ImportSettings.tileGroupWidth * ImportSettings.superTileTileWidth;
                             int rety = ij * ImportSettings.superTileTileHeight + j;
                             int retx = ik * ImportSettings.superTileTileWidth + k;
                             int idx = rety * rowChars + retx;
@@ -1045,13 +1047,15 @@ namespace Next_tile_editor
         // mouselocx +1 = newx * sup*16 + sup *newx
         // newx = mouselocx+1/((sup*16)+sup)
 
-        List<byte[]> gauntletMap = new List<byte[]>();
+        List < byte[]> gauntletMap = new List<byte[]>();
         private void pnl_gauntletMap_Paint(object sender, PaintEventArgs e)
         {
             if (gauntletMap.Count == 0)
             {
                 for (int j = 0; j < numMapHeight.Value; j++)
                 {
+                
+                    
                     gauntletMap.Add(new byte[(int)numMapWidth.Value]);
                 }
             }
