@@ -423,7 +423,7 @@ namespace Next_tile_editor
         /// tile mode, this is the 9th bit of tile index.
         /// Tile Index
         /// 8-bit tile index within the tile definitions.
-        List<TileRef> tileMap = new List<TileRef>();
+        List<TileRef> tile32_32_definition_Map = new List<TileRef>();
         class TileRef
         {
             private byte _flags = 0;
@@ -455,8 +455,8 @@ namespace Next_tile_editor
         {
             get
             {
-                List<byte> retList = new List<byte>();// new byte[tileMap.Count * 2];
-                foreach (var tile in tileMap)
+                List<byte> retList = new List<byte>();// new byte[tile32_32_definition_Map.Count * 2];
+                foreach (var tile in tile32_32_definition_Map)
                 {
                     retList.AddRange(new byte[]{
                         tile.flags,tile.index
@@ -470,7 +470,7 @@ namespace Next_tile_editor
         private void btnCreateTileToolboxandMap_Click(object sender, EventArgs e)
         {
             int iTiles = 0;
-            tileMap.Clear();
+            tile32_32_definition_Map.Clear();
             tiles.Clear();
             for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++) // height in supertiles
             {
@@ -494,13 +494,13 @@ namespace Next_tile_editor
                                     byte iflags = (byte)((int)Modifier.None + (rotated ? (int)Modifier.Rotate : 0));
                                     if (z > 255 && z < 512)
                                     {
-                                        tileMap.Add(new TileRef((byte)(1 + iflags), (byte)(z - 256)));
+                                        tile32_32_definition_Map.Add(new TileRef((byte)(1 + iflags), (byte)(z - 256)));
 
                                     }
                                     else
                                     {
                                         // tile less than 256
-                                        tileMap.Add(new TileRef(iflags, (byte)z));
+                                        tile32_32_definition_Map.Add(new TileRef(iflags, (byte)z));
                                     }
 
                                     
@@ -519,12 +519,12 @@ namespace Next_tile_editor
                                     found = true;
                                     if (z > 255 && z < 512)
                                     {
-                                        tileMap.Add(new TileRef((byte)(1+Modifier.XMirror), (byte)(z - 256)));
+                                        tile32_32_definition_Map.Add(new TileRef((byte)(1+Modifier.XMirror), (byte)(z - 256)));
                                     }
                                     else
                                     {
                                         // tile less than 256
-                                        tileMap.Add(new TileRef((byte)( Modifier.XMirror), (byte)(z - 256)));
+                                        tile32_32_definition_Map.Add(new TileRef((byte)( Modifier.XMirror), (byte)(z - 256)));
                                         
                                     }
 
@@ -543,12 +543,12 @@ namespace Next_tile_editor
                                     found = true;
                                     if (z > 255 && z < 512)
                                     {
-                                        tileMap.Add(new TileRef((byte)((int)Modifier.YMirror | 1), (byte)(z - 256)));
+                                        tile32_32_definition_Map.Add(new TileRef((byte)((int)Modifier.YMirror | 1), (byte)(z - 256)));
                                     }
                                     else                                   
                                     {
                                         // tile less than 256
-                                        tileMap.Add(new TileRef((byte)Modifier.YMirror, (byte)z));
+                                        tile32_32_definition_Map.Add(new TileRef((byte)Modifier.YMirror, (byte)z));
                                     }
                                     
                                     tile.Index = z;
@@ -566,12 +566,12 @@ namespace Next_tile_editor
                                     if (z > 255 && z < 512)
                                     {
                                         
-                                        tileMap.Add(new TileRef((byte)(1 | (int)Modifier.XMirror | (int)Modifier.YMirror), (byte)(z - 256)));
+                                        tile32_32_definition_Map.Add(new TileRef((byte)(1 | (int)Modifier.XMirror | (int)Modifier.YMirror), (byte)(z - 256)));
                                     }
                                     else
                                     {
                                         // tile less than 256
-                                        tileMap.Add(new TileRef((byte)( (int)Modifier.XMirror | (int)Modifier.YMirror), (byte)(z - 256)));
+                                        tile32_32_definition_Map.Add(new TileRef((byte)( (int)Modifier.XMirror | (int)Modifier.YMirror), (byte)(z - 256)));
                                     }
 
                                     
@@ -586,11 +586,11 @@ namespace Next_tile_editor
                                     y * ImportSettings.superTileTileWidth + x]);
                                 if (tiles.Count <= 256)
                                 {
-                                    tileMap.Add(new TileRef(0, (byte)(tiles.Count - 1)));
+                                    tile32_32_definition_Map.Add(new TileRef(0, (byte)(tiles.Count - 1)));
                                 }
                                 else
                                 {
-                                    tileMap.Add(new TileRef(1, (byte)(tiles.Count - 257)));
+                                    tile32_32_definition_Map.Add(new TileRef(1, (byte)(tiles.Count - 257)));
                                 }
 
                                 Tile newtile = tiles[tiles.Count - 1];
@@ -616,7 +616,7 @@ namespace Next_tile_editor
         private void pnl_fromActualTilemap_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.Clear(Color.Azure);
-            if (tileMap.Count == 0 || tiles.Count == 0) { return; }
+            if (tile32_32_definition_Map.Count == 0 || tiles.Count == 0) { return; }
             int iBigTile = 0;
             try
             {
@@ -628,7 +628,7 @@ namespace Next_tile_editor
                         {
                             for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                             {
-                                TileRef tref = tileMap[
+                                TileRef tref = tile32_32_definition_Map[
                                     (iBigTile * (ImportSettings.superTileTileHeight * ImportSettings.superTileTileWidth)
                                      + (y * ImportSettings.superTileTileWidth) + x)];
                                 int bTile = tref.tileIndex;
@@ -723,7 +723,17 @@ namespace Next_tile_editor
             this.btnExportTile_32_Tile_8.Enabled = true;
         }
 
-        public byte[] get_8_8_TileMap()
+        /// <summary>
+        /// get_8_8_TileMapBytesForSaving returns a byte array for saving as a next l3 16 bit aligned tilemap.
+        /// gauntletMap is the map of 32 x 32 tiles that we're saving. It's numwidth x numheight
+        /// tile32_32_definition_Map is the list of tiles in the 32x32 supertiles. in 4x4 mode each is 16 tiles long. Each
+        /// super tile runs in order so thats
+        /// t1:x0y0 t1:x1:y0 t1:x2,y0 t1:x3,y0 t1 x0y1 x1y1 x2y1 x3y1 x0y2x1y2 x2y2 x3y2 x0y3 x1y3 x2y3 x3y3 t2:x0y0
+        /// so you go 16 at a time to get to the right supertile then the 16tiles at that point should match the index from gauntletmap
+        /// </summary>
+        /// <returns></returns>
+
+        public byte[] get_8_8_TileMapBytesForSaving()
         {
             List<byte> retList = new List<byte>();
             for (int iw = 0; iw < (ImportSettings.superTileTileWidth * numMapWidth.Value) *(ImportSettings.superTileTileHeight * numMapHeight.Value) * 2; iw++)
@@ -742,19 +752,19 @@ namespace Next_tile_editor
                     {
                         for (int k = 0; k < ImportSettings.superTileTileWidth; k++)
                         {
-                            TileRef tref = tileMap[(bSuperTileIndex * ImportSettings.superTileTileHeight * ImportSettings.superTileTileWidth) //big tile ref
+                            TileRef tref = tile32_32_definition_Map[(bSuperTileIndex * (ImportSettings.superTileTileHeight * ImportSettings.superTileTileWidth)) //big tile ref
                                                              // big tile left
                                                                 + (j * ImportSettings.superTileTileWidth) + k];
 
-                            int rowChars = ImportSettings.tileGroupWidth * ImportSettings.superTileTileWidth;
+                            int rowChars = (int)numMapWidth.Value * ImportSettings.superTileTileWidth;
                             int rety = ij * ImportSettings.superTileTileHeight + j;
                             int retx = ik * ImportSettings.superTileTileWidth + k;
                             int idx = rety * rowChars + retx;
 
                             
 
-                            retList[idx * 2] = tref.flags;
-                            retList[idx * 2 + 1] = tref.index;
+                            retList[idx * 2+1] = tref.flags;
+                            retList[idx * 2] = tref.index;
 
                             
                         }
@@ -772,10 +782,10 @@ namespace Next_tile_editor
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                byte[] linearFileMapBytes = get_8_8_TileMap();
+                byte[] linearFileMapBytes = get_8_8_TileMapBytesForSaving();
                 File.WriteAllBytes(saveFileDialog.FileName + ".tileMap", linearFileMapBytes);
-                //tileMap
-                //tileMap[(iBigTile * 16) + (y * 4) + x];
+                //tile32_32_definition_Map
+                //tile32_32_definition_Map[(iBigTile * 16) + (y * 4) + x];
                 List<byte> outTileBytes = new List<byte>();
                 foreach (Tile t in tiles)
                 {
@@ -790,7 +800,7 @@ namespace Next_tile_editor
         private void pnl_32_32_TilePalette_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.Clear(Color.Azure);
-            if (tileMap.Count == 0 || tiles.Count == 0) { return; }
+            if (tile32_32_definition_Map.Count == 0 || tiles.Count == 0) { return; }
             int iBigTile = 0;
             try
             {
@@ -806,7 +816,7 @@ namespace Next_tile_editor
                             {
                                 for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                                 {
-                                    TileRef tref = tileMap[
+                                    TileRef tref = tile32_32_definition_Map[
                                         (iBigTile * (ImportSettings.superTileTileHeight * ImportSettings.superTileTileWidth)
                                          + (y * ImportSettings.superTileTileWidth) + x)];
                                     
@@ -929,7 +939,7 @@ namespace Next_tile_editor
                 for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
                 {
                     TileRef tref =
-                        tileMap[
+                        tile32_32_definition_Map[
                             (iBigTile * (ImportSettings.NumberOfTilesPerSuperTile)) +
                             (ImportSettings.superTileTileWidth * y) + x];
                     int bTile = tref.tileIndex;
@@ -1061,7 +1071,7 @@ namespace Next_tile_editor
             }
 
             e.Graphics.FillRectangle(new SolidBrush(Color.Azure), e.Graphics.ClipBounds);
-            if (tileMap.Count == 0 || tiles.Count == 0) { return; }
+            if (tile32_32_definition_Map.Count == 0 || tiles.Count == 0) { return; }
             
             try
             {
@@ -1186,17 +1196,17 @@ namespace Next_tile_editor
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 string FileName = ofd.FileName;
-                if (FileName.EndsWith(".tileMap") || FileName.EndsWith(".tileDefs") || FileName.EndsWith(".tilePal"))
+                if (FileName.EndsWith(".tile32_32_definition_Map") || FileName.EndsWith(".tileDefs") || FileName.EndsWith(".tilePal"))
                 {
                     List<string> list = new List<string>(FileName.Split("."));
                     list.RemoveAt(list.Count - 1);
                     FileName = string.Join(".", list);
                 }
 
-                byte[] tempBytes = File.ReadAllBytes(FileName + ".tileMap");
+                byte[] tempBytes = File.ReadAllBytes(FileName + ".tile32_32_definition_Map");
                 for (int i = 0; i < tempBytes.Length / 2; i++)
                 {
-                    tileMap.Add(new TileRef(tempBytes[i * 2], tempBytes[i * 2 + 1]));
+                    tile32_32_definition_Map.Add(new TileRef(tempBytes[i * 2], tempBytes[i * 2 + 1]));
                 }
                 
                 palette = Palette9bit.FromByteArray(
