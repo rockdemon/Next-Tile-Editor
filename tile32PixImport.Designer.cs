@@ -34,6 +34,8 @@
             btn_CommonTileCheck = new Button();
             btn_CreateTilesAndMapping8_8_Map = new Button();
             panel2 = new DBPanel();
+            chknumbers = new CheckBox();
+            checkBox1 = new CheckBox();
             label3 = new Label();
             btnLoad_32_32_px_tilemap = new Button();
             button3 = new Button();
@@ -136,6 +138,8 @@
             // panel2
             // 
             panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            panel2.Controls.Add(chknumbers);
+            panel2.Controls.Add(checkBox1);
             panel2.Controls.Add(label3);
             panel2.Controls.Add(btnLoad_32_32_px_tilemap);
             panel2.Controls.Add(button3);
@@ -145,6 +149,31 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(156, 814);
             panel2.TabIndex = 0;
+            // 
+            // chknumbers
+            // 
+            chknumbers.AutoSize = true;
+            chknumbers.Checked = true;
+            chknumbers.CheckState = CheckState.Checked;
+            chknumbers.Location = new Point(11, 50);
+            chknumbers.Name = "chknumbers";
+            chknumbers.Size = new Size(126, 24);
+            chknumbers.TabIndex = 12;
+            chknumbers.Text = "show numbers";
+            chknumbers.UseVisualStyleBackColor = true;
+            chknumbers.CheckedChanged += chknumbers_CheckedChanged;
+            // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new Point(11, 20);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(133, 24);
+            checkBox1.TabIndex = 11;
+            checkBox1.Text = "Show map Grid";
+            checkBox1.UseVisualStyleBackColor = true;
+            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
+            checkBox1.Click += checkBox1_Click;
             // 
             // label3
             // 
@@ -562,5 +591,7 @@
         private RichTextBox rtbTileStats;
         private Panel dbPanel1;
         private DBPanel pnl_32_32_TilePalette;
+        private CheckBox checkBox1;
+        private CheckBox chknumbers;
     }
 }

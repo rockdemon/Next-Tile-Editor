@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Next_tile_editor
@@ -25,10 +26,10 @@ namespace Next_tile_editor
         
     }
 
-    public class Tile : ICloneable
+    public class Tile8x8 : ICloneable
     {
         /// <summary>
-        ///
+        /// 
         /// Palette Offset 4-bit palette offset for this tile. This allows shifting colours to other 16-colour
         /// “banks” thus allowing us to reach the whole 256 colours from the palette.
         /// X Mirror
@@ -39,29 +40,32 @@ namespace Next_tile_editor
         /// If 1, this tile will be rotated 90oclockwise.
         /// ULA Mode If1, this tile will be rendered on top, if 0 below ULA display. However in 512
         /// tile mode, this is the 8th bit of tile index.
-        /// Tile Index
+        /// Tile8x8 Index
         /// 8-bit tile index within the tile definitions.
         /// </summary>
         /// <param name="palette"></param>
         /// <param name="paletteOffsetFor4bit"></param>
+        /// <param name="mTileData"></param>
         /// <param name="spriteNibbles"></param>
-        /// <param name="tileData"></param>
-        public Tile(Palette9bit palette, int paletteOffsetFor4bit, nibble[] spriteNibbles, byte[] tileData)
+        [JsonConstructor]
+        public Tile8x8(Palette9bit palette, int paletteOffsetFor4bit, byte[] TileData)
         {
             Palette = palette;
             this.paletteOffsetFor4bit = paletteOffsetFor4bit;
-            this.tileData = tileData;
+            this.tileData = TileData;
         }
 
-        private Tile()
+        private Tile8x8()
         {
         }
-
-        public static Tile FromPalette9ValArray(paletteValue9bit[] tileInNextColours, Palette9bit palette)
+        
+        public static Tile8x8 FromPalette9ValArray(paletteValue9bit[] tileInNextColours, Palette9bit palette)
         {
-            return new Tile { Palette = palette, TileFromNextColours = tileInNextColours };
+            return new Tile8x8 { Palette = palette, TileFromNextColours = tileInNextColours };
         }
 
+
+        [JsonIgnore]
         private paletteValue9bit[] TileFromNextColours
         {
             set
@@ -82,7 +86,7 @@ namespace Next_tile_editor
                     }
                 }
 
-                tileBytes = new byte[nibbles.Count / 2];
+                tileData = new byte[nibbles.Count / 2];
                 List<byte> bytes = new List<byte>();
 
                 for (int i = 0; i < nibbles.Count; i += 2)
@@ -91,7 +95,7 @@ namespace Next_tile_editor
                         bytes.Add((byte)(nibbles[i] << 4 | nibbles[i + 1]));
                 }
 
-                tileBytes = bytes.ToArray();
+                tileData = bytes.ToArray();
             }
         }
 
@@ -100,12 +104,18 @@ namespace Next_tile_editor
 
         public int Index { get; set; }
 
-        
+        [JsonIgnore]
         public nibble[] tileNibbles
         {
             get
             {
                 List<nibble> result = new List<nibble>();
+                if (tileData == null || tileData.Length == 0)
+                {
+                    tileData = new byte[32]
+                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0 };
+                }
+                    
                 for (int i = 0; i < tileData.Length; i++)
                 {
                     nibble a = (tileData[i] & 240) >> 4;
@@ -119,15 +129,19 @@ namespace Next_tile_editor
             }
         }
 
-        public byte[] tileBytes
-        {
-            get { return tileData; }
-            set { tileData = value; }
-        }
+        //public byte[] tileData
+        //{
+        //    get { return m_tileData; }
+        //    set { m_tileData = value; }
+        //}
 
-        private byte[] tileData { get; set; }
+        [JsonIgnore]
+        public byte[] tileData { get; set; }
+
+        [JsonIgnore]
         private Bitmap _bitmapData = null;
 
+        [JsonIgnore]
         public Bitmap bitmapData
         {
             get
@@ -156,24 +170,24 @@ namespace Next_tile_editor
 
         public object Clone()
         {
-            return (new Tile(this.Palette, this.paletteOffsetFor4bit, null, this.tileData) as object);
+            return (new Tile8x8(this.Palette, this.paletteOffsetFor4bit, this.tileData) as object);
         }
 
         //public  byte[] getHash()
         //{
-        //    return MD5.HashData(this.tileData);
+        //    return MD5.HashData(this.m_tileData);
         //}
 
 
-        public bool Equals(Tile? other, out bool rotated)
+        public bool Equals(Tile8x8? other, out bool rotated)
         {
             rotated = false;
             if (other == null) return false;
             bool retval = true;
-            if (this.tileBytes.Length != other.tileBytes.Length) return false;
-            for (int i = 0; i < this.tileBytes.Length; i++)
+            if (this.tileData.Length != other.tileData.Length) return false;
+            for (int i = 0; i < this.tileData.Length; i++)
             {
-                if (this.tileBytes[i] != other.tileBytes[i])
+                if (this.tileData[i] != other.tileData[i])
                 {
                     retval = false;
                     break;
@@ -200,19 +214,19 @@ namespace Next_tile_editor
         //    return false;
         //}
 
-        public bool EqualsVerticalMirror(Tile? other, out bool rotated)
+        public bool EqualsVerticalMirror(Tile8x8? other, out bool rotated)
         {
             rotated = false;
             if (other == null) return false;
             bool retval = true;
-            if (this.tileBytes.Length != other.tileBytes.Length) return false;
-            for (int i = 0; i < this.tileBytes.Length; i += 4)
+            if (this.tileData.Length != other.tileData.Length) return false;
+            for (int i = 0; i < this.tileData.Length; i += 4)
             {
                 for (int ik = 0; ik < 4; ik++)
                 {
                     int TileBytethis = i + ik;
-                    int TileByteother = (tileBytes.Length - i - 4) + ik;
-                    if (this.tileBytes[TileBytethis] != other.tileBytes[TileByteother])
+                    int TileByteother = (tileData.Length - i - 4) + ik;
+                    if (this.tileData[TileBytethis] != other.tileData[TileByteother])
                     {
                         retval = false;
                         break;
@@ -241,7 +255,7 @@ namespace Next_tile_editor
             return true;
         }
 
-        public bool EqualsHorizontalMirror(Tile? other, out bool rotated)
+        public bool EqualsHorizontalMirror(Tile8x8? other, out bool rotated)
         {
             rotated = false;
             if (other == null) return false;
@@ -276,7 +290,7 @@ namespace Next_tile_editor
             return true;
         }
 
-        public bool EqualsVerticalAndHorizontalMirror(Tile? other, out bool rotated)
+        public bool EqualsVerticalAndHorizontalMirror(Tile8x8? other, out bool rotated)
         {
             rotated = false;
             if (other == null) return false;
@@ -319,6 +333,7 @@ namespace Next_tile_editor
             return true;
         }
 
+        [JsonIgnore]
         public nibble[] Rotated
         {
             get

@@ -110,7 +110,7 @@ namespace Next_tile_editor
                 {
                     int tmX = mousePos.Value.X / Form1.TileSize;
                     int tmY = mousePos.Value.Y / Form1.TileSize;
-                    baMap[tmX + tmY * 40] = (byte)iSourceIndex;
+                    baMap[tmX + tmY * 40 + 1].tileIndex = (byte)iSourceIndex;
                     UpdateTileMap();
                     pnlTileMap.Invalidate();
                 }
@@ -185,6 +185,7 @@ namespace Next_tile_editor
                 Image tempImage = LockUnlockBitsLowLevelUpdate((Bitmap)Bitmap.FromFile(listFileNames[i]));
 
                 spriteImages.Add(tempImage);
+
                 if (i >= pictureBoxes.Count)
                 {
                     pictureBoxes.Add(new PictureBox());
@@ -194,6 +195,7 @@ namespace Next_tile_editor
                 pictureBoxes[i].Image = tempImage;
 
             }
+
             UpdatePictureBoxes();
         }
         List<Sprite> lstSprites = new List<Sprite>();
@@ -255,6 +257,7 @@ namespace Next_tile_editor
 
         public void UpdatePictureBoxes()
         {
+            //      _quantizeImages();
             this.pnlSprites.Controls.Clear();
             if (pictureBoxes.Count > 0)
             {
@@ -262,6 +265,7 @@ namespace Next_tile_editor
                 for (int i = 0; i < ((noFrames == 0) ? (128) : noFrames); i++)
                 {
                     pictureBoxes[i].Size = new Size(64, 64);
+
                     spriteImages[i] = lstSprites[i].bitmapData;
                     pictureBoxes[i].Image = spriteImages[i] as Bitmap;
                     this.pnlSprites.Controls.Add(pictureBoxes[i]);
@@ -398,13 +402,18 @@ namespace Next_tile_editor
 
         private void btnQuantizeImages_Click(object sender, EventArgs e)
         {
+            _quantizeImages();
+        }
+        private void _quantizeImages()
+        {
+
             var customPixelFormat = new PixelFormatInfo { BitsPerPixel = 8, Grayscale = false, HasAlpha = false, };
 
             var targetFormat = System.Drawing.Imaging.PixelFormat.Format4bppIndexed; // feel free to try other formats as well
             for (int ix = 0; ix < this.spriteImages.Count; ix++)
             {
                 using (Bitmap bmpSrc = (Bitmap)this.spriteImages[ix])
-                using (Bitmap bmpDst = new Bitmap(8, 8, targetFormat))
+                using (Bitmap bmpDst = new Bitmap(bmpSrc.Width, bmpSrc.Height, targetFormat))
                 {
                     using (IReadableBitmapData? dataSrc = bmpSrc.GetReadableBitmapData())
                     using (IWritableBitmapData dataDst = bmpDst.GetWritableBitmapData())
@@ -421,7 +430,10 @@ namespace Next_tile_editor
 
                     //bmpSrc.SaveAsPng(@"c:\temp\bmpSrc.png");
                     bmpDst.SaveAsPng(@"c:\temp\bmpDst" + ix + ".png"); // or saveAsGif/SaveAsTiff to preserve the indexed format
-                                                                       //      bmpDst.Palette.
+                                                                       //      bmpDst.Palette.#
+                    Palette9bit pal = new Palette9bit();
+
+                    lstSprites.Add(new Sprite(pal, 0, null, Get16x16ByteArrForBmp(bmpDst)));
                 }
             }
         }
@@ -464,16 +476,21 @@ namespace Next_tile_editor
         byte[] baSprites = null;
 
 
-        byte[] baMap = null;
+        TileRef[] baMap = null;
 
         private void btnLoadTileMap_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.InitialDirectory = curDir;
-            ofd.Filter = "map files (*.map)|*.map";
+            ofd.Filter = "map files (*.map)|*.map|(*.tileMap)|*.tileMap";
             if (ofd.ShowDialog(this) == DialogResult.OK)
             {
-                baMap = File.ReadAllBytes(ofd.FileName);
+                byte[] tempMap = File.ReadAllBytes(ofd.FileName);
+                baMap = new TileRef[tempMap.Length / 2];
+                for (int i = 0; i < tempMap.Length / 2; i++)
+                {
+                    baMap[i] = new TileRef(tempMap[i * 2 + 1], tempMap[i * 2]);
+                }
                 UpdateTileMap();
 
             }
@@ -575,9 +592,12 @@ namespace Next_tile_editor
 
             }
         }
+
+        private bool _b2byteMap = true;
         public void UpdateTileMap()
         {
             int arrLength = baMap.Length;
+
             int height = arrLength / 40 + 1;
             if (bmTileBuffer != null && bmTileBuffer.Height != height * TileSize)
             {
@@ -598,12 +618,12 @@ namespace Next_tile_editor
                         for (int x = 0; x < 40; x++)
                         {
                             int index = x + (y * 40);
-                            if ((Tiles[baMap[index]]) == null)
-                                Tiles[baMap[index]] = new Bitmap(TileSize, TileSize);
-                            if (this.baMap[index] < 128)
+                            if ((Tiles[baMap[index].index]) == null)
+                                Tiles[baMap[index].index] = new Bitmap(TileSize, TileSize);
+                            if (this.baMap[index].index < 128)
                             {
                                 Color color;
-                                g.DrawImage(Tiles[this.baMap[index]], (x * TileSize), y * TileSize);
+                                g.DrawImage(Tiles[this.baMap[index].index], (x * TileSize), y * TileSize);
                                 if (((x & 1) ^ (y & 1)) == 0) //even?
                                 {
                                     color = Color.FromArgb(50, 255, 255, 255);
@@ -680,7 +700,7 @@ namespace Next_tile_editor
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllBytes(saveFileDialog.FileName, baMap);
+                //     File.WriteAllBytes(saveFileDialog.FileName, baMap);
             }
 
         }
@@ -848,7 +868,7 @@ namespace Next_tile_editor
                 }
             }
 
-            this.baMap = new byte[(int)numWidth.Value * (int)numHeight.Value];
+            this.baMap = new TileRef[(int)numWidth.Value * (int)numHeight.Value];
 
             UpdateTileMap();
 
@@ -937,6 +957,24 @@ namespace Next_tile_editor
         private void tile32PixImport1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            tileMapObjs.GetInstance().Save("test.proj");
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            tileMapObjs.GetInstance().Load("test.proj");
+            this.Invalidate();
+            this.tile32PixImport1.refreshFromObjs();
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            tileMapObjs.GetInstance().Clear();
+            this.Invalidate();
         }
     }
 }

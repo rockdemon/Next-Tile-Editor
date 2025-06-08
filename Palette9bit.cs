@@ -42,31 +42,29 @@ namespace Next_tile_editor
                 List<byte> ret = new List<byte>();
                 foreach (paletteValue9bit pv in  this.Palettearray)
                 {
-                    ret.AddRange(pv.toSaveBytes());
+                    if (pv!=null)
+                       ret.AddRange(pv.toSaveBytes());
                 }
                 return ret.ToArray();
             }
-        }
-        public byte[] FromSaveByteArray
-        {
             set
             {
                 this.Palettearray = new paletteValue9bit[256];
                 int idx = 0;
-                for (int i = 0; i < value.Length; i ++)
+                for (int i = 0; i < value.Length; i++)
                 {
                     byte byte1 = value[i];
                     if (i + 1 == value.Length)
                         throw new Exception("invalid 9 bit palette");
                     byte byte2 = value[i + 1];
                     i++;
-                    Palettearray[i] = paletteValue9bit.From2bytes(byte1, byte2);
+                    Palettearray[idx] = paletteValue9bit.From2bytes(byte1, byte2);
                     idx++;
                 }
 
             }
         }
-
+        
         public override bool Equals(object? obj)
         {
             if (obj is Palette9bit otherPalette)
@@ -168,7 +166,26 @@ namespace Next_tile_editor
                 byte b1 = (byte)((Red << 5) + (Green << 2) + ((Blue & 0b110) >> 1));
                 return new byte[] { b1, b2 };
             }
+            public class Palette9bitDto
+            {
+                public byte[] PaletteBytes { get; set; }
 
-        }
+                public Palette9bitDto() { }
+
+                public Palette9bitDto(Palette9bit palette)
+                {
+                    PaletteBytes = palette?.SaveByteArray;
+                }
+
+                public Palette9bit ToPalette9bit()
+                {
+                    if (PaletteBytes == null) return new Palette9bit();
+                    var pal = new Palette9bit();
+                    pal.SaveByteArray = PaletteBytes;
+                    return pal;
+                }
+            }
+
     }
+}
 

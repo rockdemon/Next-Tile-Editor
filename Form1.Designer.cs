@@ -30,9 +30,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            paletteValue9bit paletteValue9bit1 = new paletteValue9bit();
-            paletteValue9bit paletteValue9bit2 = new paletteValue9bit();
-            tile32PixImport.TileSettings tileSettings1 = new tile32PixImport.TileSettings();
+            paletteValue9bit paletteValue9bit3 = new paletteValue9bit();
+            paletteValue9bit paletteValue9bit4 = new paletteValue9bit();
+            //tile32PixImport.TileSettings tileSettings2 = new tile32PixImport.TileSettings();
             NextPalette = new NextPaletteColourPicker();
             tab32pixtileImport = new TabControl();
             tabPage1 = new TabPage();
@@ -72,7 +72,10 @@
             TilemapPaletteInkAndPaperPicker = new PalettePicker();
             pnlTilePalette = new Panel();
             tabPage2 = new TabPage();
+            button8 = new Button();
+            button7 = new Button();
             tile32PixImport1 = new tile32PixImport();
+            button9 = new Button();
             tab32pixtileImport.SuspendLayout();
             tabPage1.SuspendLayout();
             panel1.SuspendLayout();
@@ -90,18 +93,18 @@
             // NextPalette
             // 
             NextPalette.BorderStyle = BorderStyle.FixedSingle;
-            paletteValue9bit1.Blue = 0;
-            paletteValue9bit1.Green = 0;
-            paletteValue9bit1.Red = 0;
-            NextPalette.Ink9bit = paletteValue9bit1;
+            paletteValue9bit3.Blue = 0;
+            paletteValue9bit3.Green = 0;
+            paletteValue9bit3.Red = 0;
+            NextPalette.Ink9bit = paletteValue9bit3;
             NextPalette.InkIndex = 0;
             NextPalette.Location = new Point(1428, 41);
             NextPalette.Name = "NextPalette";
             NextPalette.Palette = null;
-            paletteValue9bit2.Blue = 7;
-            paletteValue9bit2.Green = 7;
-            paletteValue9bit2.Red = 7;
-            NextPalette.Paper9bit = paletteValue9bit2;
+            paletteValue9bit4.Blue = 7;
+            paletteValue9bit4.Green = 7;
+            paletteValue9bit4.Red = 7;
+            NextPalette.Paper9bit = paletteValue9bit4;
             NextPalette.PaperIndex = 0;
             NextPalette.ScaleVal = 0;
             NextPalette.Size = new Size(128, 696);
@@ -297,7 +300,7 @@
             TileEditor.Padding = new Padding(3);
             TileEditor.Size = new Size(1856, 1000);
             TileEditor.TabIndex = 1;
-            TileEditor.Text = "Tile Editor";
+            TileEditor.Text = "Tile8x8 Editor";
             TileEditor.UseVisualStyleBackColor = true;
             // 
             // button6
@@ -502,6 +505,9 @@
             // 
             // tabPage2
             // 
+            tabPage2.Controls.Add(button9);
+            tabPage2.Controls.Add(button8);
+            tabPage2.Controls.Add(button7);
             tabPage2.Controls.Add(tile32PixImport1);
             tabPage2.Location = new Point(4, 29);
             tabPage2.Name = "tabPage2";
@@ -511,26 +517,57 @@
             tabPage2.Text = "Import 4x4 Tiles";
             tabPage2.UseVisualStyleBackColor = true;
             // 
+            // button8
+            // 
+            button8.Location = new Point(18, 818);
+            button8.Name = "button8";
+            button8.Size = new Size(135, 53);
+            button8.TabIndex = 2;
+            button8.Text = "LOAD PROJECT";
+            button8.UseVisualStyleBackColor = true;
+            button8.Click += button8_Click;
+            // 
+            // button7
+            // 
+            button7.Location = new Point(18, 753);
+            button7.Name = "button7";
+            button7.Size = new Size(135, 53);
+            button7.TabIndex = 1;
+            button7.Text = "SAVE PROJECT";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += button7_Click;
+            // 
             // tile32PixImport1
             // 
             tile32PixImport1.BackColor = Color.DarkGray;
             tile32PixImport1.Dock = DockStyle.Fill;
-            tileSettings1.ImportTilesInX = 8;
-            tileSettings1.ImportTilesInY = 8;
-            tileSettings1.NumberOfTilesPerSuperTile = 16;
-            tileSettings1.superTileTileHeight = 4;
-            tileSettings1.superTileTileWidth = 4;
-            tileSettings1.tileGroupHeight = 0;
-            tileSettings1.tileGroupWidth = 0;
-            tileSettings1.tileHeight = 0;
-            tileSettings1.tileWidth = 0;
-            tile32PixImport1.ImportSettings = tileSettings1;
+            //tileSettings2.ImportTilesInX = 8;
+            //tileSettings2.ImportTilesInY = 8;
+            //tileSettings2.NumberOfTilesPerSuperTile = 16;
+            //tileSettings2.superTileTileHeight = 4;
+            //tileSettings2.superTileTileWidth = 4;
+            //tileSettings2.tileGroupHeight = 0;
+            //tileSettings2.tileGroupWidth = 0;
+            //tileSettings2.tileHeight = 0;
+            //tileSettings2.tileWidth = 0;
+            
             tile32PixImport1.Location = new Point(3, 3);
             tile32PixImport1.Name = "tile32PixImport1";
+            tile32PixImport1.ShowGridLines = false;
             tile32PixImport1.Size = new Size(1850, 994);
             tile32PixImport1.TabIndex = 0;
             tile32PixImport1.Load += tile32PixImport1_Load;
-            tile32PixImport1.Click += btnLoadTiles_Click;
+            
+            // 
+            // button9
+            // 
+            button9.Location = new Point(18, 877);
+            button9.Name = "button9";
+            button9.Size = new Size(135, 53);
+            button9.TabIndex = 3;
+            button9.Text = "CLEAR PROJECT";
+            button9.UseVisualStyleBackColor = true;
+            button9.Click += button9_Click;
             // 
             // Form1
             // 
@@ -599,5 +636,8 @@
         private Button button6;
         private TabPage tabPage2;
         private tile32PixImport tile32PixImport1;
+        private Button button8;
+        private Button button7;
+        private Button button9;
     }
 }

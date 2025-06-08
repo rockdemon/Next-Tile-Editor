@@ -1,0 +1,20 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Next tile editor/CopilotIndices/17.12.27.11192
+/.vs/Next tile editor/DesignTimeBuild
+/.vs/Next tile editor/FileContentIndex
+/.vs/Next tile editor/v17/.futdcache.v1
+/.vs/Next tile editor/v17/.futdcache.v2
+/.vs/Next tile editor/v17/DocumentLayout.backup.json
+/.vs/Next tile editor/v17/DocumentLayout.json
+/.vs/Next-tile-editor/v17/.wsuo
+/.vs/Next-tile-editor/v17/DocumentLayout.json
+/.vs/ProjectEvaluation/next tile editor.metadata.v9.bin
+/.vs/ProjectEvaluation/next tile editor.projects.v9.bin
+/.vs/ProjectEvaluation/next tile editor.strings.v9.bin
+/.vs/slnx.sqlite
+/bin/Debug
+/obj
+/TestFiles

@@ -16,57 +16,28 @@ using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Next_tile_editor;
+using static System.Net.Mime.MediaTypeNames;
+using System.Drawing.Imaging;
+using Image = System.Drawing.Image;
 
 namespace Next_tile_editor
 {
     public partial class tile32PixImport : UserControl
     {
-        public class TileSettings
+
+
+
+        public void refreshFromObjs()
         {
-            /// <summary>
-            /// Number of 8x8 px tiles in each supertile
-            /// </summary>
-            public int NumberOfTilesPerSuperTile { get; set; } = 16;
-            /// <summary>
-            /// How many super tiles in the import horizontally
-            /// </summary>
-            public int ImportTilesInX { get; set; } = 8;
-            /// <summary>
-            /// How many super tiles in the import vertically
-            /// </summary>
-            public int ImportTilesInY { get; set; } = 8;
-
-            /// <summary>
-            /// How many 8px squares are there horizontally in one super tile
-            /// </summary>
-            public int superTileTileWidth { get; set; } = 4;
-            /// <summary>
-            /// How many 8px squares are there vertically in one super tile
-            /// </summary>
-            public int superTileTileHeight { get; set; } = 4;
-            /// <summary>
-            /// How manage 8 px squares in the import horizontally
-            /// </summary>
-            public int tileWidth {get;set; }
-            /// How manage 8 px squares in the import vertically
-            public int tileHeight { get;set; }
-
-            /// <summary>
-            /// /  how many groups of 1,2 or 4 tiles left to right
-            /// </summary>
-            public int tileGroupWidth { get; set; }
-            /// <summary>
-            /// //  how many groups of 1,2 or 4 tiles top to bottom
-            /// </summary>
-            public int tileGroupHeight { get; set; } //  how many groups of 1,2 or 4 tiles top to bottom
-
+            this.pct_OriginalTileBitmap.Image = tileMapObjs.GetInstance().imgOrigin;
+            this.pnl_32x32_gauntletMap.Invalidate();
+            this.pnl_32_32_TilePalette.Invalidate();
         }
-
-        public TileSettings ImportSettings { get; set; }
-        Image imgOrigin = null;
+        
         public tile32PixImport()
         {
-            this.ImportSettings = new TileSettings();
+            tileMapObjs.GetInstance().ImportSettings = new tileMapObjs.TileSettings();
             InitializeComponent();
             this.DropDown_SuperTileSize.SelectedIndex = 2;
         }
@@ -77,10 +48,10 @@ namespace Next_tile_editor
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 Image image = new Bitmap(ofd.FileName);
-                imgOrigin = new Bitmap(image);
-                this.pct_OriginalTileBitmap.Image = imgOrigin;
+                tileMapObjs.GetInstance().imgOrigin = new Bitmap(image);
+                this.pct_OriginalTileBitmap.Image = tileMapObjs.GetInstance().imgOrigin;
                 this.tabCutIntoSuperTiles.Select();
-                btn_cutIntoTiles.BeginInvoke(btn_CutIntoTiles_Click, new object[] { this, new MouseEventArgs(MouseButtons.Left,1,0,0,0)});
+                btn_cutIntoTiles.BeginInvoke(btn_CutIntoTiles_Click, new object[] { this, new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0) });
             }
         }
         List<List<Image>> InitialTileImages = new List<List<Image>>();
@@ -93,41 +64,44 @@ namespace Next_tile_editor
         private void btn_CutIntoTiles_Click(object sender, EventArgs e)
         {
             InitialTileImages.Clear();
-     
-            int width = imgOrigin.Width;
-            int height = imgOrigin.Height;
-            int BigTileIdx = 0;
-            ImportSettings.tileWidth = width / 8;
-            ImportSettings.tileHeight = height / 8;
 
-            ImportSettings.tileGroupWidth = ImportSettings.tileWidth / this.ImportSettings.superTileTileWidth;
-            ImportSettings.tileGroupHeight = ImportSettings.tileHeight / this.ImportSettings.superTileTileHeight;
-            
-            for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
+            int width =  tileMapObjs.GetInstance(). imgOrigin.Width;
+            int height =  tileMapObjs.GetInstance().imgOrigin.Height;
+            int BigTileIdx = 0;
+           tileMapObjs.GetInstance().ImportSettings.tileWidth = width / 8;
+            // Remove this line from tile32PixImport:
+            // public TileSettingstileMapObjs.GetInstance().ImportSettings;
+           tileMapObjs.GetInstance().ImportSettings.tileHeight = height / 8;
+
+           tileMapObjs.GetInstance().ImportSettings.tileGroupWidth =tileMapObjs.GetInstance().ImportSettings.tileWidth / tileMapObjs.GetInstance().ImportSettings.superTileTileWidth;
+           tileMapObjs.GetInstance().ImportSettings.tileGroupHeight =tileMapObjs.GetInstance().ImportSettings.tileHeight / tileMapObjs.GetInstance().ImportSettings.superTileTileHeight;
+
+            for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
             {
-                for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
+                for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
                 {
                     int idx = 0;
-                    List<Image> imageList = new List<Image>();
-       
-                    for (int y = 0; y < this.ImportSettings.superTileTileHeight; y++)
+                    List<System.Drawing.Image> imageList = new List<System.Drawing.Image>();
+
+                    for (int y = 0; y < tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
                     {
-                        for (int x = 0; x < this.ImportSettings.superTileTileWidth ; x++)
+                        for (int x = 0; x < tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
                         {
                             Bitmap imTemp = new Bitmap(8, 8);
-                            
-                            Rectangle rect = new Rectangle((ix * (this.ImportSettings.superTileTileWidth * 8) + (x * 8)), 
-                                                           (iy * (this.ImportSettings.superTileTileHeight * 8) + (y * 8)), 
-                                                            8, 
-                                                            8);
+
+                            Rectangle rect = new Rectangle((ix * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 8) + (x * 8)),
+                                                           (iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 8) + (y * 8)),
+                            8,
+                            8);
+              
                             using (Graphics g = Graphics.FromImage(imTemp))
                             {
-                                g.DrawImage(imgOrigin, new Rectangle(0, 0, 8, 8),
+                                g.DrawImage(tileMapObjs.GetInstance().imgOrigin, new Rectangle(0, 0, 8, 8),
                                     rect,
                                     GraphicsUnit.Pixel);
                             }
                             imageList.Add(imTemp);
-                                                        
+
                             idx++;
                         }
                     }
@@ -143,20 +117,20 @@ namespace Next_tile_editor
         {
             e.Graphics.Clear(Color.Black);
             int iTile = 0;
-            for (int iy = 0; iy < ImportSettings.tileGroupHeight ; iy++)
+            for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
             {
-                for (int ix = 0; ix < ImportSettings.tileGroupWidth /*&& ix < images[iy].Count*/; ix++)
+                for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth /*&& ix < images[iy].Count*/; ix++)
                 {
-                    for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
+                    for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
                     {
-                        for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
+                        for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
                         {
                             try
                             {
                                 e.Graphics.DrawImageUnscaled(
-                                    InitialTileImages[iTile][y * ImportSettings.superTileTileWidth + x],
-                                    ix * (8 * ImportSettings.superTileTileWidth) + scaleFactor * ix + x * 8,
-                                    iy * (8 * ImportSettings.superTileTileHeight) + scaleFactor * iy + y * 8);
+                                    InitialTileImages[iTile][y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x],
+                                    ix * (8 *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth) + scaleFactor * ix + x * 8,
+                                    iy * (8 *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight) + scaleFactor * iy + y * 8);
                             }
                             catch { }
                         }
@@ -181,17 +155,48 @@ namespace Next_tile_editor
                 List<paletteValue9bit[]> List9BitColours = new List<paletteValue9bit[]>();
                 foreach (Image image in images)
                 {
-                    paletteValue9bit[] baImg = new paletteValue9bit[image.Width * image.Height];
-                    for (int y = 0; y < image.Height; y++)
+                    Bitmap bitmapImage = image as Bitmap;
+                    if (bitmapImage == null)
                     {
-                        for (int x = 0; x < image.Width; x++)
+                        throw new InvalidOperationException("Image is not a Bitmap.");
+                    }
+
+                    BitmapData bData = bitmapImage.LockBits(new Rectangle(0, 0, bitmapImage.Width, bitmapImage.Height), ImageLockMode.ReadWrite, bitmapImage.PixelFormat);
+
+                    byte bitsPerPixel = GetBitsPerPixel(bData.PixelFormat);
+                    paletteValue9bit[] baImg = new paletteValue9bit[bitmapImage.Width * bitmapImage.Height];
+
+                    unsafe
+                    {
+                        byte* scan0 = (byte*)bData.Scan0.ToPointer();
+
+                        for (int y = 0; y < bData.Height; ++y)
                         {
-                            Color c = (image as Bitmap).GetPixel(x, y);
-                            baImg[y * image.Width + x] = paletteValue9bit.FromColor(c);
+                            for (int x = 0; x < bData.Width; ++x)
+                            {
+                                byte* data = scan0 + y * bData.Stride + x * bitsPerPixel / 8;
+
+                                //data is a pointer to the first byte of the 3-byte color data  
+                                //data[0] = blueComponent;  
+                                //data[1] = greenComponent;  
+                                //data[2] = redComponent;  
+                                Color c = Color.FromArgb(data[2], data[1], data[0]); //BbitmapImage.GetPixel(x, y);
+                                baImg[y * bitmapImage.Width + x] = paletteValue9bit.FromColor(c);
+                            }
                         }
                     }
-                    List9BitColours.Add(baImg);
 
+                    bitmapImage.UnlockBits(bData);
+                    List9BitColours.Add(baImg);
+                    //for (int y = 0; y < bitmapImage.Height; y++)
+                    //{
+                    //    for (int x = 0; x < bitmapImage.Width; x++)
+                    //    {
+                    //        Color c = bitmapImage.GetPixel(x, y);
+                    //        baImg[y * bitmapImage.Width + x] = paletteValue9bit.FromColor(c);
+                    //    }
+                    //}
+                    //List9BitColours.Add(baImg);
                 }
                 NextQuantisedTiles.Add(List9BitColours);
             }
@@ -205,18 +210,18 @@ namespace Next_tile_editor
             int iTiles = 0;
             try
             {
-                for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
+                for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
                 {
-                    for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
+                    for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
                     {
 
-                        for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
+                        for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
                         {
 
 
-                            for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
+                            for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
                             {
-                                var paletteValue9Bits = NextQuantisedTiles[iTiles][y * ImportSettings.superTileTileHeight + x];
+                                var paletteValue9Bits = NextQuantisedTiles[iTiles][y *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight + x];
 
 
                                 Bitmap bmTemp = new Bitmap(8, 8);
@@ -231,8 +236,8 @@ namespace Next_tile_editor
                                 }
                                 e.Graphics.DrawImageUnscaled(
                                        bmwrite.ToBitmap(),
-                                       ix * (ImportSettings.superTileTileWidth*8) + 2 * ix + x * 8,
-                                       iy * (ImportSettings.superTileTileHeight*8)  + 2 * iy + y * 8);
+                                       ix * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 8) + 2 * ix + x * 8,
+                                       iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 8) + 2 * iy + y * 8);
                             }
 
 
@@ -250,9 +255,8 @@ namespace Next_tile_editor
             }
         }
 
+
         
-        List<List<Tile>> TileList = new List<List<Tile>>();
-        Palette9bit palette = new Palette9bit();
         /// <summary>
         /// Builds a list of 8x8 px tiles using palette data
         /// </summary>
@@ -260,40 +264,27 @@ namespace Next_tile_editor
         /// <param name="e"></param>
         private void btn_CommonTileCheck_Click(object sender, EventArgs e)
         {
-            palette = new Palette9bit();
+            tileMapObjs.GetInstance().palette = new Palette9bit();
             int iPaletteIdx = 0;
             int iTiles = 0;
-            TileList.Clear();
-            for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++) // count through supertiles
+            tileMapObjs.GetInstance().TileList.Clear();
+            for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++) // count through supertiles
             {
-                for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++) // count through supertiles
+                for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++) // count through supertiles
                 {
-                    for (int y = 0; y < ImportSettings.superTileTileHeight; y++) // count through 8x8 tiles within supertile
+                    for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++) // count through 8x8 tiles within supertile
                     {
-                        for (int x = 0; x < ImportSettings.superTileTileWidth; x++) // count through 8x8 tiles within supertile
+                        for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++) // count through 8x8 tiles within supertile
                         {
                             // get palette array for tile we've counted to
-                            paletteValue9bit[] paletteValue9Bits = NextQuantisedTiles[iTiles][y * ImportSettings.superTileTileWidth + x];
-                            
-                            //if (palette.Palettearray[0].Equals(paletteValue9Bits[]))
-                            //{
-
-                            //}
-                            //else if(palette.Palettearray[iPaletteIdx - 1].Equals(paletteValue9Bits[]))
-                            //{
-                                
-                            //}
-                            //else
-                            //{
-                            //}
-
+                            paletteValue9bit[] paletteValue9Bits = NextQuantisedTiles[iTiles][y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x];
 
                             foreach (paletteValue9bit pv in paletteValue9Bits)
                             {
                                 bool contained = false;
                                 for (int xx = 0; xx < iPaletteIdx; xx++)
                                 {
-                                    if (palette.Palettearray[xx].Equals(pv))
+                                    if (tileMapObjs.GetInstance().palette.Palettearray[xx].Equals(pv))
                                     {
                                         contained = true;
                                         break;
@@ -302,69 +293,60 @@ namespace Next_tile_editor
                                 if (contained)
                                     continue;
 
-                                if (!palette.Palettearray.Contains(pv)) // add to palette array (A palette array is a palette based bitmap)
+                                if (!tileMapObjs.GetInstance().palette.Palettearray.Contains(pv)) // add to palette array (A palette array is a palette based bitmap)
                                 {
-                                    palette.Palettearray[iPaletteIdx] = pv;
-
+                                    tileMapObjs.GetInstance().palette.Palettearray[iPaletteIdx] = pv;
                                     iPaletteIdx++;
                                 }
-
-
                             }
                         }
-
                     }
-
                     iTiles++; // go through the tile lists
                 }
             }
 
             iTiles = 0;
-            TileList.Clear();
-            for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
+            tileMapObjs.GetInstance().TileList.Clear();
+            for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
             {
-                for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
+                for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
                 {
-                    TileList.Add(new List<Tile>()); // new super tile
-                    for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
+                    tileMapObjs.GetInstance().TileList.Add(new List<Tile8x8>()); // new super tile
+                    for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
                     {
-                        for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
+                        for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
                         {
-                            var paletteValue9Bits = NextQuantisedTiles[iTiles][y * ImportSettings.superTileTileWidth + x];
-
-
-                            TileList[iTiles].Add(Tile.FromPalette9ValArray(paletteValue9Bits, palette));
+                            var paletteValue9Bits = NextQuantisedTiles[iTiles][y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x];
+                            tileMapObjs.GetInstance().TileList[iTiles].Add(Tile8x8.FromPalette9ValArray(paletteValue9Bits, tileMapObjs.GetInstance().palette));
                         }
-
                     }
-
                     iTiles++;
                 }
             }
-     
+
             pnl_CommonTiles.Invalidate();
             this.BeginInvoke(btnCreateTileToolboxandMap_Click, new object[] { this, new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0) });
-            
+
         }
 
         private void pnl_CommonTiles_Paint(object sender, PaintEventArgs e)
         {
-            if (TileList.Count > 0)
+            if (tileMapObjs.GetInstance().TileList.Count > 0)
             {
                 e.Graphics.Clear(Color.Green);
                 int iTiles = 0;
                 try
                 {
-                    for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
+                    for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
                     {
-                        for (int ix = 0; ix < ImportSettings.tileGroupWidth ; ix++)
+                        for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
                         {
 
-                            for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
+                            for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
                             {
 
 
-                                for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
+                                for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
                                 {
 
                                     Bitmap bmTemp = new Bitmap(8, 8);
@@ -376,11 +358,11 @@ namespace Next_tile_editor
                                             nibble n = null;
                                             try
                                             {
-                                                n     = TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x].tileNibbles[ij * 8 + ik];
+                                                n = tileMapObjs.GetInstance().TileList[iy *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x].tileNibbles[ij * 8 + ik];
 
 
 
-                                                bmwrite.SetPixel(ik, ij, palette.Palettearray[n].PalColor);
+                                                bmwrite.SetPixel(ik, ij, tileMapObjs.GetInstance().palette.Palettearray[n].PalColor);
                                             }
                                             catch (Exception ex)
                                             {
@@ -390,9 +372,9 @@ namespace Next_tile_editor
                                     }
                                     e.Graphics.DrawImageUnscaled(
                                            bmwrite.ToBitmap(),
-                                           ix * (8 * ImportSettings.superTileTileWidth) + 2 * ix + x * 8,
-                                           iy * (8* ImportSettings.superTileTileHeight) + 2 * iy + y * 8);
-                                    
+                                           ix * (8 *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth) + 2 * ix + x * 8,
+                                           iy * (8 *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight) + 2 * iy + y * 8);
+
                                 }
 
 
@@ -421,182 +403,139 @@ namespace Next_tile_editor
         /// If 1, this tile will be rotated 90oclockwise.
         /// ULA Mode If1, this tile will be rendered on top, if 0 below ULA display. However in 512
         /// tile mode, this is the 9th bit of tile index.
-        /// Tile Index
+        /// Tile8x8 Index
         /// 8-bit tile index within the tile definitions.
-        List<TileRef> tile32_32_definition_Map = new List<TileRef>();
-        class TileRef
-        {
-            private byte _flags = 0;
-            private byte _index = 0;
-            public byte flags { get; set; }
-            public byte index { get; set; }
-            public TileRef(byte flags, byte index)
-            {
-                this.flags = flags;
-                this.index = index;
-            }
 
-            public int tileIndex
-            {
-                get
-                {
-                    return (int)index + ((int)flags & 0b00000001 * 256);
-                }
-                set
-                {
-                    this.flags = (byte)(value >255 ? flags |1 : flags);
-                    this.index = (byte)(value & 0b11111111);
-                }
 
-            }
-        }
-
-        public byte[] tileMapBytes
-        {
-            get
-            {
-                List<byte> retList = new List<byte>();// new byte[tile32_32_definition_Map.Count * 2];
-                foreach (var tile in tile32_32_definition_Map)
-                {
-                    retList.AddRange(new byte[]{
-                        tile.flags,tile.index
-                    });
-                }
-                return retList.ToArray();
-            }
-        }
-        List<Tile> tiles = new List<Tile>();
 
         private void btnCreateTileToolboxandMap_Click(object sender, EventArgs e)
         {
             int iTiles = 0;
-            tile32_32_definition_Map.Clear();
-            tiles.Clear();
-            for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++) // height in supertiles
+            tileMapObjs.GetInstance().tile32_32_definition_Map.Clear();
+            tileMapObjs.GetInstance().tiles.Clear();
+            for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++) // height in supertiles
             {
-                for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++) // width in supertiles
+                for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++) // width in supertiles
                 {
-                    TileList.Add(new List<Tile>());
-                    for (int y = 0; y < ImportSettings.superTileTileHeight; y++) // height of supertile in 8x8 tiles
+                    tileMapObjs.GetInstance().TileList.Add(new List<Tile8x8>());
+                    for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++) // height of supertile in 8x8 tiles
                     {
-                        for (int x = 0; x < ImportSettings.superTileTileWidth; x++) // width of supertile in 8x8 tiles
+                        for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++) // width of supertile in 8x8 tiles
                         {
 
                             bool found = false;
-                            for (int z = 0; z < tiles.Count; z++) //count through all 8x8 tiles
+                            for (int z = 0; z < tileMapObjs.GetInstance().tiles.Count; z++) //count through all 8x8 tiles
                             {
-                                Tile tile = tiles[z];
+                                Tile8x8 tile8X8 = tileMapObjs.GetInstance().tiles[z];
                                 if (!found &&
-                                    TileList[iy * ImportSettings.tileGroupWidth + ix][
-                                        y * ImportSettings.superTileTileWidth + x].Equals(tile, out bool rotated))
+                                    tileMapObjs.GetInstance().TileList[iy *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][
+                                        y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x].Equals(tile8X8, out bool rotated))
                                 {
                                     found = true;
                                     byte iflags = (byte)((int)Modifier.None + (rotated ? (int)Modifier.Rotate : 0));
                                     if (z > 255 && z < 512)
                                     {
-                                        tile32_32_definition_Map.Add(new TileRef((byte)(1 + iflags), (byte)(z - 256)));
+                                        tileMapObjs.GetInstance().tile32_32_definition_Map.Add(new TileRef((byte)(1 + iflags), (byte)(z - 256)));
 
                                     }
                                     else
                                     {
-                                        // tile less than 256
-                                        tile32_32_definition_Map.Add(new TileRef(iflags, (byte)z));
+                                        // tile8X8 less than 256
+                                        tileMapObjs.GetInstance().tile32_32_definition_Map.Add(new TileRef(iflags, (byte)z));
                                     }
 
-                                    
-                                    tile.Index = z;
-                                    //           tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+
+                                    tile8X8.Index = z;
+                                    //           tiles.Add(TileList[iy *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x]);
                                     break;
 
                                 }
 
                                 if (!found &&
-                                    TileList[iy * ImportSettings.tileGroupWidth + ix][
-                                            y * ImportSettings.superTileTileWidth + x]
-                                        .EqualsHorizontalMirror(tile, out rotated))
+                                    tileMapObjs.GetInstance().TileList[iy *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][
+                                            y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x]
+                                        .EqualsHorizontalMirror(tile8X8, out rotated))
                                 {
                                     // byte 11 for x mirror
                                     found = true;
                                     if (z > 255 && z < 512)
                                     {
-                                        tile32_32_definition_Map.Add(new TileRef((byte)(1+Modifier.XMirror), (byte)(z - 256)));
+                                        tileMapObjs.GetInstance().tile32_32_definition_Map.Add(new TileRef((byte)(1 + Modifier.XMirror), (byte)(z - 256)));
                                     }
                                     else
                                     {
-                                        // tile less than 256
-                                        tile32_32_definition_Map.Add(new TileRef((byte)( Modifier.XMirror), (byte)(z - 256)));
-                                        
+                                        // tile8X8 less than 256
+                                        tileMapObjs.GetInstance().tile32_32_definition_Map.Add(new TileRef((byte)(Modifier.XMirror), (byte)(z - 256)));
+
                                     }
 
-                                    
-                                    tile.Index = z;
-                                    //           tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+
+                                    tile8X8.Index = z;
                                     break;
 
                                 }
 
                                 if (!found &&
-                                    TileList[iy * ImportSettings.tileGroupWidth + ix][
-                                            y * ImportSettings.superTileTileWidth + x]
-                                        .EqualsVerticalMirror(tile, out rotated))
+                                            tileMapObjs.GetInstance().TileList[iy *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][
+                                            y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x]
+                                        .EqualsVerticalMirror(tile8X8, out rotated))
                                 {
                                     found = true;
                                     if (z > 255 && z < 512)
                                     {
-                                        tile32_32_definition_Map.Add(new TileRef((byte)((int)Modifier.YMirror | 1), (byte)(z - 256)));
+                                        tileMapObjs.GetInstance().tile32_32_definition_Map.Add(new TileRef((byte)((int)Modifier.YMirror | 1), (byte)(z - 256)));
                                     }
-                                    else                                   
+                                    else
                                     {
-                                        // tile less than 256
-                                        tile32_32_definition_Map.Add(new TileRef((byte)Modifier.YMirror, (byte)z));
+                                        // tile8X8 less than 256
+                                        tileMapObjs.GetInstance().tile32_32_definition_Map.Add(new TileRef((byte)Modifier.YMirror, (byte)z));
                                     }
-                                    
-                                    tile.Index = z;
-                                    //        tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+
+                                    tile8X8.Index = z;
                                     break;
 
                                 }
 
                                 if (!found &&
-                                    TileList[iy * ImportSettings.tileGroupWidth + ix][
-                                            y * ImportSettings.superTileTileWidth + x]
-                                        .EqualsVerticalAndHorizontalMirror((tile), out rotated))
+                                    tileMapObjs.GetInstance().TileList[iy *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][
+                                            y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x]
+                                        .EqualsVerticalAndHorizontalMirror((tile8X8), out rotated))
                                 {
                                     found = true;
                                     if (z > 255 && z < 512)
                                     {
-                                        
-                                        tile32_32_definition_Map.Add(new TileRef((byte)(1 | (int)Modifier.XMirror | (int)Modifier.YMirror), (byte)(z - 256)));
+
+                                        tileMapObjs.GetInstance().tile32_32_definition_Map.Add(new TileRef((byte)(1 | (int)Modifier.XMirror | (int)Modifier.YMirror), (byte)(z - 256)));
                                     }
                                     else
                                     {
-                                        // tile less than 256
-                                        tile32_32_definition_Map.Add(new TileRef((byte)( (int)Modifier.XMirror | (int)Modifier.YMirror), (byte)(z - 256)));
+                                        // tile8X8 less than 256
+                                        tileMapObjs.GetInstance().tile32_32_definition_Map.Add(new TileRef((byte)((int)Modifier.XMirror | (int)Modifier.YMirror), (byte)(z - 256)));
                                     }
 
-                                    
-                                    tile.Index = z;
+
+                                    tile8X8.Index = z;
                                     break;
                                 }
                                 //----------------------------------------------------------//
                             }
                             if (!found)
                             {
-                                tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][
-                                    y * ImportSettings.superTileTileWidth + x]);
-                                if (tiles.Count <= 256)
+                                tileMapObjs.GetInstance().tiles.Add(tileMapObjs.GetInstance().TileList[iy *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][
+                                    y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x]);
+                                if (tileMapObjs.GetInstance().tiles.Count <= 256)
                                 {
-                                    tile32_32_definition_Map.Add(new TileRef(0, (byte)(tiles.Count - 1)));
+                                    tileMapObjs.GetInstance().tile32_32_definition_Map.Add(new TileRef(0, (byte)(tileMapObjs.GetInstance().tiles.Count - 1)));
                                 }
                                 else
                                 {
-                                    tile32_32_definition_Map.Add(new TileRef(1, (byte)(tiles.Count - 257)));
+                                    tileMapObjs.GetInstance().tile32_32_definition_Map.Add(new TileRef(1, (byte)(tileMapObjs.GetInstance().tiles.Count - 257)));
                                 }
 
-                                Tile newtile = tiles[tiles.Count - 1];
-                                
-                                newtile.Index = tiles.Count - 1;
-                                //            tiles.Add(TileList[iy * ImportSettings.tileGroupWidth + ix][y * ImportSettings.superTileTileWidth + x]);
+                                Tile8x8 newtile = tileMapObjs.GetInstance().tiles[tileMapObjs.GetInstance().tiles.Count - 1];
+
+                                newtile.Index = tileMapObjs.GetInstance().tiles.Count - 1;
+                                //            tiles.Add(TileList[iy *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x]);
                             }
                         }
                         iTiles++;
@@ -604,10 +543,10 @@ namespace Next_tile_editor
                 }
             }
 
-            this.label3.Text = "8x8 Tiles : " + tiles.Count;
+            this.label3.Text = "8x8 Tiles : " + tileMapObjs.GetInstance().tiles.Count;
             pnl_32_32_TilePalette.Size =
-                new Size(ImportSettings.tileGroupWidth * ImportSettings.superTileTileWidth * 17,
-                    ImportSettings.tileGroupHeight * ImportSettings.superTileTileHeight * 17);
+                new Size(tileMapObjs.GetInstance().ImportSettings.tileGroupWidth *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 17,
+                   tileMapObjs.GetInstance().ImportSettings.tileGroupHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 17);
             pnl_fromActualTilemap.Invalidate();
             pnl_32x32_gauntletMap.Invalidate();
             pnl_32_32_TilePalette.Invalidate();
@@ -616,36 +555,36 @@ namespace Next_tile_editor
         private void pnl_fromActualTilemap_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.Clear(Color.Azure);
-            if (tile32_32_definition_Map.Count == 0 || tiles.Count == 0) { return; }
+            if (tileMapObjs.GetInstance().tile32_32_definition_Map.Count == 0 || tileMapObjs.GetInstance().tiles.Count == 0) { return; }
             int iBigTile = 0;
             try
             {
-                for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
+                for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
                 {
-                    for (int ix = 0;ix < ImportSettings.tileGroupWidth ; ix++)
+                    for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
                     {
-                        for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
+                        for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
                         {
-                            for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
+                            for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
                             {
-                                TileRef tref = tile32_32_definition_Map[
-                                    (iBigTile * (ImportSettings.superTileTileHeight * ImportSettings.superTileTileWidth)
-                                     + (y * ImportSettings.superTileTileWidth) + x)];
+                                TileRef tref = tileMapObjs.GetInstance().tile32_32_definition_Map[
+                                    (iBigTile * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth)
+                                     + (y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth) + x)];
                                 int bTile = tref.tileIndex;
-                                
-                                Tile t = tiles[bTile];
+
+                                Tile8x8 t = tileMapObjs.GetInstance().tiles[bTile];
                                 Bitmap bmTemp = new Bitmap(8, 8);
                                 IReadWriteBitmapData bmwrite = bmTemp.GetReadWriteBitmapData();
-                                
-                                
-                                
+
+
+
                                 for (int ij = 0; ij < 8; ij++) // ycount
                                 {
                                     for (int ik = 0; ik < 8; ik++) //xcount
                                     {
-                                        
+
                                         int nibbleOffset = 0;
-                                        if (((int)tref.flags & (int)Modifier.Rotate)==0)
+                                        if (((int)tref.flags & (int)Modifier.Rotate) == 0)
                                         {
 
 
@@ -659,15 +598,15 @@ namespace Next_tile_editor
                                                 nibbleOffset += ik;
                                             }
 
-                                            if (((int)tref.flags & (int)Modifier.YMirror)>0)
+                                            if (((int)tref.flags & (int)Modifier.YMirror) > 0)
                                             {
                                                 // flip vertically
-                                                nibbleOffset += 56-(ij * 8);
+                                                nibbleOffset += 56 - (ij * 8);
                                             }
                                             else
                                             {
-                                                nibbleOffset += ij*8;
-                                                    
+                                                nibbleOffset += ij * 8;
+
 
                                             }
                                         }
@@ -700,14 +639,15 @@ namespace Next_tile_editor
                                         }
 
                                         nibble n = t.tileNibbles[nibbleOffset];
-                                        bmwrite.SetPixel(ik, ij, palette.Palettearray[n].PalColor);
+                                        bmwrite.SetPixel(ik, ij, tileMapObjs.GetInstance().palette.Palettearray[n].PalColor);
                                     }
                                 }
                                 e.Graphics.DrawImageUnscaled(
                                        bmwrite.ToBitmap(),
-                                       ix * (ImportSettings.superTileTileWidth*8) + 2 * ix + x * 8,
-                                       iy * (ImportSettings.superTileTileHeight*8) + 2 * iy + y * 8);
-                                e.Graphics.DrawString(""+tref.tileIndex, SystemFonts.DialogFont,Brushes.Aqua, ix * (ImportSettings.superTileTileWidth * 8) + 2 * ix + x * 8, iy * (ImportSettings.superTileTileHeight * 8) + 2 * iy + y * 8);
+                                       ix * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 8) + 2 * ix + x * 8,
+                                       iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 8) + 2 * iy + y * 8);
+                                if (bShowNumbers)
+                                    e.Graphics.DrawString("" + tref.tileIndex, SystemFonts.DialogFont, Brushes.Aqua, ix * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 8) + 2 * ix + x * 8, iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 8) + 2 * iy + y * 8);
 
                             }
                         }
@@ -736,37 +676,37 @@ namespace Next_tile_editor
         public byte[] get_8_8_TileMapBytesForSaving()
         {
             List<byte> retList = new List<byte>();
-            for (int iw = 0; iw < (ImportSettings.superTileTileWidth * numMapWidth.Value) *(ImportSettings.superTileTileHeight * numMapHeight.Value) * 2; iw++)
+            for (int iw = 0; iw < (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * numMapWidth.Value) * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * numMapHeight.Value) * 2; iw++)
             {
-                retList.Add( (byte)0);
+                retList.Add((byte)0);
             }
-  
+
             int iBigTile = 0;
-            //   for (int ij=0; ij < ImportSettings.tileGroupHeight; ij++) // y (row)
+            //   for (int ij=0; ij <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; ij++) // y (row)
             for (int ij = 0; ij < numMapHeight.Value; ij++) // y (row)
             {
                 for (int ik = 0; ik < numMapWidth.Value; ik++) // x
                 {
-                    int bSuperTileIndex = gauntletMap[ij][ik];
-                    for (int j = 0; j < ImportSettings.superTileTileHeight; j++)
+                    int bSuperTileIndex = tileMapObjs.GetInstance().gauntletMap[ij][ik];
+                    for (int j = 0; j <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; j++)
                     {
-                        for (int k = 0; k < ImportSettings.superTileTileWidth; k++)
+                        for (int k = 0; k <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; k++)
                         {
-                            TileRef tref = tile32_32_definition_Map[(bSuperTileIndex * (ImportSettings.superTileTileHeight * ImportSettings.superTileTileWidth)) //big tile ref
-                                                             // big tile left
-                                                                + (j * ImportSettings.superTileTileWidth) + k];
+                            TileRef tref = tileMapObjs.GetInstance().tile32_32_definition_Map[(bSuperTileIndex * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth)) //big tile ref
+                                                                                                                                                                                           // big tile left
+                                                                + (j *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth) + k];
 
-                            int rowChars = (int)numMapWidth.Value * ImportSettings.superTileTileWidth;
-                            int rety = ij * ImportSettings.superTileTileHeight + j;
-                            int retx = ik * ImportSettings.superTileTileWidth + k;
+                            int rowChars = (int)numMapWidth.Value *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth;
+                            int rety = ij *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight + j;
+                            int retx = ik *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + k;
                             int idx = rety * rowChars + retx;
 
-                            
 
-                            retList[idx * 2+1] = tref.flags;
+
+                            retList[idx * 2 + 1] = tref.flags;
                             retList[idx * 2] = tref.index;
 
-                            
+
                         }
                     }
 
@@ -787,12 +727,12 @@ namespace Next_tile_editor
                 //tile32_32_definition_Map
                 //tile32_32_definition_Map[(iBigTile * 16) + (y * 4) + x];
                 List<byte> outTileBytes = new List<byte>();
-                foreach (Tile t in tiles)
+                foreach (Tile8x8 t in tileMapObjs.GetInstance().tiles)
                 {
-                    outTileBytes.AddRange(t.tileBytes);
+                    outTileBytes.AddRange(t.tileData);
                 }
                 File.WriteAllBytes(saveFileDialog.FileName + ".tileDefs", outTileBytes.ToArray());
-                File.WriteAllBytes(saveFileDialog.FileName + ".tilePal", palette.SaveByteArray);
+                File.WriteAllBytes(saveFileDialog.FileName + ".tilePal", tileMapObjs.GetInstance().palette.SaveByteArray);
 
             }
         }
@@ -800,28 +740,28 @@ namespace Next_tile_editor
         private void pnl_32_32_TilePalette_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.Clear(Color.Azure);
-            if (tile32_32_definition_Map.Count == 0 || tiles.Count == 0) { return; }
+            if (tileMapObjs.GetInstance().tile32_32_definition_Map.Count == 0 || tileMapObjs.GetInstance().tiles.Count == 0) { return; }
             int iBigTile = 0;
             try
             {
-                for (int iy = 0; iy < ImportSettings.tileGroupHeight; iy++)
+                for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
                 {
-                    for (int ix = 0; ix < ImportSettings.tileGroupWidth; ix++)
+                    for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
                     {
-                        if (e.Graphics.ClipBounds.IntersectsWith(new Rectangle(ix * (ImportSettings.superTileTileWidth * 16), iy *(ImportSettings.superTileTileHeight *16), (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16))))
+                        if (e.Graphics.ClipBounds.IntersectsWith(new Rectangle(ix * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16), iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16), (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16), (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16))))
                         {
 
 
-                            for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
+                            for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
                             {
-                                for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
+                                for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
                                 {
-                                    TileRef tref = tile32_32_definition_Map[
-                                        (iBigTile * (ImportSettings.superTileTileHeight * ImportSettings.superTileTileWidth)
-                                         + (y * ImportSettings.superTileTileWidth) + x)];
-                                    
+                                    TileRef tref = tileMapObjs.GetInstance().tile32_32_definition_Map[
+                                        (iBigTile * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth)
+                                         + (y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth) + x)];
+
                                     int bTile = tref.tileIndex;
-                                    Tile t = tiles[bTile];
+                                    Tile8x8 t = tileMapObjs.GetInstance().tiles[bTile];
                                     Bitmap bmTemp = new Bitmap(16, 16);
                                     IReadWriteBitmapData bmwrite = bmTemp.GetReadWriteBitmapData();
                                     for (int ij = 0; ij < 8; ij++)
@@ -883,36 +823,39 @@ namespace Next_tile_editor
 
                                             try
                                             {
-                                                 n = t.tileNibbles[nibbleOffset];
-                                                 bmwrite.SetPixel(ik * 2, ij * 2, palette.Palettearray[n].PalColor);
-                                                 bmwrite.SetPixel(ik * 2 + 1, ij * 2, palette.Palettearray[n].PalColor);
-                                                 bmwrite.SetPixel(ik * 2, ij * 2 + 1, palette.Palettearray[n].PalColor);
-                                                 bmwrite.SetPixel(ik * 2 + 1, ij * 2 + 1, palette.Palettearray[n].PalColor);
+                                                n = t.tileNibbles[nibbleOffset];
+                                                bmwrite.SetPixel(ik * 2, ij * 2, tileMapObjs.GetInstance().palette.Palettearray[n].PalColor);
+                                                bmwrite.SetPixel(ik * 2 + 1, ij * 2, tileMapObjs.GetInstance().palette.Palettearray[n].PalColor);
+                                                bmwrite.SetPixel(ik * 2, ij * 2 + 1, tileMapObjs.GetInstance().palette.Palettearray[n].PalColor);
+                                                bmwrite.SetPixel(ik * 2 + 1, ij * 2 + 1, tileMapObjs.GetInstance().palette.Palettearray[n].PalColor);
                                             }
                                             catch (Exception exception)
                                             {
                                                 Console.WriteLine(exception);
                                                 throw;
                                             }
-                                            
 
 
-                                   
+
+
 
                                         }
                                     }
                                     e.Graphics.DrawImageUnscaled(
                                            bmwrite.ToBitmap(),
-                                           ix * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * ix + x * 16 + 1,
-                                           iy * (ImportSettings.superTileTileHeight * 16) + ImportSettings.superTileTileHeight * iy + y * 16 + 1);
-                                    e.Graphics.DrawString("" + tref.tileIndex, SystemFonts.DialogFont, Brushes.Aqua, 
-                                        ix * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * ix + x * 16 + 1, 
-                                        iy * (ImportSettings.superTileTileHeight * 16) + ImportSettings.superTileTileHeight * iy + y * 16 + 1);
+                                           ix * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * ix + x * 16 + 1,
+                                           iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * iy + y * 16 + 1);
+                                    if (bShowNumbers)
+                                    {
+                                        e.Graphics.DrawString("" + tref.tileIndex, SystemFonts.DialogFont, Brushes.Aqua,
+                                            ix * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * ix + x * 16 + 1,
+                                            iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * iy + y * 16 + 1);
+                                    }
                                     if (iBigTile == iSelectedIndex)
                                     {
                                         e.Graphics.DrawRectangle(Pens.Black,
-                                                                ix * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * ix + x * 16 +1 ,
-                                                                iy * (ImportSettings.superTileTileHeight * 16) + ImportSettings.superTileTileHeight * iy + y * 16 +1,
+                                                                ix * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * ix + x * 16 + 1,
+                                                                iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * iy + y * 16 + 1,
                                                                 16, 16);
                                     }
 
@@ -933,17 +876,17 @@ namespace Next_tile_editor
 
         private Bitmap get_32_32_TileBitMap(int iBigTile)
         {
-            Bitmap retBm = new Bitmap(BigtilewidthInPx,BigtileheightInPx);
-            for (int y = 0; y < ImportSettings.superTileTileHeight; y++)
+            Bitmap retBm = new Bitmap(BigtilewidthInPx, BigtileheightInPx);
+            for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
             {
-                for (int x = 0; x < ImportSettings.superTileTileWidth; x++)
+                for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
                 {
                     TileRef tref =
-                        tile32_32_definition_Map[
-                            (iBigTile * (ImportSettings.NumberOfTilesPerSuperTile)) +
-                            (ImportSettings.superTileTileWidth * y) + x];
+                        tileMapObjs.GetInstance().tile32_32_definition_Map[
+                            (iBigTile * (tileMapObjs.GetInstance().ImportSettings.NumberOfTilesPerSuperTile)) +
+                            (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * y) + x];
                     int bTile = tref.tileIndex;
-                    Tile t = tiles[bTile];
+                    Tile8x8 t = tileMapObjs.GetInstance().tiles[bTile];
                     nibble[] nib = t.tileNibbles;
                     if (((int)tref.flags & (int)Modifier.Rotate) > 0)
                     {
@@ -955,7 +898,7 @@ namespace Next_tile_editor
                     {
                         for (int ik = 0; ik < 8; ik++)
                         {
-                            
+
                             int nibbleOffset = 0;//ij * 8 + ik;
                             if (((int)tref.flags & (int)Modifier.Rotate) == 0)
                             {
@@ -1008,7 +951,7 @@ namespace Next_tile_editor
                                 }
                             }
                             nibble n = t.tileNibbles[nibbleOffset];
-                            bmwrite.SetPixel(ik, ij, palette.Palettearray[n].PalColor);
+                            bmwrite.SetPixel(ik, ij, tileMapObjs.GetInstance().palette.Palettearray[n].PalColor);
                         }
                     }
 
@@ -1027,74 +970,75 @@ namespace Next_tile_editor
         {
 
 
-            int tileX = (e.Location.X+1) / (ImportSettings.superTileTileWidth * 17 );
+            int tileX = (e.Location.X + 1) / (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 17);
 
-            int tileY = (e.Location.Y+1) / (ImportSettings.superTileTileHeight * 17  );
+            int tileY = (e.Location.Y + 1) / (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 17);
 
 
             //this.textBox1.Text = "" + tileX + " " + tileY + " " + (tileY * 8 + tileX);
 
-            int oldy = iSelectedIndex / ImportSettings.tileGroupWidth;
-            int oldx = iSelectedIndex % ImportSettings.tileGroupWidth;
-            //pnl_32_32_TilePalette.Invalidate(new Rectangle(oldx * (ImportSettings.superTileTileWidth * 16)  /*+ 2 * oldx*/, oldy * (ImportSettings.superTileTileHeight * 16) + 2 * oldy, (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
+            int oldy = iSelectedIndex /tileMapObjs.GetInstance().ImportSettings.tileGroupWidth;
+            int oldx = iSelectedIndex %tileMapObjs.GetInstance().ImportSettings.tileGroupWidth;
+            //pnl_32_32_TilePalette.Invalidate(new Rectangle(oldx * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16)  /*+ 2 * oldx*/, oldy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) + 2 * oldy, (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16), (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16)));
             pnl_32_32_TilePalette.Invalidate(new Rectangle(
-                oldx * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * oldx + 1,
-                oldy * (ImportSettings.superTileTileHeight * 16) + ImportSettings.superTileTileHeight * oldy + 1,
-                (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
+                oldx * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * oldx + 1,
+                oldy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * oldy + 1,
+                (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16), (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16)));
 
-            iSelectedIndex = tileY * ImportSettings.tileGroupWidth + tileX;
+            iSelectedIndex = tileY *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + tileX;
 
-            int newy = iSelectedIndex / ImportSettings.tileGroupWidth;
-            int newx = iSelectedIndex % ImportSettings.tileGroupWidth;
-            //pnl_32_32_TilePalette.Invalidate(new Rectangle(newx * (ImportSettings.superTileTileWidth * 16) /*+ 2 * newx*/, newy * (ImportSettings.superTileTileHeight * 16) + 2 * newy, (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
+            int newy = iSelectedIndex /tileMapObjs.GetInstance().ImportSettings.tileGroupWidth;
+            int newx = iSelectedIndex %tileMapObjs.GetInstance().ImportSettings.tileGroupWidth;
+            //pnl_32_32_TilePalette.Invalidate(new Rectangle(newx * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) /*+ 2 * newx*/, newy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) + 2 * newy, (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16), (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16)));
             pnl_32_32_TilePalette.Invalidate(new Rectangle(
-                newx * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * newx+1,
-                newy * (ImportSettings.superTileTileHeight * 16) + ImportSettings.superTileTileHeight * newy + 1,
-                (ImportSettings.superTileTileWidth * 16), (ImportSettings.superTileTileHeight * 16)));
+                newx * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * newx + 1,
+                newy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * newy + 1,
+                (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16), (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16)));
 
         }
-        // mouse.locationx = newx * (ImportSettings.superTileTileWidth * 16) + ImportSettings.superTileTileWidth * newx+1,
+        // mouse.locationx = newx * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * newx+1,
         // mouselocx +1 = newx * sup*16 + sup *newx
         // newx = mouselocx+1/((sup*16)+sup)
 
-        List < byte[]> gauntletMap = new List<byte[]>();
+        
         private void pnl_gauntletMap_Paint(object sender, PaintEventArgs e)
         {
-            if (gauntletMap.Count == 0)
+            if (tileMapObjs.GetInstance().gauntletMap.Count == 0)
             {
                 for (int j = 0; j < numMapHeight.Value; j++)
                 {
-                
-                    
-                    gauntletMap.Add(new byte[(int)numMapWidth.Value]);
+
+
+                    tileMapObjs.GetInstance().gauntletMap.Add(new byte[(int)numMapWidth.Value]);
                 }
             }
 
             e.Graphics.FillRectangle(new SolidBrush(Color.Azure), e.Graphics.ClipBounds);
-            if (tile32_32_definition_Map.Count == 0 || tiles.Count == 0) { return; }
-            
+            if (tileMapObjs.GetInstance().tile32_32_definition_Map.Count == 0 || tileMapObjs.GetInstance().tiles.Count == 0) { return; }
+
             try
             {
                 for (int iy = 0; iy < numMapHeight.Value; iy++)
                 {
                     for (int ix = 0; ix < numMapWidth.Value; ix++)
                     {
-                        
+
                         RectangleF clipRect = new RectangleF(ix * (this.BigtilewidthInPx),
                             iy * (this.BigtileheightInPx),
                             (this.BigtilewidthInPx),
                             (this.BigtileheightInPx));
                         if (e.Graphics.ClipBounds.IntersectsWith(clipRect))
                         {
-                            byte bTile = gauntletMap[iy][ix];
+                            byte bTile = tileMapObjs.GetInstance().gauntletMap[iy][ix];
                             Bitmap bmTemp = get_32_32_TileBitMap(bTile);
 
                             IReadWriteBitmapData bmwrite = bmTemp.GetReadWriteBitmapData();
                             e.Graphics.DrawImageUnscaled(
                                     bmwrite.ToBitmap(),
-                                    ix * (scaleFactor * ImportSettings.superTileTileWidth * ImportSettings.superTileTileWidth),
-                                    iy *  scaleFactor * ImportSettings.superTileTileHeight * ImportSettings.superTileTileHeight);
-
+                                    ix * (scaleFactor *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth),
+                                    iy * scaleFactor *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight);
+                            if (this.ShowGridLines)
+                                e.Graphics.DrawRectangle(Pens.Gray, clipRect.X, clipRect.Y, clipRect.Width, clipRect.Height);
                         }
 
 
@@ -1108,20 +1052,25 @@ namespace Next_tile_editor
         }
 
 
-        void setLocationOn_32_MapEd(Point mouseLocation, bool invalidate)
+        void setLocationOn_32_MapEd(Point mouseLocation, bool invalidate, bool delete=false)
         {
             try
             {
-                int iy = (int)mouseLocation.Y / (( scaleFactor) * ImportSettings.superTileTileHeight*ImportSettings.superTileTileHeight);
-                int ix = (int)mouseLocation.X / (( scaleFactor) * ImportSettings.superTileTileWidth* ImportSettings.superTileTileWidth);
-                this.gauntletMap[iy][ix] = (byte)iSelectedIndex;
+                int iy = (int)mouseLocation.Y / ((scaleFactor) *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight);
+                int ix = (int)mouseLocation.X / ((scaleFactor) *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth);
+                if (!delete)
+                    tileMapObjs.GetInstance().gauntletMap[iy][ix] = (byte)iSelectedIndex;
+                else
+                {
+                        tileMapObjs.GetInstance().gauntletMap[iy][ix] = 0;
+                }
                 if (invalidate)
                 {
                     Rectangle r = new Rectangle(
-                        (ix-1) * ((scaleFactor) * ImportSettings.superTileTileWidth * ImportSettings.superTileTileWidth), 
-                        (iy-1) * (( scaleFactor) * ImportSettings.superTileTileHeight * ImportSettings.superTileTileHeight), 
-                        (3* scaleFactor * ImportSettings.superTileTileWidth * ImportSettings.superTileTileWidth),
-                        (3* scaleFactor * ImportSettings.superTileTileHeight * ImportSettings.superTileTileHeight));
+                        (ix - 1) * ((scaleFactor) *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth),
+                        (iy - 1) * ((scaleFactor) *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight),
+                        (3 * scaleFactor *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth),
+                        (3 * scaleFactor *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight));
                     pnl_32x32_gauntletMap.Invalidate(r);
                 }
             }
@@ -1133,7 +1082,7 @@ namespace Next_tile_editor
         private void panel7_MouseDown(object sender, MouseEventArgs e)
         {
             this.mouseDown = true;
-            this.setLocationOn_32_MapEd(e.Location, true);
+            this.setLocationOn_32_MapEd(e.Location, true, e.Button == MouseButtons.Right);
         }
 
         private void panel7_MouseUp(object sender, MouseEventArgs e)
@@ -1144,7 +1093,7 @@ namespace Next_tile_editor
 
         private void panel7_MouseMove(object sender, MouseEventArgs e)
         {
-            if (this.mouseDown) { this.setLocationOn_32_MapEd(e.Location, true); }
+            if (this.mouseDown) { this.setLocationOn_32_MapEd(e.Location, true, e.Button == MouseButtons.Right); }
         }
 
         private void panel7_MouseLeave(object sender, EventArgs e)
@@ -1156,7 +1105,7 @@ namespace Next_tile_editor
         private void btn_Save32_32px_tilemap(object sender, EventArgs e)
         {
             List<byte> bytesSaveMap = new List<byte>();
-            foreach (var v in gauntletMap)
+            foreach (var v in tileMapObjs.GetInstance().gauntletMap)
             {
                 bytesSaveMap.AddRange(v);
             }
@@ -1175,7 +1124,7 @@ namespace Next_tile_editor
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 byte[] baBytes = File.ReadAllBytes(openFileDialog.FileName);
-                this.gauntletMap.Clear();
+                tileMapObjs.GetInstance().gauntletMap.Clear();
                 for (int iy = 0; iy < 64; iy++)
                 {
                     byte[] baRow = new byte[64];
@@ -1183,10 +1132,10 @@ namespace Next_tile_editor
                     {
                         baRow[ix] = baBytes[iy * 64 + ix];
                     }
-                    gauntletMap.Add(baRow);
+                    tileMapObjs.GetInstance().gauntletMap.Add(baRow);
                 }
 
-                //    this.gauntletMap = (List<byte[]>) baBytes.Chunk(64);
+                //    tileMapObjs.GetInstance().gauntletMap = (List<byte[]>) baBytes.Chunk(64);
             }
         }
 
@@ -1206,15 +1155,15 @@ namespace Next_tile_editor
                 byte[] tempBytes = File.ReadAllBytes(FileName + ".tile32_32_definition_Map");
                 for (int i = 0; i < tempBytes.Length / 2; i++)
                 {
-                    tile32_32_definition_Map.Add(new TileRef(tempBytes[i * 2], tempBytes[i * 2 + 1]));
+                    tileMapObjs.GetInstance().tile32_32_definition_Map.Add(new TileRef(tempBytes[i * 2], tempBytes[i * 2 + 1]));
                 }
-                
-                palette = Palette9bit.FromByteArray(
+
+                tileMapObjs.GetInstance().palette = Palette9bit.FromByteArray(
                      File.ReadAllBytes(FileName + ".tilePal"));
                 byte[] outTileBytes = File.ReadAllBytes(FileName + ".tileDefs");
                 // now reverse park those bytes into tiles
 
-                tiles = new List<Tile>();
+                tileMapObjs.GetInstance().tiles = new List<Tile8x8>();
                 for (int i = 0; i < outTileBytes.Length / 32; i++)
                 {
                     byte[] baTemp = new byte[32];
@@ -1222,7 +1171,7 @@ namespace Next_tile_editor
                     {
                         baTemp[j] = (byte)(outTileBytes[i * 32 + j]);
                     }
-                    tiles.Add(new Tile(palette, 0, null, baTemp));
+                    tileMapObjs.GetInstance().tiles.Add(new Tile8x8(tileMapObjs.GetInstance().palette, 0, baTemp));
                 }
 
             }
@@ -1269,9 +1218,9 @@ namespace Next_tile_editor
             switch (DropDown_SuperTileSize.SelectedIndex)
             {
                 case 0:     //1x1
-                    this.ImportSettings.NumberOfTilesPerSuperTile = 1;
-                    this.ImportSettings.superTileTileHeight = 1;
-                    this.ImportSettings.superTileTileWidth = 1;
+                    tileMapObjs.GetInstance().ImportSettings.NumberOfTilesPerSuperTile = 1;
+                    tileMapObjs.GetInstance().ImportSettings.superTileTileHeight = 1;
+                    tileMapObjs.GetInstance().ImportSettings.superTileTileWidth = 1;
                     this.scaleFactor = 8;
                     this.BigtilewidthInPx = 8;
                     this.BigtileheightInPx = 8;
@@ -1279,18 +1228,18 @@ namespace Next_tile_editor
                     break;
 
                 case 1:     //2x2
-                    this.ImportSettings.NumberOfTilesPerSuperTile = 4;
-                    this.ImportSettings.superTileTileHeight = 2;
-                    this.ImportSettings.superTileTileWidth = 2;
+                    tileMapObjs.GetInstance().ImportSettings.NumberOfTilesPerSuperTile = 4;
+                    tileMapObjs.GetInstance().ImportSettings.superTileTileHeight = 2;
+                    tileMapObjs.GetInstance().ImportSettings.superTileTileWidth = 2;
                     this.scaleFactor = 4;
                     this.BigtilewidthInPx = 16;
                     this.BigtileheightInPx = 16;
 
                     break;
                 case 2:     //3x3
-                    this.ImportSettings.NumberOfTilesPerSuperTile = 16;
-                    this.ImportSettings.superTileTileHeight = 4;
-                    this.ImportSettings.superTileTileWidth = 4;
+                    tileMapObjs.GetInstance().ImportSettings.NumberOfTilesPerSuperTile = 16;
+                    tileMapObjs.GetInstance().ImportSettings.superTileTileHeight = 4;
+                    tileMapObjs.GetInstance().ImportSettings.superTileTileWidth = 4;
                     this.scaleFactor = 2;
                     this.BigtilewidthInPx = 32;
                     this.BigtileheightInPx = 32;
@@ -1303,7 +1252,61 @@ namespace Next_tile_editor
         private void tabPage2_Click(object sender, EventArgs e)
         {
 
-    }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowGridLines = checkBox1.Checked;
+            pnl_32x32_gauntletMap.Invalidate();
+        }
+
+        private void checkBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        bool bShowNumbers = true;
+
+        private void chknumbers_CheckedChanged(object sender, EventArgs e)
+        {
+            bShowNumbers = this.chknumbers.Checked;
+        }
+
+        private byte GetBitsPerPixel(PixelFormat pixelFormat)
+        {
+            switch (pixelFormat)
+            {
+                case PixelFormat.Format1bppIndexed:
+                    return 1;
+                case PixelFormat.Format4bppIndexed:
+                    return 4;
+                case PixelFormat.Format8bppIndexed:
+                case PixelFormat.Format16bppArgb1555:
+                case PixelFormat.Format16bppGrayScale:
+                case PixelFormat.Format16bppRgb555:
+                case PixelFormat.Format16bppRgb565:
+                    return 16;
+                case PixelFormat.Format24bppRgb:
+                    return 24;
+                case PixelFormat.Format32bppArgb:
+                case PixelFormat.Format32bppPArgb:
+                case PixelFormat.Format32bppRgb:
+                    return 32;
+                case PixelFormat.Format48bppRgb:
+                    return 48;
+                case PixelFormat.Format64bppArgb:
+                case PixelFormat.Format64bppPArgb:
+                    return 64;
+                default:
+                    throw new ArgumentException("Unsupported pixel format: " + pixelFormat);
+            }
+        }
+
+        public bool ShowGridLines
+        {
+            get;
+            set;
+        }
     }
     class DBPanel : Panel
     {
