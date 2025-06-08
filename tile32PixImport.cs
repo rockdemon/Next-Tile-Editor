@@ -33,8 +33,10 @@ namespace Next_tile_editor
             this.pct_OriginalTileBitmap.Image = tileMapObjs.GetInstance().imgOrigin;
             this.pnl_32x32_gauntletMap.Invalidate();
             this.pnl_32_32_TilePalette.Invalidate();
+            this.numMapWidth.Value = tileMapObjs.GetInstance().ImportSettings.width_32tiles;
+            this.numMapHeight.Value = tileMapObjs.GetInstance().ImportSettings.height_32tiles;
         }
-        
+
         public tile32PixImport()
         {
             tileMapObjs.GetInstance().ImportSettings = new tileMapObjs.TileSettings();
@@ -65,20 +67,20 @@ namespace Next_tile_editor
         {
             InitialTileImages.Clear();
 
-            int width =  tileMapObjs.GetInstance(). imgOrigin.Width;
-            int height =  tileMapObjs.GetInstance().imgOrigin.Height;
+            int width = tileMapObjs.GetInstance().imgOrigin.Width;
+            int height = tileMapObjs.GetInstance().imgOrigin.Height;
             int BigTileIdx = 0;
-           tileMapObjs.GetInstance().ImportSettings.tileWidth = width / 8;
+            tileMapObjs.GetInstance().ImportSettings.tileWidth = width / 8;
             // Remove this line from tile32PixImport:
             // public TileSettingstileMapObjs.GetInstance().ImportSettings;
-           tileMapObjs.GetInstance().ImportSettings.tileHeight = height / 8;
+            tileMapObjs.GetInstance().ImportSettings.tileHeight = height / 8;
 
-           tileMapObjs.GetInstance().ImportSettings.tileGroupWidth =tileMapObjs.GetInstance().ImportSettings.tileWidth / tileMapObjs.GetInstance().ImportSettings.superTileTileWidth;
-           tileMapObjs.GetInstance().ImportSettings.tileGroupHeight =tileMapObjs.GetInstance().ImportSettings.tileHeight / tileMapObjs.GetInstance().ImportSettings.superTileTileHeight;
+            tileMapObjs.GetInstance().ImportSettings.tileGroupWidth = tileMapObjs.GetInstance().ImportSettings.tileWidth / tileMapObjs.GetInstance().ImportSettings.superTileTileWidth;
+            tileMapObjs.GetInstance().ImportSettings.tileGroupHeight = tileMapObjs.GetInstance().ImportSettings.tileHeight / tileMapObjs.GetInstance().ImportSettings.superTileTileHeight;
 
-            for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
+            for (int iy = 0; iy < tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
             {
-                for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
+                for (int ix = 0; ix < tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
                 {
                     int idx = 0;
                     List<System.Drawing.Image> imageList = new List<System.Drawing.Image>();
@@ -93,7 +95,7 @@ namespace Next_tile_editor
                                                            (iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 8) + (y * 8)),
                             8,
                             8);
-              
+
                             using (Graphics g = Graphics.FromImage(imTemp))
                             {
                                 g.DrawImage(tileMapObjs.GetInstance().imgOrigin, new Rectangle(0, 0, 8, 8),
@@ -117,20 +119,20 @@ namespace Next_tile_editor
         {
             e.Graphics.Clear(Color.Black);
             int iTile = 0;
-            for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
+            for (int iy = 0; iy < tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
             {
-                for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth /*&& ix < images[iy].Count*/; ix++)
+                for (int ix = 0; ix < tileMapObjs.GetInstance().ImportSettings.tileGroupWidth /*&& ix < images[iy].Count*/; ix++)
                 {
-                    for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
+                    for (int y = 0; y < tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
                     {
-                        for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
+                        for (int x = 0; x < tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
                         {
                             try
                             {
                                 e.Graphics.DrawImageUnscaled(
-                                    InitialTileImages[iTile][y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x],
-                                    ix * (8 *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth) + scaleFactor * ix + x * 8,
-                                    iy * (8 *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight) + scaleFactor * iy + y * 8);
+                                    InitialTileImages[iTile][y * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x],
+                                    ix * (8 * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth) + scaleFactor * ix + x * 8,
+                                    iy * (8 * tileMapObjs.GetInstance().ImportSettings.superTileTileHeight) + scaleFactor * iy + y * 8);
                             }
                             catch { }
                         }
@@ -210,18 +212,18 @@ namespace Next_tile_editor
             int iTiles = 0;
             try
             {
-                for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
+                for (int iy = 0; iy < tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
                 {
-                    for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
+                    for (int ix = 0; ix < tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
                     {
 
-                        for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
+                        for (int y = 0; y < tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
                         {
 
 
-                            for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
+                            for (int x = 0; x < tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
                             {
-                                var paletteValue9Bits = NextQuantisedTiles[iTiles][y *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight + x];
+                                var paletteValue9Bits = NextQuantisedTiles[iTiles][y * tileMapObjs.GetInstance().ImportSettings.superTileTileHeight + x];
 
 
                                 Bitmap bmTemp = new Bitmap(8, 8);
@@ -256,7 +258,7 @@ namespace Next_tile_editor
         }
 
 
-        
+
         /// <summary>
         /// Builds a list of 8x8 px tiles using palette data
         /// </summary>
@@ -268,16 +270,16 @@ namespace Next_tile_editor
             int iPaletteIdx = 0;
             int iTiles = 0;
             tileMapObjs.GetInstance().TileList.Clear();
-            for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++) // count through supertiles
+            for (int iy = 0; iy < tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++) // count through supertiles
             {
-                for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++) // count through supertiles
+                for (int ix = 0; ix < tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++) // count through supertiles
                 {
-                    for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++) // count through 8x8 tiles within supertile
+                    for (int y = 0; y < tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++) // count through 8x8 tiles within supertile
                     {
-                        for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++) // count through 8x8 tiles within supertile
+                        for (int x = 0; x < tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++) // count through 8x8 tiles within supertile
                         {
                             // get palette array for tile we've counted to
-                            paletteValue9bit[] paletteValue9Bits = NextQuantisedTiles[iTiles][y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x];
+                            paletteValue9bit[] paletteValue9Bits = NextQuantisedTiles[iTiles][y * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x];
 
                             foreach (paletteValue9bit pv in paletteValue9Bits)
                             {
@@ -307,16 +309,16 @@ namespace Next_tile_editor
 
             iTiles = 0;
             tileMapObjs.GetInstance().TileList.Clear();
-            for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
+            for (int iy = 0; iy < tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
             {
-                for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
+                for (int ix = 0; ix < tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
                 {
                     tileMapObjs.GetInstance().TileList.Add(new List<Tile8x8>()); // new super tile
-                    for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
+                    for (int y = 0; y < tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
                     {
-                        for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
+                        for (int x = 0; x < tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
                         {
-                            var paletteValue9Bits = NextQuantisedTiles[iTiles][y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x];
+                            var paletteValue9Bits = NextQuantisedTiles[iTiles][y * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x];
                             tileMapObjs.GetInstance().TileList[iTiles].Add(Tile8x8.FromPalette9ValArray(paletteValue9Bits, tileMapObjs.GetInstance().palette));
                         }
                     }
@@ -337,16 +339,16 @@ namespace Next_tile_editor
                 int iTiles = 0;
                 try
                 {
-                    for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
+                    for (int iy = 0; iy < tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
                     {
-                        for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
+                        for (int ix = 0; ix < tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
                         {
 
-                            for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
+                            for (int y = 0; y < tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
                             {
 
 
-                                for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
+                                for (int x = 0; x < tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
                                 {
 
                                     Bitmap bmTemp = new Bitmap(8, 8);
@@ -358,7 +360,7 @@ namespace Next_tile_editor
                                             nibble n = null;
                                             try
                                             {
-                                                n = tileMapObjs.GetInstance().TileList[iy *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x].tileNibbles[ij * 8 + ik];
+                                                n = tileMapObjs.GetInstance().TileList[iy * tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][y * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x].tileNibbles[ij * 8 + ik];
 
 
 
@@ -372,8 +374,8 @@ namespace Next_tile_editor
                                     }
                                     e.Graphics.DrawImageUnscaled(
                                            bmwrite.ToBitmap(),
-                                           ix * (8 *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth) + 2 * ix + x * 8,
-                                           iy * (8 *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight) + 2 * iy + y * 8);
+                                           ix * (8 * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth) + 2 * ix + x * 8,
+                                           iy * (8 * tileMapObjs.GetInstance().ImportSettings.superTileTileHeight) + 2 * iy + y * 8);
 
                                 }
 
@@ -413,14 +415,14 @@ namespace Next_tile_editor
             int iTiles = 0;
             tileMapObjs.GetInstance().tile32_32_definition_Map.Clear();
             tileMapObjs.GetInstance().tiles.Clear();
-            for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++) // height in supertiles
+            for (int iy = 0; iy < tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++) // height in supertiles
             {
-                for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++) // width in supertiles
+                for (int ix = 0; ix < tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++) // width in supertiles
                 {
                     tileMapObjs.GetInstance().TileList.Add(new List<Tile8x8>());
-                    for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++) // height of supertile in 8x8 tiles
+                    for (int y = 0; y < tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++) // height of supertile in 8x8 tiles
                     {
-                        for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++) // width of supertile in 8x8 tiles
+                        for (int x = 0; x < tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++) // width of supertile in 8x8 tiles
                         {
 
                             bool found = false;
@@ -428,8 +430,8 @@ namespace Next_tile_editor
                             {
                                 Tile8x8 tile8X8 = tileMapObjs.GetInstance().tiles[z];
                                 if (!found &&
-                                    tileMapObjs.GetInstance().TileList[iy *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][
-                                        y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x].Equals(tile8X8, out bool rotated))
+                                    tileMapObjs.GetInstance().TileList[iy * tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][
+                                        y * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x].Equals(tile8X8, out bool rotated))
                                 {
                                     found = true;
                                     byte iflags = (byte)((int)Modifier.None + (rotated ? (int)Modifier.Rotate : 0));
@@ -452,8 +454,8 @@ namespace Next_tile_editor
                                 }
 
                                 if (!found &&
-                                    tileMapObjs.GetInstance().TileList[iy *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][
-                                            y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x]
+                                    tileMapObjs.GetInstance().TileList[iy * tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][
+                                            y * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x]
                                         .EqualsHorizontalMirror(tile8X8, out rotated))
                                 {
                                     // byte 11 for x mirror
@@ -476,8 +478,8 @@ namespace Next_tile_editor
                                 }
 
                                 if (!found &&
-                                            tileMapObjs.GetInstance().TileList[iy *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][
-                                            y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x]
+                                            tileMapObjs.GetInstance().TileList[iy * tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][
+                                            y * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x]
                                         .EqualsVerticalMirror(tile8X8, out rotated))
                                 {
                                     found = true;
@@ -497,8 +499,8 @@ namespace Next_tile_editor
                                 }
 
                                 if (!found &&
-                                    tileMapObjs.GetInstance().TileList[iy *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][
-                                            y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x]
+                                    tileMapObjs.GetInstance().TileList[iy * tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][
+                                            y * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x]
                                         .EqualsVerticalAndHorizontalMirror((tile8X8), out rotated))
                                 {
                                     found = true;
@@ -521,8 +523,8 @@ namespace Next_tile_editor
                             }
                             if (!found)
                             {
-                                tileMapObjs.GetInstance().tiles.Add(tileMapObjs.GetInstance().TileList[iy *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][
-                                    y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x]);
+                                tileMapObjs.GetInstance().tiles.Add(tileMapObjs.GetInstance().TileList[iy * tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + ix][
+                                    y * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + x]);
                                 if (tileMapObjs.GetInstance().tiles.Count <= 256)
                                 {
                                     tileMapObjs.GetInstance().tile32_32_definition_Map.Add(new TileRef(0, (byte)(tileMapObjs.GetInstance().tiles.Count - 1)));
@@ -545,8 +547,8 @@ namespace Next_tile_editor
 
             this.label3.Text = "8x8 Tiles : " + tileMapObjs.GetInstance().tiles.Count;
             pnl_32_32_TilePalette.Size =
-                new Size(tileMapObjs.GetInstance().ImportSettings.tileGroupWidth *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 17,
-                   tileMapObjs.GetInstance().ImportSettings.tileGroupHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 17);
+                new Size(tileMapObjs.GetInstance().ImportSettings.tileGroupWidth * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 17,
+                   tileMapObjs.GetInstance().ImportSettings.tileGroupHeight * tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 17);
             pnl_fromActualTilemap.Invalidate();
             pnl_32x32_gauntletMap.Invalidate();
             pnl_32_32_TilePalette.Invalidate();
@@ -559,17 +561,17 @@ namespace Next_tile_editor
             int iBigTile = 0;
             try
             {
-                for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
+                for (int iy = 0; iy < tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
                 {
-                    for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
+                    for (int ix = 0; ix < tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
                     {
-                        for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
+                        for (int y = 0; y < tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
                         {
-                            for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
+                            for (int x = 0; x < tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
                             {
                                 TileRef tref = tileMapObjs.GetInstance().tile32_32_definition_Map[
-                                    (iBigTile * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth)
-                                     + (y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth) + x)];
+                                    (iBigTile * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth)
+                                     + (y * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth) + x)];
                                 int bTile = tref.tileIndex;
 
                                 Tile8x8 t = tileMapObjs.GetInstance().tiles[bTile];
@@ -688,17 +690,17 @@ namespace Next_tile_editor
                 for (int ik = 0; ik < numMapWidth.Value; ik++) // x
                 {
                     int bSuperTileIndex = tileMapObjs.GetInstance().gauntletMap[ij][ik];
-                    for (int j = 0; j <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; j++)
+                    for (int j = 0; j < tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; j++)
                     {
-                        for (int k = 0; k <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; k++)
+                        for (int k = 0; k < tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; k++)
                         {
-                            TileRef tref = tileMapObjs.GetInstance().tile32_32_definition_Map[(bSuperTileIndex * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth)) //big tile ref
-                                                                                                                                                                                           // big tile left
-                                                                + (j *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth) + k];
+                            TileRef tref = tileMapObjs.GetInstance().tile32_32_definition_Map[(bSuperTileIndex * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth)) //big tile ref
+                                                                                                                                                                                                                                               // big tile left
+                                                                + (j * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth) + k];
 
-                            int rowChars = (int)numMapWidth.Value *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth;
-                            int rety = ij *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight + j;
-                            int retx = ik *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + k;
+                            int rowChars = (int)numMapWidth.Value * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth;
+                            int rety = ij * tileMapObjs.GetInstance().ImportSettings.superTileTileHeight + j;
+                            int retx = ik * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth + k;
                             int idx = rety * rowChars + retx;
 
 
@@ -744,21 +746,21 @@ namespace Next_tile_editor
             int iBigTile = 0;
             try
             {
-                for (int iy = 0; iy <tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
+                for (int iy = 0; iy < tileMapObjs.GetInstance().ImportSettings.tileGroupHeight; iy++)
                 {
-                    for (int ix = 0; ix <tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
+                    for (int ix = 0; ix < tileMapObjs.GetInstance().ImportSettings.tileGroupWidth; ix++)
                     {
                         if (e.Graphics.ClipBounds.IntersectsWith(new Rectangle(ix * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16), iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16), (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16), (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16))))
                         {
 
 
-                            for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
+                            for (int y = 0; y < tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
                             {
-                                for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
+                                for (int x = 0; x < tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
                                 {
                                     TileRef tref = tileMapObjs.GetInstance().tile32_32_definition_Map[
-                                        (iBigTile * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth)
-                                         + (y *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth) + x)];
+                                        (iBigTile * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth)
+                                         + (y * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth) + x)];
 
                                     int bTile = tref.tileIndex;
                                     Tile8x8 t = tileMapObjs.GetInstance().tiles[bTile];
@@ -843,19 +845,19 @@ namespace Next_tile_editor
                                     }
                                     e.Graphics.DrawImageUnscaled(
                                            bmwrite.ToBitmap(),
-                                           ix * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * ix + x * 16 + 1,
-                                           iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * iy + y * 16 + 1);
+                                           ix * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) + tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * ix + x * 16 + 1,
+                                           iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) + tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * iy + y * 16 + 1);
                                     if (bShowNumbers)
                                     {
                                         e.Graphics.DrawString("" + tref.tileIndex, SystemFonts.DialogFont, Brushes.Aqua,
-                                            ix * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * ix + x * 16 + 1,
-                                            iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * iy + y * 16 + 1);
+                                            ix * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) + tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * ix + x * 16 + 1,
+                                            iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) + tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * iy + y * 16 + 1);
                                     }
                                     if (iBigTile == iSelectedIndex)
                                     {
                                         e.Graphics.DrawRectangle(Pens.Black,
-                                                                ix * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * ix + x * 16 + 1,
-                                                                iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * iy + y * 16 + 1,
+                                                                ix * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) + tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * ix + x * 16 + 1,
+                                                                iy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) + tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * iy + y * 16 + 1,
                                                                 16, 16);
                                     }
 
@@ -877,9 +879,9 @@ namespace Next_tile_editor
         private Bitmap get_32_32_TileBitMap(int iBigTile)
         {
             Bitmap retBm = new Bitmap(BigtilewidthInPx, BigtileheightInPx);
-            for (int y = 0; y <tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
+            for (int y = 0; y < tileMapObjs.GetInstance().ImportSettings.superTileTileHeight; y++)
             {
-                for (int x = 0; x <tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
+                for (int x = 0; x < tileMapObjs.GetInstance().ImportSettings.superTileTileWidth; x++)
                 {
                     TileRef tref =
                         tileMapObjs.GetInstance().tile32_32_definition_Map[
@@ -977,22 +979,22 @@ namespace Next_tile_editor
 
             //this.textBox1.Text = "" + tileX + " " + tileY + " " + (tileY * 8 + tileX);
 
-            int oldy = iSelectedIndex /tileMapObjs.GetInstance().ImportSettings.tileGroupWidth;
-            int oldx = iSelectedIndex %tileMapObjs.GetInstance().ImportSettings.tileGroupWidth;
+            int oldy = iSelectedIndex / tileMapObjs.GetInstance().ImportSettings.tileGroupWidth;
+            int oldx = iSelectedIndex % tileMapObjs.GetInstance().ImportSettings.tileGroupWidth;
             //pnl_32_32_TilePalette.Invalidate(new Rectangle(oldx * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16)  /*+ 2 * oldx*/, oldy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) + 2 * oldy, (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16), (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16)));
             pnl_32_32_TilePalette.Invalidate(new Rectangle(
-                oldx * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * oldx + 1,
-                oldy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * oldy + 1,
+                oldx * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) + tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * oldx + 1,
+                oldy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) + tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * oldy + 1,
                 (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16), (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16)));
 
-            iSelectedIndex = tileY *tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + tileX;
+            iSelectedIndex = tileY * tileMapObjs.GetInstance().ImportSettings.tileGroupWidth + tileX;
 
-            int newy = iSelectedIndex /tileMapObjs.GetInstance().ImportSettings.tileGroupWidth;
-            int newx = iSelectedIndex %tileMapObjs.GetInstance().ImportSettings.tileGroupWidth;
+            int newy = iSelectedIndex / tileMapObjs.GetInstance().ImportSettings.tileGroupWidth;
+            int newx = iSelectedIndex % tileMapObjs.GetInstance().ImportSettings.tileGroupWidth;
             //pnl_32_32_TilePalette.Invalidate(new Rectangle(newx * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) /*+ 2 * newx*/, newy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) + 2 * newy, (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16), (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16)));
             pnl_32_32_TilePalette.Invalidate(new Rectangle(
-                newx * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * newx + 1,
-                newy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) +tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * newy + 1,
+                newx * (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16) + tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * newx + 1,
+                newy * (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16) + tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * newy + 1,
                 (tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * 16), (tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * 16)));
 
         }
@@ -1000,7 +1002,7 @@ namespace Next_tile_editor
         // mouselocx +1 = newx * sup*16 + sup *newx
         // newx = mouselocx+1/((sup*16)+sup)
 
-        
+
         private void pnl_gauntletMap_Paint(object sender, PaintEventArgs e)
         {
             if (tileMapObjs.GetInstance().gauntletMap.Count == 0)
@@ -1035,8 +1037,8 @@ namespace Next_tile_editor
                             IReadWriteBitmapData bmwrite = bmTemp.GetReadWriteBitmapData();
                             e.Graphics.DrawImageUnscaled(
                                     bmwrite.ToBitmap(),
-                                    ix * (scaleFactor *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth),
-                                    iy * scaleFactor *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight);
+                                    ix * (scaleFactor * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth),
+                                    iy * scaleFactor * tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * tileMapObjs.GetInstance().ImportSettings.superTileTileHeight);
                             if (this.ShowGridLines)
                                 e.Graphics.DrawRectangle(Pens.Gray, clipRect.X, clipRect.Y, clipRect.Width, clipRect.Height);
                         }
@@ -1052,25 +1054,25 @@ namespace Next_tile_editor
         }
 
 
-        void setLocationOn_32_MapEd(Point mouseLocation, bool invalidate, bool delete=false)
+        void setLocationOn_32_MapEd(Point mouseLocation, bool invalidate, bool delete = false)
         {
             try
             {
-                int iy = (int)mouseLocation.Y / ((scaleFactor) *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight);
-                int ix = (int)mouseLocation.X / ((scaleFactor) *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth);
+                int iy = (int)mouseLocation.Y / ((scaleFactor) * tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * tileMapObjs.GetInstance().ImportSettings.superTileTileHeight);
+                int ix = (int)mouseLocation.X / ((scaleFactor) * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth);
                 if (!delete)
                     tileMapObjs.GetInstance().gauntletMap[iy][ix] = (byte)iSelectedIndex;
                 else
                 {
-                        tileMapObjs.GetInstance().gauntletMap[iy][ix] = 0;
+                    tileMapObjs.GetInstance().gauntletMap[iy][ix] = 0;
                 }
                 if (invalidate)
                 {
                     Rectangle r = new Rectangle(
-                        (ix - 1) * ((scaleFactor) *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth),
-                        (iy - 1) * ((scaleFactor) *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight),
-                        (3 * scaleFactor *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth *tileMapObjs.GetInstance().ImportSettings.superTileTileWidth),
-                        (3 * scaleFactor *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight *tileMapObjs.GetInstance().ImportSettings.superTileTileHeight));
+                        (ix - 1) * ((scaleFactor) * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth),
+                        (iy - 1) * ((scaleFactor) * tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * tileMapObjs.GetInstance().ImportSettings.superTileTileHeight),
+                        (3 * scaleFactor * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth * tileMapObjs.GetInstance().ImportSettings.superTileTileWidth),
+                        (3 * scaleFactor * tileMapObjs.GetInstance().ImportSettings.superTileTileHeight * tileMapObjs.GetInstance().ImportSettings.superTileTileHeight));
                     pnl_32x32_gauntletMap.Invalidate(r);
                 }
             }
@@ -1300,6 +1302,16 @@ namespace Next_tile_editor
                 default:
                     throw new ArgumentException("Unsupported pixel format: " + pixelFormat);
             }
+        }
+
+        private void numMapWidth_ValueChanged(object sender, EventArgs e)
+        {
+            tileMapObjs.GetInstance().ImportSettings.width_32tiles = (int)numMapWidth.Value;
+        }
+
+        private void numMapHeight_ValueChanged(object sender, EventArgs e)
+        {
+            tileMapObjs.GetInstance().ImportSettings.height_32tiles = (int)numMapHeight.Value;
         }
 
         public bool ShowGridLines

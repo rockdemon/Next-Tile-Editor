@@ -961,12 +961,26 @@ namespace Next_tile_editor
 
         private void button7_Click(object sender, EventArgs e)
         {
-            tileMapObjs.GetInstance().Save("test.proj");
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.InitialDirectory = curDir;
+            sfd.Filter = "project files (*.proj)|*.proj";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                tileMapObjs.GetInstance().Save(sfd.FileName);
+            }
+            
         }
 
         private void button8_Click(object sender, EventArgs e)
         {
-            tileMapObjs.GetInstance().Load("test.proj");
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.InitialDirectory = curDir;
+            ofd.Filter = "project files (*.proj)|*.proj";
+            ofd.Multiselect = false;
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                tileMapObjs.GetInstance().Load(ofd.FileName);
+            }
             this.Invalidate();
             this.tile32PixImport1.refreshFromObjs();
         }

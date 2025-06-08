@@ -470,6 +470,7 @@
             numMapHeight.Size = new Size(88, 27);
             numMapHeight.TabIndex = 12;
             numMapHeight.Value = new decimal(new int[] { 64, 0, 0, 0 });
+            numMapHeight.ValueChanged += numMapHeight_ValueChanged;
             // 
             // btnTileLeft
             // 
@@ -498,7 +499,8 @@
             numMapWidth.Name = "numMapWidth";
             numMapWidth.Size = new Size(88, 27);
             numMapWidth.TabIndex = 12;
-            numMapWidth.Value = new decimal(new int[] { 64, 0, 0, 0 });
+            numMapWidth.Value = new decimal(new int[] { 32, 0, 0, 0 });
+            numMapWidth.ValueChanged += numMapWidth_ValueChanged;
             // 
             // label1
             // 

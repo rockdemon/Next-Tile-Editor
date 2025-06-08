@@ -202,7 +202,8 @@ namespace Next_tile_editor
                 tiles.Add(new Tile8x8(this.palette,0,tileData));
                 
             }
-            
+
+            this.ImportSettings = dto.ImportSettings;
             this.TileList = dto.TileList ?? new List<List<Tile8x8>>();
             this.tile32_32_definition_Map = dto.tile32_32_definition_Map ?? new List<TileRef>();
             this.gauntletMap = dto.gauntletMap;
@@ -288,6 +289,8 @@ namespace Next_tile_editor
             /// </summary>
             public int tileGroupHeight { get; set; } = 12; //  how many groups of 1,2 or 4 tiles top to bottom
 
+            public int width_32tiles { get; set; } = 32;
+            public int height_32tiles { get; set; } = 64;
         }
     }
 }
