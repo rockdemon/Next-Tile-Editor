@@ -179,20 +179,70 @@ namespace Next_tile_editor
 
         public void UpdateSprites(List<string> listFileNames)
         {
-            noFrames = listFileNames.Count;
+            //noFrames = listFileNames.Count;
+            noFrames = 0;
+            List<Image> tempImages = new List<Image>();
             for (int i = 0; i < listFileNames.Count; i++)
             {
-                Image tempImage = LockUnlockBitsLowLevelUpdate((Bitmap)Bitmap.FromFile(listFileNames[i]));
+                Bitmap tempImage = (Bitmap)Bitmap.FromFile(listFileNames[i]);
 
-                spriteImages.Add(tempImage);
+                if (tempImage.Height != tempImage.Width)
+                {
+                    if (tempImage.Height > tempImage.Width)
+                    {
+                        // slice it the right way
+                        ;
+                        for (int iy = 0; iy < tempImage.Height; iy += tempImage.Width)
+                        {
+                            Bitmap bmTemp = new Bitmap(16, 16);
+                            using (Graphics g = Graphics.FromImage((Image)bmTemp))
+                            {
+                                g.DrawImage((Image)tempImage, new Point[] { new Point(0, 0), new Point(16, 16) },
+                                    new Rectangle(0, iy, tempImage.Width, tempImage.Width), GraphicsUnit.Pixel);
+                            }
 
-                if (i >= pictureBoxes.Count)
+                            spriteImages.Add(bmTemp);
+                            noFrames++;
+                        }
+                    }
+
+                    else
+                    {
+                        //slice it the other way
+                        for (int ix = 0; ix < tempImage.Width; ix += tempImage.Height)
+                        {
+                            Bitmap bmTemp = new Bitmap(16, 16);
+                            using (Graphics g = Graphics.FromImage((Image)bmTemp))
+                            {
+                                g.DrawImage((Image)tempImage, new Point[] { new Point(0, 0),new Point(0,16), new Point(16, 16), new Point(16,0)},
+                                    new Rectangle(ix, 0, tempImage.Height, tempImage.Height), GraphicsUnit.Pixel);
+                            }
+
+                            spriteImages.Add(bmTemp);
+                            noFrames++;
+                        }
+
+                    }
+
+                }
+                else
+
+                {
+                    spriteImages.Add(tempImage);
+                    noFrames++;
+                }
+        }
+            for (int i = 0; i<noFrames; i++)
+            {
+            
+
+            if (i >= pictureBoxes.Count)
                 {
                     pictureBoxes.Add(new PictureBox());
 
                 };
 
-                pictureBoxes[i].Image = tempImage;
+                pictureBoxes[i].Image = spriteImages[i];
 
             }
 

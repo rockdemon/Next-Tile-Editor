@@ -1319,6 +1319,230 @@ namespace Next_tile_editor
             get;
             set;
         }
+
+        private bool place_meeting(int x, int y, int tilenumber)
+        {
+            if (tileMapObjs.GetInstance().gauntletMap[y][x] == tilenumber)
+                return true;
+            else return false;
+
+        }
+
+        //tile_x      = argument0;	// current x tile position in the map
+        //tile_y      = argument1;	// current y tile position in the map
+        //tile_size   = argument2;	// added to this function for usage elsewhere (can be hardcoded)
+        public void ZingotMode(int tile_x, int tile_y, int tile_size)
+        {
+            var tile, iw, w_left, w_right, w_up, w_down, w_upleft, w_downleft, w_upright, w_downright;
+
+            iw = tile_size;
+            w_left = place_meeting(x - iw, y, object_index);     //
+            w_right = place_meeting(x + iw, y, object_index);     // place meeting is gml collision check code
+            w_up = place_meeting(x, y - iw, object_index);     // to determine if 2 tiles overlap. Obviously
+            w_down = place_meeting(x, y + iw, object_index);     // in an editor this would be a check into the
+            w_upleft = place_meeting(x - iw, y - iw, object_index);  // array to check adjacent values.
+            w_downleft = place_meeting(x - iw, y + iw, object_index);  //
+            w_upright = place_meeting(x + iw, y - iw, object_index);  // object_index just refers to the generic tile
+            w_downright = place_meeting(x + iw, y + iw, object_index);  // wall I used in the map to be changed.
+
+
+            //if (x-iw < 0          ) { w_left = 1; w_upleft = 1; w_downleft = 1; }
+            //if (x+iw+1 > room_width ) { w_right = 1; w_upright = 1; w_downright = 1; }
+            //if (y-iw < 0          ) { w_up = 1; w_upright = 1; w_upleft = 1; }
+            //if (y+iw+1 > room_height) { w_down = 1; w_downright = 1; w_downleft = 1; }
+            // ^ commented out
+
+
+            tile = 44;	// this is 
+
+            if (w_up)
+            {
+                tile = 0;
+                if (w_right)
+                {
+                    tile = 4;
+                    if (w_down)
+                    {
+                        tile = 12;
+                        if (w_left)
+                        {
+                            tile = 28;
+                            if (w_upright)
+                            {
+                                tile = 29;
+                                if (w_downright)
+                                {
+                                    tile = 33;
+                                    if (w_downleft)
+                                    {
+                                        tile = 39;
+                                        if (w_upleft)
+                                        {
+                                            tile = 43;
+                                        }
+                                    }
+                                    else if (w_upleft)
+                                    {
+                                        tile = 40;
+                                    }
+                                }
+                                else if (w_downleft)
+                                {
+                                    tile = 37;
+                                    if (w_upleft)
+                                    {
+                                        tile = 41;
+                                    }
+                                }
+                                else if (w_upleft)
+                                {
+                                    tile = 36;
+                                }
+                            }
+                            else if (w_downright)
+                            {
+                                tile = 30;
+                                if (w_downleft)
+                                {
+                                    tile = 34;
+                                    if (w_upleft)
+                                    {
+                                        tile = 42;
+                                    }
+                                }
+                                else if (w_upleft)
+                                {
+                                    tile = 38;
+                                }
+                            }
+                            else if (w_downleft)
+                            {
+                                tile = 31;
+                                if (w_upleft) tile = 35;
+                            }
+                            else if (w_upleft)
+                            {
+                                tile = 32;
+                            }
+                        }
+                        else if (w_upright)
+                        {
+                            tile = 16;
+                            if (w_downright)
+                            {
+                                tile = 18;
+                            }
+                        }
+                        else if (w_downright)
+                        {
+                            tile = 17;
+                        }
+                    }
+                    else if (w_left)
+                    {
+                        tile = 15;
+                        if (w_upright)
+                        {
+                            tile = 25;
+                            if (w_upleft)
+                            {
+                                tile = 27;
+                            }
+                        }
+                        else if (w_upleft)
+                        {
+                            tile = 26;
+                        }
+                    }
+                    else if (w_upright)
+                    {
+                        tile = 8;
+                    }
+                }
+                else if (w_down)
+                {
+                    tile = 45;
+                    if (w_left)
+                    {
+                        tile = 14;
+                        if (w_downleft)
+                        {
+                            tile = 22;
+                            if (w_upleft)
+                            {
+                                tile = 24;
+                            }
+                        }
+                        else if (w_upleft)
+                        {
+                            tile = 23;
+                        }
+                    }
+                }
+                else if (w_left)
+                {
+                    tile = 7;
+                    if (w_upleft)
+                    {
+                        tile = 11;
+                    }
+                }
+            }
+
+
+            else if (w_right)
+            {
+                tile = 1;
+                if (w_down)
+                {
+                    tile = 5;
+                    if (w_left)
+                    {
+                        tile = 13;
+                        if (w_downright)
+                        {
+                            tile = 19;
+                            if (w_downleft)
+                            {
+                                tile = 21;
+                            }
+                        }
+                        else if (w_downleft)
+                        {
+                            tile = 20;
+                        }
+                    }
+                    else if (w_downright)
+                    {
+                        tile = 9;
+                    }
+                }
+                else if (w_left)
+                {
+                    tile = 46;
+                }
+            }
+
+
+            else if (w_down)
+            {
+                tile = 2;
+                if (w_left)
+                {
+                    tile = 6;
+                    if (w_downleft)
+                    {
+                        tile = 10;
+                    }
+                }
+            }
+
+
+            else if (w_left)
+            {
+                tile = 3;
+            }
+        }
     }
     class DBPanel : Panel
     {
