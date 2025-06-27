@@ -1331,9 +1331,10 @@ namespace Next_tile_editor
         //tile_x      = argument0;	// current x tile position in the map
         //tile_y      = argument1;	// current y tile position in the map
         //tile_size   = argument2;	// added to this function for usage elsewhere (can be hardcoded)
-        public void ZingotMode(int tile_x, int tile_y, int tile_size)
+        public void ZingotMode(int tile_x, int tile_y, int tile_size, int object_index)
         {
-            var tile, iw, w_left, w_right, w_up, w_down, w_upleft, w_downleft, w_upright, w_downright;
+            int tile, iw;
+            bool w_left, w_right, w_up, w_down, w_upleft, w_downleft, w_upright, w_downright;
 
             iw = tile_size;
             w_left = place_meeting(x - iw, y, object_index);     //
