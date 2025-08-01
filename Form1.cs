@@ -195,11 +195,8 @@ namespace Next_tile_editor
                         for (int iy = 0; iy < tempImage.Height; iy += tempImage.Width)
                         {
                             Bitmap bmTemp = new Bitmap(16, 16);
-                            using (Graphics g = Graphics.FromImage((Image)bmTemp))
-                            {
-                                g.DrawImage((Image)tempImage, new Point[] { new Point(0, 0), new Point(16, 16) },
-                                    new Rectangle(0, iy, tempImage.Width, tempImage.Width), GraphicsUnit.Pixel);
-                            }
+                      
+                            BitmapUtils.CopyBitmap(tempImage, bmTemp, new Rectangle(0, 0, 16, 16), new Rectangle( 0,iy , tempImage.Width, tempImage.Width));
 
                             spriteImages.Add(bmTemp);
                             noFrames++;
@@ -212,11 +209,9 @@ namespace Next_tile_editor
                         for (int ix = 0; ix < tempImage.Width; ix += tempImage.Height)
                         {
                             Bitmap bmTemp = new Bitmap(16, 16);
-                            using (Graphics g = Graphics.FromImage((Image)bmTemp))
-                            {
-                                g.DrawImage((Image)tempImage, new Point[] { new Point(0, 0),new Point(0,16), new Point(16, 16), new Point(16,0)},
-                                    new Rectangle(ix, 0, tempImage.Height, tempImage.Height), GraphicsUnit.Pixel);
-                            }
+                            BitmapUtils.CopyBitmap(tempImage, bmTemp, new Rectangle(0, 0, tempImage.Width, tempImage.Height),
+                                new Rectangle(ix, 0, 16, 16));// tempImage.Height, tempImage.Height));
+
 
                             spriteImages.Add(bmTemp);
                             noFrames++;

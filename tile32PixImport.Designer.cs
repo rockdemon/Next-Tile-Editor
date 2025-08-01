@@ -68,6 +68,7 @@
             numMapWidth = new NumericUpDown();
             label1 = new Label();
             DropDown_SuperTileSize = new ComboBox();
+            chkZingotMode = new CheckBox();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pct_OriginalTileBitmap).BeginInit();
             pnlUserTileMap.SuspendLayout();
@@ -138,6 +139,7 @@
             // panel2
             // 
             panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            panel2.Controls.Add(chkZingotMode);
             panel2.Controls.Add(chknumbers);
             panel2.Controls.Add(checkBox1);
             panel2.Controls.Add(label3);
@@ -521,6 +523,18 @@
             DropDown_SuperTileSize.TabIndex = 8;
             DropDown_SuperTileSize.SelectedIndexChanged += DropDown_SuperTileSize_ValueChanged;
             // 
+            // chkZingotMode
+            // 
+            chkZingotMode.AutoSize = true;
+            chkZingotMode.Checked = true;
+            chkZingotMode.CheckState = CheckState.Checked;
+            chkZingotMode.Location = new Point(11, 89);
+            chkZingotMode.Name = "chkZingotMode";
+            chkZingotMode.Size = new Size(118, 24);
+            chkZingotMode.TabIndex = 13;
+            chkZingotMode.Text = "Zingot Mode";
+            chkZingotMode.UseVisualStyleBackColor = true;
+            // 
             // tile32PixImport
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -595,5 +609,6 @@
         private DBPanel pnl_32_32_TilePalette;
         private CheckBox checkBox1;
         private CheckBox chknumbers;
+        private CheckBox chkZingotMode;
     }
 }
