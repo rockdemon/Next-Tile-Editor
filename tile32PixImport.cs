@@ -1322,28 +1322,37 @@ namespace Next_tile_editor
 
         private bool place_meeting(int x, int y, int tilenumber)
         {
+            if (x <1 ||y < 1 || x >= tileMapObjs.GetInstance().gauntletMap[0].Length || y >= tileMapObjs.GetInstance().gauntletMap.Count)
+                return false; // out of bounds check
             if (tileMapObjs.GetInstance().gauntletMap[y][x] == tilenumber)
                 return true;
             else return false;
 
         }
-
+        /// <summary>
+        /// In Gamemaker I use a generic wall tile (object_index) and my code scans the room (x,y) and when it finds object_index it checks around it to determine the correct wall tile that needs to be placed at that position. 
+        /// Then the loop continues.
+        /// </summary>
+        /// <param name="tile_x"></param>
+        /// <param name="tile_y"></param>
+        /// <param name="tile_size"></param>
         //tile_x      = argument0;	// current x tile position in the map
         //tile_y      = argument1;	// current y tile position in the map
         //tile_size   = argument2;	// added to this function for usage elsewhere (can be hardcoded)
-        public void ZingotMode(int tile_x, int tile_y, int tile_size)
+        public void ZingotMode(int tile_x, int tile_y, int tile_size, int object_index)
         {
-            var tile, iw, w_left, w_right, w_up, w_down, w_upleft, w_downleft, w_upright, w_downright;
+            int tile, iw;
+            bool w_left, w_right, w_up, w_down, w_upleft, w_downleft, w_upright, w_downright;
 
             iw = tile_size;
-            w_left = place_meeting(x - iw, y, object_index);     //
-            w_right = place_meeting(x + iw, y, object_index);     // place meeting is gml collision check code
-            w_up = place_meeting(x, y - iw, object_index);     // to determine if 2 tiles overlap. Obviously
-            w_down = place_meeting(x, y + iw, object_index);     // in an editor this would be a check into the
-            w_upleft = place_meeting(x - iw, y - iw, object_index);  // array to check adjacent values.
-            w_downleft = place_meeting(x - iw, y + iw, object_index);  //
-            w_upright = place_meeting(x + iw, y - iw, object_index);  // object_index just refers to the generic tile
-            w_downright = place_meeting(x + iw, y + iw, object_index);  // wall I used in the map to be changed.
+            w_left = place_meeting(tile_x - iw, tile_y, object_index);     //
+            w_right = place_meeting(tile_x + iw, tile_y, object_index);     // place meeting is gml collision check code
+            w_up = place_meeting(tile_x, tile_y - iw, object_index);     // to determine if 2 tiles overlap. Obviously
+            w_down = place_meeting(tile_x, tile_y + iw, object_index);     // in an editor this would be a check into the
+            w_upleft = place_meeting(tile_x - iw, tile_y - iw, object_index);  // array to check adjacent values.
+            w_downleft = place_meeting(tile_x - iw, tile_y + iw, object_index);  //
+            w_upright = place_meeting(tile_x + iw, tile_y - iw, object_index);  // object_index just refers to the generic tile
+            w_downright = place_meeting(tile_x + iw, tile_y + iw, object_index);  // wall I used in the map to be changed.
 
 
             //if (x-iw < 0          ) { w_left = 1; w_upleft = 1; w_downleft = 1; }
@@ -1543,9 +1552,21 @@ namespace Next_tile_editor
                 tile = 3;
             }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            for (int x = 0; x < tileMapObjs.GetInstance().ImportSettings.width_32tiles; x++)
+            {
+                for (int y = 0; y < tileMapObjs.GetInstance().ImportSettings.height_32tiles; y++)
+                {
+                    ZingotMode(x, y,1,44);
+                }
+            }
+            
+        }
     }
     class DBPanel : Panel
-    {
+    { 
         public DBPanel()
         {
             this.DoubleBuffered = true;
