@@ -89,8 +89,10 @@
             // btnLoadImage
             // 
             btnLoadImage.Location = new Point(18, 6);
+            btnLoadImage.Location = new Point(16, 4);
+            btnLoadImage.Margin = new Padding(3, 2, 3, 2);
             btnLoadImage.Name = "btnLoadImage";
-            btnLoadImage.Size = new Size(94, 29);
+            btnLoadImage.Size = new Size(82, 22);
             btnLoadImage.TabIndex = 0;
             btnLoadImage.Text = "Open image File";
             btnLoadImage.UseVisualStyleBackColor = true;
@@ -98,9 +100,10 @@
             // 
             // btn_cutIntoTiles
             // 
-            btn_cutIntoTiles.Location = new Point(20, 21);
+            btn_cutIntoTiles.Location = new Point(18, 16);
+            btn_cutIntoTiles.Margin = new Padding(3, 2, 3, 2);
             btn_cutIntoTiles.Name = "btn_cutIntoTiles";
-            btn_cutIntoTiles.Size = new Size(141, 29);
+            btn_cutIntoTiles.Size = new Size(123, 22);
             btn_cutIntoTiles.TabIndex = 2;
             btn_cutIntoTiles.Text = "Cut Into SuperTiles";
             btn_cutIntoTiles.UseVisualStyleBackColor = true;
@@ -108,9 +111,10 @@
             // 
             // btnQuantizeColours
             // 
-            btnQuantizeColours.Location = new Point(6, 6);
+            btnQuantizeColours.Location = new Point(5, 4);
+            btnQuantizeColours.Margin = new Padding(3, 2, 3, 2);
             btnQuantizeColours.Name = "btnQuantizeColours";
-            btnQuantizeColours.Size = new Size(294, 29);
+            btnQuantizeColours.Size = new Size(257, 22);
             btnQuantizeColours.TabIndex = 3;
             btnQuantizeColours.Text = "Quantize images";
             btnQuantizeColours.UseVisualStyleBackColor = true;
@@ -118,9 +122,10 @@
             // 
             // btn_CommonTileCheck
             // 
-            btn_CommonTileCheck.Location = new Point(6, 6);
+            btn_CommonTileCheck.Location = new Point(5, 4);
+            btn_CommonTileCheck.Margin = new Padding(3, 2, 3, 2);
             btn_CommonTileCheck.Name = "btn_CommonTileCheck";
-            btn_CommonTileCheck.Size = new Size(193, 29);
+            btn_CommonTileCheck.Size = new Size(169, 22);
             btn_CommonTileCheck.TabIndex = 4;
             btn_CommonTileCheck.Text = "Common tile check";
             btn_CommonTileCheck.UseVisualStyleBackColor = true;
@@ -128,9 +133,10 @@
             // 
             // btn_CreateTilesAndMapping8_8_Map
             // 
-            btn_CreateTilesAndMapping8_8_Map.Location = new Point(6, 26);
+            btn_CreateTilesAndMapping8_8_Map.Location = new Point(5, 20);
+            btn_CreateTilesAndMapping8_8_Map.Margin = new Padding(3, 2, 3, 2);
             btn_CreateTilesAndMapping8_8_Map.Name = "btn_CreateTilesAndMapping8_8_Map";
-            btn_CreateTilesAndMapping8_8_Map.Size = new Size(193, 29);
+            btn_CreateTilesAndMapping8_8_Map.Size = new Size(169, 22);
             btn_CreateTilesAndMapping8_8_Map.TabIndex = 7;
             btn_CreateTilesAndMapping8_8_Map.Text = "Make Tiles and map of original map";
             btn_CreateTilesAndMapping8_8_Map.UseVisualStyleBackColor = true;
@@ -144,12 +150,14 @@
             panel2.Controls.Add(checkBox1);
             panel2.Controls.Add(label3);
             panel2.Controls.Add(btnLoad_32_32_px_tilemap);
+            //panel2.Controls.Add(chkZingotMode);
             panel2.Controls.Add(button3);
             panel2.Controls.Add(button2);
             panel2.Controls.Add(btnExportTile_32_Tile_8);
-            panel2.Location = new Point(1, 4);
+            panel2.Location = new Point(1, 3);
+            panel2.Margin = new Padding(3, 2, 3, 2);
             panel2.Name = "panel2";
-            panel2.Size = new Size(156, 814);
+            panel2.Size = new Size(136, 610);
             panel2.TabIndex = 0;
             // 
             // chknumbers
@@ -157,9 +165,10 @@
             chknumbers.AutoSize = true;
             chknumbers.Checked = true;
             chknumbers.CheckState = CheckState.Checked;
-            chknumbers.Location = new Point(11, 50);
+            chknumbers.Location = new Point(10, 38);
+            chknumbers.Margin = new Padding(3, 2, 3, 2);
             chknumbers.Name = "chknumbers";
-            chknumbers.Size = new Size(126, 24);
+            chknumbers.Size = new Size(104, 19);
             chknumbers.TabIndex = 12;
             chknumbers.Text = "show numbers";
             chknumbers.UseVisualStyleBackColor = true;
@@ -168,9 +177,10 @@
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(11, 20);
+            checkBox1.Location = new Point(10, 15);
+            checkBox1.Margin = new Padding(3, 2, 3, 2);
             checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(133, 24);
+            checkBox1.Size = new Size(107, 19);
             checkBox1.TabIndex = 11;
             checkBox1.Text = "Show map Grid";
             checkBox1.UseVisualStyleBackColor = true;
@@ -180,17 +190,18 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(26, 427);
+            label3.Location = new Point(23, 320);
             label3.Name = "label3";
-            label3.Size = new Size(56, 20);
+            label3.Size = new Size(45, 15);
             label3.TabIndex = 10;
             label3.Text = "TILES:#";
             // 
             // btnLoad_32_32_px_tilemap
             // 
-            btnLoad_32_32_px_tilemap.Location = new Point(23, 238);
+            btnLoad_32_32_px_tilemap.Location = new Point(20, 178);
+            btnLoad_32_32_px_tilemap.Margin = new Padding(3, 2, 3, 2);
             btnLoad_32_32_px_tilemap.Name = "btnLoad_32_32_px_tilemap";
-            btnLoad_32_32_px_tilemap.Size = new Size(102, 79);
+            btnLoad_32_32_px_tilemap.Size = new Size(89, 59);
             btnLoad_32_32_px_tilemap.TabIndex = 4;
             btnLoad_32_32_px_tilemap.Text = "Load 32_32_px_tilemap";
             btnLoad_32_32_px_tilemap.UseVisualStyleBackColor = true;
@@ -198,9 +209,10 @@
             // 
             // button3
             // 
-            button3.Location = new Point(23, 190);
+            button3.Location = new Point(20, 142);
+            button3.Margin = new Padding(3, 2, 3, 2);
             button3.Name = "button3";
-            button3.Size = new Size(102, 42);
+            button3.Size = new Size(89, 32);
             button3.TabIndex = 1;
             button3.Text = "Load defs";
             button3.UseVisualStyleBackColor = true;
@@ -208,9 +220,10 @@
             // 
             // button2
             // 
-            button2.Location = new Point(23, 584);
+            button2.Location = new Point(20, 438);
+            button2.Margin = new Padding(3, 2, 3, 2);
             button2.Name = "button2";
-            button2.Size = new Size(84, 110);
+            button2.Size = new Size(74, 82);
             button2.TabIndex = 9;
             button2.Text = "Save_32_32px tilemap";
             button2.UseVisualStyleBackColor = true;
@@ -218,9 +231,10 @@
             // 
             // btnExportTile_32_Tile_8
             // 
-            btnExportTile_32_Tile_8.Location = new Point(23, 457);
+            btnExportTile_32_Tile_8.Location = new Point(20, 343);
+            btnExportTile_32_Tile_8.Margin = new Padding(3, 2, 3, 2);
             btnExportTile_32_Tile_8.Name = "btnExportTile_32_Tile_8";
-            btnExportTile_32_Tile_8.Size = new Size(84, 121);
+            btnExportTile_32_Tile_8.Size = new Size(74, 91);
             btnExportTile_32_Tile_8.TabIndex = 7;
             btnExportTile_32_Tile_8.Text = "Export Maps and palette";
             btnExportTile_32_Tile_8.UseVisualStyleBackColor = true;
@@ -229,44 +243,49 @@
             // pct_OriginalTileBitmap
             // 
             pct_OriginalTileBitmap.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            pct_OriginalTileBitmap.Location = new Point(6, 59);
+            pct_OriginalTileBitmap.Location = new Point(5, 44);
+            pct_OriginalTileBitmap.Margin = new Padding(3, 2, 3, 2);
             pct_OriginalTileBitmap.Name = "pct_OriginalTileBitmap";
-            pct_OriginalTileBitmap.Size = new Size(848, 662);
+            pct_OriginalTileBitmap.Size = new Size(742, 496);
             pct_OriginalTileBitmap.TabIndex = 0;
             pct_OriginalTileBitmap.TabStop = false;
             // 
             // pnl_32_32_tiles
             // 
             pnl_32_32_tiles.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            pnl_32_32_tiles.Location = new Point(6, 56);
+            pnl_32_32_tiles.Location = new Point(5, 42);
+            pnl_32_32_tiles.Margin = new Padding(3, 2, 3, 2);
             pnl_32_32_tiles.Name = "pnl_32_32_tiles";
-            pnl_32_32_tiles.Size = new Size(848, 642);
+            pnl_32_32_tiles.Size = new Size(742, 482);
             pnl_32_32_tiles.TabIndex = 1;
             pnl_32_32_tiles.Paint += pnl_32_32_tiles_Paint;
             // 
             // pnl_QuantizedColour
             // 
             pnl_QuantizedColour.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            pnl_QuantizedColour.Location = new Point(6, 41);
+            pnl_QuantizedColour.Location = new Point(5, 31);
+            pnl_QuantizedColour.Margin = new Padding(3, 2, 3, 2);
             pnl_QuantizedColour.Name = "pnl_QuantizedColour";
-            pnl_QuantizedColour.Size = new Size(848, 657);
+            pnl_QuantizedColour.Size = new Size(742, 493);
             pnl_QuantizedColour.TabIndex = 2;
             pnl_QuantizedColour.Paint += pnl_QuantizedColour_Paint;
             // 
             // pnl_CommonTiles
             // 
-            pnl_CommonTiles.Location = new Point(12, 41);
+            pnl_CommonTiles.Location = new Point(10, 31);
+            pnl_CommonTiles.Margin = new Padding(3, 2, 3, 2);
             pnl_CommonTiles.Name = "pnl_CommonTiles";
-            pnl_CommonTiles.Size = new Size(842, 578);
+            pnl_CommonTiles.Size = new Size(737, 434);
             pnl_CommonTiles.TabIndex = 3;
             pnl_CommonTiles.Paint += pnl_CommonTiles_Paint;
             // 
             // pnl_fromActualTilemap
             // 
             pnl_fromActualTilemap.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            pnl_fromActualTilemap.Location = new Point(6, 61);
+            pnl_fromActualTilemap.Location = new Point(5, 46);
+            pnl_fromActualTilemap.Margin = new Padding(3, 2, 3, 2);
             pnl_fromActualTilemap.Name = "pnl_fromActualTilemap";
-            pnl_fromActualTilemap.Size = new Size(892, 637);
+            pnl_fromActualTilemap.Size = new Size(780, 478);
             pnl_fromActualTilemap.TabIndex = 5;
             pnl_fromActualTilemap.Paint += pnl_fromActualTilemap_Paint;
             // 
@@ -275,18 +294,20 @@
             pnlUserTileMap.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pnlUserTileMap.AutoScroll = true;
             pnlUserTileMap.Controls.Add(pnl_32x32_gauntletMap);
-            pnlUserTileMap.Location = new Point(163, 3);
+            pnlUserTileMap.Location = new Point(143, 2);
+            pnlUserTileMap.Margin = new Padding(3, 2, 3, 2);
             pnlUserTileMap.Name = "pnlUserTileMap";
-            pnlUserTileMap.Size = new Size(794, 811);
+            pnlUserTileMap.Size = new Size(695, 608);
             pnlUserTileMap.TabIndex = 8;
             // 
             // pnl_32x32_gauntletMap
             // 
             pnl_32x32_gauntletMap.BorderStyle = BorderStyle.FixedSingle;
             pnl_32x32_gauntletMap.CausesValidation = false;
-            pnl_32x32_gauntletMap.Location = new Point(3, 14);
+            pnl_32x32_gauntletMap.Location = new Point(3, 10);
+            pnl_32x32_gauntletMap.Margin = new Padding(3, 2, 3, 2);
             pnl_32x32_gauntletMap.Name = "pnl_32x32_gauntletMap";
-            pnl_32x32_gauntletMap.Size = new Size(2048, 2048);
+            pnl_32x32_gauntletMap.Size = new Size(1792, 1536);
             pnl_32x32_gauntletMap.TabIndex = 7;
             pnl_32x32_gauntletMap.Paint += pnl_gauntletMap_Paint;
             pnl_32x32_gauntletMap.MouseDown += panel7_MouseDown;
@@ -299,9 +320,10 @@
             panel1.Controls.Add(panel3);
             panel1.Controls.Add(pnlUserTileMap);
             panel1.Controls.Add(panel2);
-            panel1.Location = new Point(2, 34);
+            panel1.Location = new Point(2, 26);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1855, 821);
+            panel1.Size = new Size(1623, 616);
             panel1.TabIndex = 1;
             // 
             // panel3
@@ -309,9 +331,10 @@
             panel3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             panel3.Controls.Add(lblImportAndPalette);
             panel3.Controls.Add(tabTileControlAndImport);
-            panel3.Location = new Point(963, 13);
+            panel3.Location = new Point(843, 10);
+            panel3.Margin = new Padding(3, 2, 3, 2);
             panel3.Name = "panel3";
-            panel3.Size = new Size(889, 801);
+            panel3.Size = new Size(778, 601);
             panel3.TabIndex = 16;
             // 
             // lblImportAndPalette
@@ -321,7 +344,7 @@
             lblImportAndPalette.Font = new Font("Segoe UI Semibold", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
             lblImportAndPalette.Location = new Point(3, -1);
             lblImportAndPalette.Name = "lblImportAndPalette";
-            lblImportAndPalette.Size = new Size(149, 25);
+            lblImportAndPalette.Size = new Size(119, 20);
             lblImportAndPalette.TabIndex = 15;
             lblImportAndPalette.Text = "Import and Tiles";
             // 
@@ -335,10 +358,11 @@
             tabTileControlAndImport.Controls.Add(tabCommonTileCheck);
             tabTileControlAndImport.Controls.Add(tabCreateFinalTileToolbox);
             tabTileControlAndImport.Controls.Add(tabTileToolbox);
-            tabTileControlAndImport.Location = new Point(3, 27);
+            tabTileControlAndImport.Location = new Point(3, 20);
+            tabTileControlAndImport.Margin = new Padding(3, 2, 3, 2);
             tabTileControlAndImport.Name = "tabTileControlAndImport";
             tabTileControlAndImport.SelectedIndex = 0;
-            tabTileControlAndImport.Size = new Size(868, 762);
+            tabTileControlAndImport.Size = new Size(760, 572);
             tabTileControlAndImport.TabIndex = 14;
             // 
             // tabOpenTileBMP
@@ -347,10 +371,11 @@
             tabOpenTileBMP.Controls.Add(btnLoadImage);
             tabOpenTileBMP.Controls.Add(pct_OriginalTileBitmap);
             tabOpenTileBMP.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            tabOpenTileBMP.Location = new Point(4, 32);
+            tabOpenTileBMP.Location = new Point(4, 27);
+            tabOpenTileBMP.Margin = new Padding(3, 2, 3, 2);
             tabOpenTileBMP.Name = "tabOpenTileBMP";
-            tabOpenTileBMP.Padding = new Padding(3);
-            tabOpenTileBMP.Size = new Size(860, 726);
+            tabOpenTileBMP.Padding = new Padding(3, 2, 3, 2);
+            tabOpenTileBMP.Size = new Size(752, 541);
             tabOpenTileBMP.TabIndex = 0;
             tabOpenTileBMP.Text = "LoadTileBMP/PNG";
             // 
@@ -358,10 +383,11 @@
             // 
             tabCutIntoSuperTiles.Controls.Add(pnl_32_32_tiles);
             tabCutIntoSuperTiles.Controls.Add(btn_cutIntoTiles);
-            tabCutIntoSuperTiles.Location = new Point(4, 32);
+            tabCutIntoSuperTiles.Location = new Point(4, 27);
+            tabCutIntoSuperTiles.Margin = new Padding(3, 2, 3, 2);
             tabCutIntoSuperTiles.Name = "tabCutIntoSuperTiles";
-            tabCutIntoSuperTiles.Padding = new Padding(3);
-            tabCutIntoSuperTiles.Size = new Size(860, 726);
+            tabCutIntoSuperTiles.Padding = new Padding(3, 2, 3, 2);
+            tabCutIntoSuperTiles.Size = new Size(752, 541);
             tabCutIntoSuperTiles.TabIndex = 1;
             tabCutIntoSuperTiles.Text = "tabCutIntoSuperTiles";
             tabCutIntoSuperTiles.UseVisualStyleBackColor = true;
@@ -371,10 +397,11 @@
             // 
             tabQuantizeImages.Controls.Add(btnQuantizeColours);
             tabQuantizeImages.Controls.Add(pnl_QuantizedColour);
-            tabQuantizeImages.Location = new Point(4, 32);
+            tabQuantizeImages.Location = new Point(4, 27);
+            tabQuantizeImages.Margin = new Padding(3, 2, 3, 2);
             tabQuantizeImages.Name = "tabQuantizeImages";
-            tabQuantizeImages.Padding = new Padding(3);
-            tabQuantizeImages.Size = new Size(860, 726);
+            tabQuantizeImages.Padding = new Padding(3, 2, 3, 2);
+            tabQuantizeImages.Size = new Size(752, 541);
             tabQuantizeImages.TabIndex = 2;
             tabQuantizeImages.Text = "Quantize Images";
             tabQuantizeImages.UseVisualStyleBackColor = true;
@@ -384,20 +411,22 @@
             tabCommonTileCheck.Controls.Add(rtbTileStats);
             tabCommonTileCheck.Controls.Add(btn_CommonTileCheck);
             tabCommonTileCheck.Controls.Add(pnl_CommonTiles);
-            tabCommonTileCheck.Location = new Point(4, 32);
+            tabCommonTileCheck.Location = new Point(4, 27);
+            tabCommonTileCheck.Margin = new Padding(3, 2, 3, 2);
             tabCommonTileCheck.Name = "tabCommonTileCheck";
-            tabCommonTileCheck.Padding = new Padding(3);
-            tabCommonTileCheck.Size = new Size(860, 726);
+            tabCommonTileCheck.Padding = new Padding(3, 2, 3, 2);
+            tabCommonTileCheck.Size = new Size(752, 541);
             tabCommonTileCheck.TabIndex = 3;
             tabCommonTileCheck.Text = "CommonTileCheck";
             tabCommonTileCheck.UseVisualStyleBackColor = true;
             // 
             // rtbTileStats
             // 
-            rtbTileStats.Location = new Point(17, 631);
+            rtbTileStats.Location = new Point(15, 473);
+            rtbTileStats.Margin = new Padding(3, 2, 3, 2);
             rtbTileStats.Name = "rtbTileStats";
             rtbTileStats.ReadOnly = true;
-            rtbTileStats.Size = new Size(827, 92);
+            rtbTileStats.Size = new Size(724, 70);
             rtbTileStats.TabIndex = 5;
             rtbTileStats.Text = "";
             // 
@@ -405,10 +434,11 @@
             // 
             tabCreateFinalTileToolbox.Controls.Add(btn_CreateTilesAndMapping8_8_Map);
             tabCreateFinalTileToolbox.Controls.Add(pnl_fromActualTilemap);
-            tabCreateFinalTileToolbox.Location = new Point(4, 32);
+            tabCreateFinalTileToolbox.Location = new Point(4, 27);
+            tabCreateFinalTileToolbox.Margin = new Padding(3, 2, 3, 2);
             tabCreateFinalTileToolbox.Name = "tabCreateFinalTileToolbox";
-            tabCreateFinalTileToolbox.Padding = new Padding(3);
-            tabCreateFinalTileToolbox.Size = new Size(860, 726);
+            tabCreateFinalTileToolbox.Padding = new Padding(3, 2, 3, 2);
+            tabCreateFinalTileToolbox.Size = new Size(752, 541);
             tabCreateFinalTileToolbox.TabIndex = 4;
             tabCreateFinalTileToolbox.Text = "Create TileToolbox+Map";
             tabCreateFinalTileToolbox.UseVisualStyleBackColor = true;
@@ -422,10 +452,11 @@
             tabTileToolbox.Controls.Add(label2);
             tabTileToolbox.Controls.Add(numMapWidth);
             tabTileToolbox.Controls.Add(label1);
-            tabTileToolbox.Location = new Point(4, 32);
+            tabTileToolbox.Location = new Point(4, 27);
+            tabTileToolbox.Margin = new Padding(3, 2, 3, 2);
             tabTileToolbox.Name = "tabTileToolbox";
-            tabTileToolbox.Padding = new Padding(3);
-            tabTileToolbox.Size = new Size(860, 726);
+            tabTileToolbox.Padding = new Padding(3, 2, 3, 2);
+            tabTileToolbox.Size = new Size(752, 541);
             tabTileToolbox.TabIndex = 5;
             tabTileToolbox.Text = "Toolbox";
             tabTileToolbox.UseVisualStyleBackColor = true;
@@ -435,9 +466,10 @@
             dbPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dbPanel1.AutoScroll = true;
             dbPanel1.Controls.Add(pnl_32_32_TilePalette);
-            dbPanel1.Location = new Point(6, 6);
+            dbPanel1.Location = new Point(5, 4);
+            dbPanel1.Margin = new Padding(3, 2, 3, 2);
             dbPanel1.Name = "dbPanel1";
-            dbPanel1.Size = new Size(848, 565);
+            dbPanel1.Size = new Size(742, 424);
             dbPanel1.TabIndex = 14;
             // 
             // pnl_32_32_TilePalette
@@ -447,17 +479,19 @@
             pnl_32_32_TilePalette.AutoSize = true;
             pnl_32_32_TilePalette.CausesValidation = false;
             pnl_32_32_TilePalette.Location = new Point(0, 0);
+            pnl_32_32_TilePalette.Margin = new Padding(3, 2, 3, 2);
             pnl_32_32_TilePalette.Name = "pnl_32_32_TilePalette";
-            pnl_32_32_TilePalette.Size = new Size(900, 559);
+            pnl_32_32_TilePalette.Size = new Size(788, 419);
             pnl_32_32_TilePalette.TabIndex = 8;
             pnl_32_32_TilePalette.Paint += pnl_32_32_TilePalette_Paint;
             pnl_32_32_TilePalette.MouseDown += pnl_32_32_TilePalette_MouseDown;
             // 
             // btnRightTile
             // 
-            btnRightTile.Location = new Point(382, 605);
+            btnRightTile.Location = new Point(334, 454);
+            btnRightTile.Margin = new Padding(3, 2, 3, 2);
             btnRightTile.Name = "btnRightTile";
-            btnRightTile.Size = new Size(94, 37);
+            btnRightTile.Size = new Size(82, 28);
             btnRightTile.TabIndex = 11;
             btnRightTile.Text = ">>";
             btnRightTile.UseVisualStyleBackColor = true;
@@ -465,20 +499,22 @@
             // 
             // numMapHeight
             // 
-            numMapHeight.Location = new Point(100, 617);
+            numMapHeight.Location = new Point(88, 463);
+            numMapHeight.Margin = new Padding(3, 2, 3, 2);
             numMapHeight.Maximum = new decimal(new int[] { 4096, 0, 0, 0 });
             numMapHeight.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numMapHeight.Name = "numMapHeight";
-            numMapHeight.Size = new Size(88, 27);
+            numMapHeight.Size = new Size(77, 23);
             numMapHeight.TabIndex = 12;
             numMapHeight.Value = new decimal(new int[] { 64, 0, 0, 0 });
             numMapHeight.ValueChanged += numMapHeight_ValueChanged;
             // 
             // btnTileLeft
             // 
-            btnTileLeft.Location = new Point(279, 603);
+            btnTileLeft.Location = new Point(244, 452);
+            btnTileLeft.Margin = new Padding(3, 2, 3, 2);
             btnTileLeft.Name = "btnTileLeft";
-            btnTileLeft.Size = new Size(97, 41);
+            btnTileLeft.Size = new Size(85, 31);
             btnTileLeft.TabIndex = 10;
             btnTileLeft.Text = "<<";
             btnTileLeft.UseVisualStyleBackColor = true;
@@ -487,19 +523,20 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(113, 594);
+            label2.Location = new Point(99, 446);
             label2.Name = "label2";
-            label2.Size = new Size(54, 20);
+            label2.Size = new Size(43, 15);
             label2.TabIndex = 13;
             label2.Text = "Height";
             // 
             // numMapWidth
             // 
-            numMapWidth.Location = new Point(6, 617);
+            numMapWidth.Location = new Point(5, 463);
+            numMapWidth.Margin = new Padding(3, 2, 3, 2);
             numMapWidth.Maximum = new decimal(new int[] { 1024, 0, 0, 0 });
             numMapWidth.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numMapWidth.Name = "numMapWidth";
-            numMapWidth.Size = new Size(88, 27);
+            numMapWidth.Size = new Size(77, 23);
             numMapWidth.TabIndex = 12;
             numMapWidth.Value = new decimal(new int[] { 32, 0, 0, 0 });
             numMapWidth.ValueChanged += numMapWidth_ValueChanged;
@@ -507,9 +544,9 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(3, 594);
+            label1.Location = new Point(3, 446);
             label1.Name = "label1";
-            label1.Size = new Size(49, 20);
+            label1.Size = new Size(39, 15);
             label1.TabIndex = 13;
             label1.Text = "Width";
             // 
@@ -517,9 +554,10 @@
             // 
             DropDown_SuperTileSize.FormattingEnabled = true;
             DropDown_SuperTileSize.Items.AddRange(new object[] { "1x1 (8x8px)", "2x2 (16x16px)", "4x4 (32x32px)" });
-            DropDown_SuperTileSize.Location = new Point(399, 2);
+            DropDown_SuperTileSize.Location = new Point(349, 2);
+            DropDown_SuperTileSize.Margin = new Padding(3, 2, 3, 2);
             DropDown_SuperTileSize.Name = "DropDown_SuperTileSize";
-            DropDown_SuperTileSize.Size = new Size(151, 28);
+            DropDown_SuperTileSize.Size = new Size(133, 23);
             DropDown_SuperTileSize.TabIndex = 8;
             DropDown_SuperTileSize.SelectedIndexChanged += DropDown_SuperTileSize_ValueChanged;
             // 
@@ -537,13 +575,14 @@
             // 
             // tile32PixImport
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.DarkGray;
             Controls.Add(DropDown_SuperTileSize);
             Controls.Add(panel1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "tile32PixImport";
-            Size = new Size(1876, 882);
+            Size = new Size(1642, 662);
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pct_OriginalTileBitmap).EndInit();

@@ -1347,24 +1347,27 @@ namespace Next_tile_editor
 
         private bool place_meeting(int x, int y, int tilenumber)
         {
-            if (tileMapObjs.GetInstance().gauntletMap[y][x] !=0 &&
-                tileMapObjs.GetInstance().gauntletMap[y][x] <48
-             )
+            if (x <1 ||y < 1 || x >= tileMapObjs.GetInstance().gauntletMap[0].Length || y >= tileMapObjs.GetInstance().gauntletMap.Count)
+                return false; // out of bounds check
+            if (tileMapObjs.GetInstance().gauntletMap[y][x] == tilenumber)
                 return true;
             else return false;
 
         }
-
+        /// <summary>
+        /// In Gamemaker I use a generic wall tile (object_index) and my code scans the room (x,y) and when it finds object_index it checks around it to determine the correct wall tile that needs to be placed at that position. 
+        /// Then the loop continues.
+        /// </summary>
+        /// <param name="tile_x"></param>
+        /// <param name="tile_y"></param>
+        /// <param name="tile_size"></param>
         //tile_x      = argument0;	// current x tile position in the map
         //tile_y      = argument1;	// current y tile position in the map
         //tile_size   = argument2;	// added to this function for usage elsewhere (can be hardcoded)
         public void ZingotMode(int old_x, int old_y, int new_x, int new_y)
         {
-            int basetile = 45;
-
             var map = tileMapObjs.GetInstance().gauntletMap;
             //map[new_y][new_x] = (byte)basetile; // no change
-
             for (int gy = 0; gy < numMapHeight.Value; gy += 1)
             {
                 for (int gx = 0; gx < numMapWidth.Value; gx += 1)
@@ -1412,16 +1415,16 @@ namespace Next_tile_editor
             //
         }
 
-        public int zingotSub(int tile_x, int tile_y)//, int tile_size=1, int object_index=45 )
+        public int zingotSub(int tile_x, int tile_y) //, int tile_size=1, int object_index=45 )
         {
-            
+
             //int iw = tile_size;
 
             // Autotile(tx, ty)
 
             // current tile
-            int tx = tile_x;    // current x tile position in the map
-            int ty = tile_y;    // current y tile position in the map
+            int tx = tile_x; // current x tile position in the map
+            int ty = tile_y; // current y tile position in the map
 
             // surrounding tiles
             int tile, w_left, w_right, w_up, w_down, w_upleft, w_downleft, w_upright, w_downright;
@@ -1653,222 +1656,24 @@ namespace Next_tile_editor
                     tile = 4;
                 }
             }
-
-            catch(Exception exr)
+            catch (Exception ex)
             {
-                Console.WriteLine(exr.ToString());
-                throw exr;
+                tile = 45;
             }
 
-                return tile;
-            //w_left = place_meeting(tile_x - iw, tile_size, object_index);     //
-            //w_right = place_meeting(tile_x + iw, tile_size, object_index);     // place meeting is gml collision check code
-            //w_up = place_meeting(tile_x, tile_size - iw, object_index);     // to determine if 2 tiles overlap. Obviously
-            //w_down = place_meeting(tile_x, tile_size + iw, object_index);     // in an editor this would be a check into the
-            //w_upleft = place_meeting(tile_x - iw, tile_size - iw, object_index);  // array to check adjacent values.
-            //w_downleft = place_meeting(tile_x - iw, tile_size + iw, object_index);  //
-            //w_upright = place_meeting(tile_x + iw, tile_size - iw, object_index);  // object_index just refers to the generic tile
-            //w_downright = place_meeting(tile_x + iw, tile_size + iw, object_index);  // wall I used in the map to be changed.
+            return tile;
+        }
 
-
-            ////if (x-iw < 0          ) { w_left = 1; w_upleft = 1; w_downleft = 1; }
-            ////if (x+iw+1 > room_width ) { w_right = 1; w_upright = 1; w_downright = 1; }
-            ////if (y-iw < 0          ) { w_up = 1; w_upright = 1; w_upleft = 1; }
-            ////if (y+iw+1 > room_height) { w_down = 1; w_downright = 1; w_downleft = 1; }
-            //// ^ commented out
-
-
-            //tile = 45;	// this is 
-
-            //if (w_up)
-            //{
-            //    tile = 1;
-            //    if (w_right)
-            //    {
-            //        tile = 5;
-            //        if (w_down)
-            //        {
-            //            tile = 13;
-            //            if (w_left)
-            //            {
-            //                tile = 29;
-            //                if (w_upright)
-            //                {
-            //                    tile = 30;
-            //                    if (w_downright)
-            //                    {
-            //                        tile = 34;
-            //                        if (w_downleft)
-            //                        {
-            //                            tile = 40;
-            //                            if (w_upleft)
-            //                            {
-            //                                tile = 44;
-            //                            }
-            //                        }
-            //                        else if (w_upleft)
-            //                        {
-            //                            tile = 41;
-            //                        }
-            //                    }
-            //                    else if (w_downleft)
-            //                    {
-            //                        tile = 38;
-            //                        if (w_upleft)
-            //                        {
-            //                            tile = 42;
-            //                        }
-            //                    }
-            //                    else if (w_upleft)
-            //                    {
-            //                        tile = 37;
-            //                    }
-            //                }
-            //                else if (w_downright)
-            //                {
-            //                    tile = 31;
-            //                    if (w_downleft)
-            //                    {
-            //                        tile = 35;
-            //                        if (w_upleft)
-            //                        {
-            //                            tile = 43;
-            //                        }
-            //                    }
-            //                    else if (w_upleft)
-            //                    {
-            //                        tile = 39;
-            //                    }
-            //                }
-            //                else if (w_downleft)
-            //                {
-            //                    tile = 32;
-            //                    if (w_upleft) tile = 36;
-            //                }
-            //                else if (w_upleft)
-            //                {
-            //                    tile = 33;
-            //                }
-            //            }
-            //            else if (w_upright)
-            //            {
-            //                tile = 17;
-            //                if (w_downright)
-            //                {
-            //                    tile = 19;
-            //                }
-            //            }
-            //            else if (w_downright)
-            //            {
-            //                tile = 18;
-            //            }
-            //        }
-            //        else if (w_left)
-            //        {
-            //            tile = 16;
-            //            if (w_upright)
-            //            {
-            //                tile = 26;
-            //                if (w_upleft)
-            //                {
-            //                    tile = 28;
-            //                }
-            //            }
-            //            else if (w_upleft)
-            //            {
-            //                tile = 27;
-            //            }
-            //        }
-            //        else if (w_upright)
-            //        {
-            //            tile = 9;
-            //        }
-            //    }
-            //    else if (w_down)
-            //    {
-            //        tile = 46;
-            //        if (w_left)
-            //        {
-            //            tile = 15;
-            //            if (w_downleft)
-            //            {
-            //                tile = 23;
-            //                if (w_upleft)
-            //                {
-            //                    tile = 25;
-            //                }
-            //            }
-            //            else if (w_upleft)
-            //            {
-            //                tile = 24;
-            //            }
-            //        }
-            //    }
-            //    else if (w_left)
-            //    {
-            //        tile = 8;
-            //        if (w_upleft)
-            //        {
-            //            tile = 12;
-            //        }
-            //    }
-            //}
-
-
-            //else if (w_right)
-            //{
-            //    tile = 2;
-            //    if (w_down)
-            //    {
-            //        tile = 6;
-            //        if (w_left)
-            //        {
-            //            tile = 14;
-            //            if (w_downright)
-            //            {
-            //                tile = 20;
-            //                if (w_downleft)
-            //                {
-            //                    tile = 22;
-            //                }
-            //            }
-            //            else if (w_downleft)
-            //            {
-            //                tile = 21;
-            //            }
-            //        }
-            //        else if (w_downright)
-            //        {
-            //            tile = 10;
-            //        }
-            //    }
-            //    else if (w_left)
-            //    {
-            //        tile = 47;
-            //    }
-            //}
-
-
-            //else if (w_down)
-            //{
-            //    tile = 3;
-            //    if (w_left)
-            //    {
-            //        tile = 7;
-            //        if (w_downleft)
-            //        {
-            //            tile = 11;
-            //        }
-            //    }
-            //}
-
-
-            //else if (w_left)
-            //{
-            //    tile = 4;
-            //}
-
-            //return tile;
+        private void button1_Click(object sender, EventArgs e)
+        {
+            for (int x = 0; x < tileMapObjs.GetInstance().ImportSettings.width_32tiles; x++)
+            {
+                for (int y = 0; y < tileMapObjs.GetInstance().ImportSettings.height_32tiles; y++)
+                {
+                    ZingotMode(x, y,1,44);
+                }
+            }
+            
         }
     }
     class DBPanel : Panel

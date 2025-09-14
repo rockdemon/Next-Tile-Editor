@@ -209,11 +209,19 @@ namespace Next_tile_editor
                         for (int ix = 0; ix < tempImage.Width; ix += tempImage.Height)
                         {
                             Bitmap bmTemp = new Bitmap(16, 16);
-                            BitmapUtils.CopyBitmap(tempImage, bmTemp, new Rectangle(0, 0, tempImage.Width, tempImage.Height),
-                                new Rectangle(ix, 0, 16, 16));// tempImage.Height, tempImage.Height));
+                            using (Graphics g = Graphics.FromImage((Image)bmTemp))
+                            {
+                                g.DrawImage((Image)tempImage, new Point[] { new Point(0, 0),new Point(0,16), new Point(16,0)},
+                                    new Rectangle(ix, 0, tempImage.Height, tempImage.Height), GraphicsUnit.Pixel);
+                            }
 
 
                             spriteImages.Add(bmTemp);
+                            byte[] baCurSpr = Get4x8ByteArrForBmp(bmTemp);
+                            
+                            Sprite spr = new Sprite(palette: get9bitPaletteFromImage(bmTemp), (int)numericUpDown1.Value, spriteNibbles: null, spriteData: baCurSpr);
+
+                            lstSprites.Add(spr);
                             noFrames++;
                         }
 
@@ -224,6 +232,9 @@ namespace Next_tile_editor
 
                 {
                     spriteImages.Add(tempImage);
+                    Sprite spr = new Sprite(palette: Palette9bit.FromByteArray(baSpritePalette), (int)numericUpDown1.Value, spriteNibbles: null, spriteData: Get4x8ByteArrForBmp(tempImage));
+
+                    lstSprites.Add(spr);
                     noFrames++;
                 }
         }
@@ -243,6 +254,98 @@ namespace Next_tile_editor
 
             UpdatePictureBoxes();
         }
+        private byte GetBitsPerPixel(PixelFormat pixelFormat)
+        {
+            switch (pixelFormat)
+            {
+                case PixelFormat.Format1bppIndexed:
+                    return 1;
+                case PixelFormat.Format4bppIndexed:
+                    return 4;
+                case PixelFormat.Format8bppIndexed:
+                case PixelFormat.Format16bppArgb1555:
+                case PixelFormat.Format16bppGrayScale:
+                case PixelFormat.Format16bppRgb555:
+                case PixelFormat.Format16bppRgb565:
+                    return 16;
+                case PixelFormat.Format24bppRgb:
+                    return 24;
+                case PixelFormat.Format32bppArgb:
+                case PixelFormat.Format32bppPArgb:
+                case PixelFormat.Format32bppRgb:
+                    return 32;
+                case PixelFormat.Format48bppRgb:
+                    return 48;
+                case PixelFormat.Format64bppArgb:
+                case PixelFormat.Format64bppPArgb:
+                    return 64;
+                default:
+                    throw new ArgumentException("Unsupported pixel format: " + pixelFormat);
+            }
+        }
+        private Palette9bit get9bitPaletteFromImage(Image img)
+        {
+                Palette9bit List9BitColours = new Palette9bit();
+                List<paletteValue9bit> Palette = new List<paletteValue9bit>();
+            List9BitColours.Palettearray= new paletteValue9bit[512]; // 256 colours, 2 bytes each
+                int ix = 0;
+                Bitmap bitmapImage = img as Bitmap;
+                if (bitmapImage == null)
+                {
+                    throw new InvalidOperationException("Image is not a Bitmap.");
+                }
+
+                BitmapData bData = bitmapImage.LockBits(new Rectangle(0, 0, bitmapImage.Width, bitmapImage.Height), ImageLockMode.ReadWrite, bitmapImage.PixelFormat);
+
+                byte bitsPerPixel = GetBitsPerPixel(bData.PixelFormat);
+                paletteValue9bit[] baImg = new paletteValue9bit[bitmapImage.Width * bitmapImage.Height];
+
+                unsafe
+                {
+                    byte* scan0 = (byte*)bData.Scan0.ToPointer();
+
+                    for (int y = 0; y < bData.Height; ++y)
+                    {
+                        for (int x = 0; x < bData.Width; ++x)
+                        {
+                            byte* data = scan0 + y * bData.Stride + x * bitsPerPixel / 8;
+
+                            //data is a pointer to the first byte of the 3-byte color data  
+                            //data[0] = blueComponent;  
+                            //data[1] = greenComponent;  
+                            //data[2] = redComponent;  
+                            Color c = Color.FromArgb(data[2], data[1], data[0]); //BbitmapImage.GetPixel(x, y);
+                            baImg[y * bitmapImage.Width + x] = paletteValue9bit.FromColor(c);
+                            if (!Palette.Contains(paletteValue9bit.FromColor(c))
+                                && Palette.Count < 256)
+                            {
+                                Palette.Add(paletteValue9bit.FromColor(c));
+                                List9BitColours.Palettearray[ix] = paletteValue9bit.FromColor(c);
+                                ix++;
+                            }
+                            else if (Palette.Count >= 256)
+                            {
+                                // we have enough colours
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                bitmapImage.UnlockBits(bData);
+                
+                //for (int y = 0; y < bitmapImage.Height; y++)
+                //{
+                //    for (int x = 0; x < bitmapImage.Width; x++)
+                //    {
+                //        Color c = bitmapImage.GetPixel(x, y);
+                //        baImg[y * bitmapImage.Width + x] = paletteValue9bit.FromColor(c);
+                //    }
+                //}
+                //List9BitColours.Add(baImg);
+                return List9BitColours;
+
+        }
         List<Sprite> lstSprites = new List<Sprite>();
         public void UpdateSprites(byte[] SpriteList, bool b4bit = true)
         {
@@ -261,7 +364,6 @@ namespace Next_tile_editor
                     Array.Copy(SpriteList, i * 128, baCurSpr, 0, 128);
                     Sprite spr = new Sprite(palette: Palette9bit.FromByteArray(baSpritePalette), (int)numericUpDown1.Value, spriteNibbles: null, spriteData: baCurSpr);
                     // Image tempImage = LockUnlockBitsLowLevelUpdate((Bitmap)Bitmap.FromFile(listFileNames[i]));
-
                     spriteImages.Add(spr.bitmapData);
                     lstSprites.Add(spr);
                     if (i >= pictureBoxes.Count)
@@ -277,6 +379,8 @@ namespace Next_tile_editor
                     pictureBoxes[i].SizeMode = PictureBoxSizeMode.StretchImage;
 
                 }
+
+
                 UpdatePictureBoxes();
             }
 
