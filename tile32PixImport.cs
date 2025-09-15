@@ -1141,8 +1141,6 @@ namespace Next_tile_editor
             {
                 File.WriteAllBytes(sfd.FileName, bytesSaveMap.ToArray());
             }
-
-
         }
 
         private void btnLoad_32_32_px_tilemap_Click(object sender, EventArgs e)
@@ -1378,41 +1376,6 @@ namespace Next_tile_editor
                     }
                 }
             }
-            ///// Check Mouse Input & Perform Autotile Logic
-
-            //// Grab Mouse X,Y snapped to tile grid
-            //mx = clamp(floor(device_mouse_x(0) / 16), 0, 15);
-            //my = clamp(floor(device_mouse_y(0) / 16), 0, 11);
-
-            //// Draw Tile
-            //if device_mouse_check_button(0, mb_left) {
-            //    global.grid_array[mx, my] = 45;
-            //    for (gy = 0; gy < 12; gy += 1)
-            //    {
-            //        for (gx = 0; gx < 16; gx += 1)
-            //        {
-            //            if (global.grid_array[gx, gy] <> 0)
-            //            {
-            //                global.grid_array[gx, gy] = autotile(gx, gy);
-            //            }
-            //        }
-            //    }
-            //}
-
-            //// Erase Tile
-            //if device_mouse_check_button(0, mb_right) {
-            //    global.grid_array[mx, my] = 0;
-            //    for (gy = 0; gy < 12; gy += 1)
-            //    {
-            //        for (gx = 0; gx < 16; gx += 1)
-            //        {
-            //            if (global.grid_array[gx, gy] <> 0)
-            //            {
-            //                global.grid_array[gx, gy] = autotile(gx, gy);
-            //            }
-            //        }
-            //    }
-            //
         }
 
         public int zingotSub(int tile_x, int tile_y) //, int tile_size=1, int object_index=45 )
